@@ -1,0 +1,5 @@
+{
+  "EntityPlayerSP": "EntityPlayerSP.js",
+  "EntityLivingBase": "EntityLivingBase.js",
+  "NetHandlerPlayServer": "NetHandlerPlayServer.js"
+}
