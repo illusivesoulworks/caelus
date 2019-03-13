@@ -1,11 +1,11 @@
 modLoader="javafml"
 loaderVersion="[25,)"
-issueTrackerURL="http://my.issue.tracker/"
+issueTrackerURL="https://github.com/TheIllusiveC4/Caelus/issues"
 [[mods]]
 modId="caelus"
 version="${file.jarVersion}"
 displayName="Caelus API"
-displayURL="http://example.com/"
+displayURL="https://minecraft.curseforge.com/projects/caelus"
 logoFile="caelus_icon.png"
 authors="C4"
 description='''
