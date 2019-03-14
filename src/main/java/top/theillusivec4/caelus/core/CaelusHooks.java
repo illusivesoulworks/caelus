@@ -22,7 +22,7 @@ package top.theillusivec4.caelus.core;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.client.CPacketEntityAction;
-import top.theillusivec4.caelus.CaelusAPI;
+import top.theillusivec4.caelus.api.CaelusAPI;
 
 public class CaelusHooks {
 

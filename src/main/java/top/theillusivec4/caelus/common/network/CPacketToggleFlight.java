@@ -24,7 +24,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.network.NetworkEvent;
-import top.theillusivec4.caelus.CaelusAPI;
+import top.theillusivec4.caelus.api.CaelusAPI;
 
 import java.util.function.Supplier;
 

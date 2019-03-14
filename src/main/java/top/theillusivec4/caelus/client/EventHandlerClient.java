@@ -27,7 +27,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import top.theillusivec4.caelus.Caelus;
-import top.theillusivec4.caelus.CaelusAPI;
+import top.theillusivec4.caelus.api.CaelusAPI;
 import top.theillusivec4.caelus.common.CaelusConfig;
 import top.theillusivec4.caelus.common.network.CPacketToggleFlight;
 import top.theillusivec4.caelus.common.network.NetworkHandler;

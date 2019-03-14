@@ -32,7 +32,7 @@ function initializeCoreMod() {
                                     instruction = instruction.getPrevious().getPrevious();
                                     print("Found node ", instruction.toString());
                                     code.insert(instruction, new VarInsnNode(opcodes.ISTORE, 1))
-                                    code.insert(instruction, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/CaelusAPI", "canElytraFly", "(Lnet/minecraft/entity/EntityLivingBase;)Z", false))
+                                    code.insert(instruction, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/api/CaelusAPI", "canElytraFly", "(Lnet/minecraft/entity/EntityLivingBase;)Z", false))
                                     code.insert(instruction, new VarInsnNode(opcodes.ALOAD, 0))
                                     break;
                                 }
