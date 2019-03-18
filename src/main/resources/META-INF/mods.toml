@@ -1,12 +1,12 @@
 modLoader="javafml"
 loaderVersion="[25,)"
 issueTrackerURL="https://github.com/TheIllusiveC4/Caelus/issues"
+logoFile="caelus_icon.png"
 [[mods]]
 modId="caelus"
 version="${file.jarVersion}"
 displayName="Caelus API"
 displayURL="https://minecraft.curseforge.com/projects/caelus"
-logoFile="caelus_icon.png"
 authors="C4"
 description='''
 A coremod and API to provide developers access to elytra flight mechanics through an entity attribute.
