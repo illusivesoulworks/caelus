@@ -20,9 +20,15 @@
 package top.theillusivec4.caelus.core;
 
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.network.play.client.CPacketEntityAction;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.Event;
 import top.theillusivec4.caelus.api.CaelusAPI;
+import top.theillusivec4.caelus.api.event.RenderCapeCheckEvent;
 
 public class CaelusHooks {
 
@@ -37,6 +43,18 @@ public class CaelusHooks {
 
         if (CaelusAPI.canElytraFly(playerSP)) {
             playerSP.connection.sendPacket(new CPacketEntityAction(playerSP, CPacketEntityAction.Action.START_FALL_FLYING));
+        }
+    }
+
+    public static boolean fireRenderCapeCheckEvent(EntityPlayer player) {
+        RenderCapeCheckEvent evt = new RenderCapeCheckEvent(player);
+        MinecraftForge.EVENT_BUS.post(evt);
+        Event.Result doRender = evt.getResult();
+
+        if(doRender == Event.Result.DEFAULT) {
+            return player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() != Items.ELYTRA;
+        } else {
+            return doRender == Event.Result.ALLOW;
         }
     }
 }
