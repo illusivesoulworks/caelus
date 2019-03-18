@@ -56,7 +56,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.13.2-25.0.73'
+    minecraft 'net.minecraftforge:forge:1.13.2-25.0.84'
 }
 
 sourceSets {
@@ -81,16 +81,40 @@ jar {
     }
 }
 
-publishing {
+def reobfFile = file("build/reobfJar/output.jar")
+def reobfArtifact = artifacts.add('default', reobfFile) {
+    type 'jar'
+    builtBy 'reobfJar'
+}
 
+task apiJar(type: Jar) {
+    classifier = 'api'
+    include 'top/theillusivec4/caelus/api/**/*'
+    from sourceSets.main.allSource
+    from sourceSets.main.output
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+tasks.build.dependsOn apiJar, sourcesJar
+
+publishing {
+    tasks.publish.dependsOn 'build'
     publications {
 
         mavenJava(MavenPublication) {
-
-            groupId project.group
-            artifactId project.archivesBaseName
-            version project.version
-            from components.java
+            artifact (reobfArtifact) {
+                artifactId project.archivesBaseName
+            }
+            artifact (sourcesJar) {
+                artifactId project.archivesBaseName
+            }
+            artifact (apiJar) {
+                artifactId project.archivesBaseName
+            }
         }
     }
 
