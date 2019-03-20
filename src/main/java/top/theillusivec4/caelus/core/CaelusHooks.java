@@ -24,6 +24,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
@@ -32,7 +33,8 @@ import top.theillusivec4.caelus.api.event.RenderCapeCheckEvent;
 
 public class CaelusHooks {
 
-    public static void setElytraState(EntityPlayerMP player) {
+    public static void setElytraState(NetHandlerPlayServer server) {
+        EntityPlayerMP player = server.player;
 
         if (CaelusAPI.canElytraFly(player)) {
             player.setElytraFlying();

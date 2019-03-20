@@ -16,7 +16,7 @@ function initializeCoreMod() {
                 for (m in methods) {
                     var method = methods[m];
 
-                    if (method.name.compareTo("updateElytra") == 0) {
+                    if (method.name === "updateElytra" || method.name === "func_184616_r") {
                         print("Found method ", method.toString());
                         var code = method.instructions;
                         var instr = code.toArray();

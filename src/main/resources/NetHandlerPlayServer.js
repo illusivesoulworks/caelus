@@ -18,7 +18,7 @@ function initializeCoreMod() {
                 for (m in methods) {
                     var method = methods[m];
 
-                    if (method.name.compareTo("processEntityAction") == 0) {
+                    if (method.name === "processEntityAction" || method.name === "func_147357_a") {
                         print("Found method ", method.toString());
                         var code = method.instructions;
                         var instr = code.toArray();
@@ -36,8 +36,7 @@ function initializeCoreMod() {
                                 var inst = instruction.getPrevious().getPrevious().getPrevious();
                                 print("Found node ", inst.toString());
                                 code.insertBefore(inst, new VarInsnNode(opcodes.ALOAD, 0))
-                                code.insertBefore(inst, new FieldInsnNode(opcodes.GETFIELD, "net/minecraft/network/NetHandlerPlayServer", "player", "Lnet/minecraft/entity/player/EntityPlayerMP;"))
-                                code.insertBefore(inst, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/core/CaelusHooks", "setElytraState", "(Lnet/minecraft/entity/player/EntityPlayerMP;)V", false))
+                                code.insertBefore(inst, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/core/CaelusHooks", "setElytraState", "(Lnet/minecraft/network/NetHandlerPlayServer;)V", false))
                                 code.insertBefore(inst, new JumpInsnNode(opcodes.GOTO, jumpLabel))
                                 break;
                             }
