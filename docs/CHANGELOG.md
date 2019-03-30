@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [0.4](https://github.com/TheIllusiveC4/Caelus/compare/cc44c517e2b5617b1a931471cade368eafc8f860...master) - 2019.03.29
+### Fixed
+- Fixed broken elytras still giving flight
+
 ## [0.3] - 2019.03.19
 ### Fixed
 - Fixed coremod transformations in obfuscated environments
