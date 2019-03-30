@@ -90,7 +90,7 @@ public class Caelus {
                 attributeInstance.removeModifier(CaelusAPI.ELYTRA_MODIFIER);
             }
 
-            if (to.getItem() instanceof ItemElytra && !attributeInstance.hasModifier(CaelusAPI.ELYTRA_MODIFIER)) {
+            if (to.getItem() instanceof ItemElytra && !attributeInstance.hasModifier(CaelusAPI.ELYTRA_MODIFIER) && ItemElytra.isUsable(to)) {
                 attributeInstance.applyModifier(CaelusAPI.ELYTRA_MODIFIER);
             }
         }
