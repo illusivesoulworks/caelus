@@ -1,4 +1,4 @@
-# Caelus API [![](http://cf.way2muchnoise.eu/versions/caelus.svg)](https://minecraft.curseforge.com/projects/caelus) [![](http://cf.way2muchnoise.eu/short_caelus_downloads.svg)](https://minecraft.curseforge.com/projects/caelus/files) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+# Caelus API [![](http://cf.way2muchnoise.eu/versions/caelus.svg)](https://www.curseforge.com/minecraft/mc-mods/caelus) [![](http://cf.way2muchnoise.eu/short_caelus_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/caelus/files) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg?&style=flat-square)](https://www.gnu.org/licenses/lgpl-3.0) [![](https://img.shields.io/discord/500852157503766538.svg?color=green&label=Discord&style=flat-square)](https://discord.gg/JWgrdwt)
 
 ## Overview
 
