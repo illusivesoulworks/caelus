@@ -1,5 +1,5 @@
 {
-  "EntityPlayerSP": "EntityPlayerSP.js",
-  "EntityLivingBase": "EntityLivingBase.js",
-  "NetHandlerPlayServer": "NetHandlerPlayServer.js"
+  "ClientPlayerEntity": "ClientPlayerEntity.js",
+  "LivingEntity": "LivingEntity.js",
+  "ServerPlayNetHandler": "ServerPlayNetHandler.js"
 }

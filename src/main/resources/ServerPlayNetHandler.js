@@ -3,7 +3,7 @@ function initializeCoreMod() {
         'coremodone': {
             'target': {
                 'type': 'CLASS',
-                'name': 'net.minecraft.network.NetHandlerPlayServer'
+                'name': 'net.minecraft.network.play.ServerPlayNetHandler'
             },
             'transformer': function(classNode) {
                 print("Initializing transformation ", classNode.toString());
@@ -36,7 +36,7 @@ function initializeCoreMod() {
                                 var inst = instruction.getPrevious().getPrevious().getPrevious();
                                 print("Found node ", inst.toString());
                                 code.insertBefore(inst, new VarInsnNode(opcodes.ALOAD, 0))
-                                code.insertBefore(inst, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/core/CaelusHooks", "setElytraState", "(Lnet/minecraft/network/NetHandlerPlayServer;)V", false))
+                                code.insertBefore(inst, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/core/CaelusHooks", "setElytraState", "(Lnet/minecraft/network/play/ServerPlayNetHandler;)V", false))
                                 code.insertBefore(inst, new JumpInsnNode(opcodes.GOTO, jumpLabel))
                                 break;
                             }
