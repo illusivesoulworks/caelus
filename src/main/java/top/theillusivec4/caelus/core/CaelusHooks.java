@@ -20,17 +20,18 @@
 package top.theillusivec4.caelus.core;
 
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Items;
+import net.minecraft.item.ElytraItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.network.play.client.CEntityActionPacket;
+import net.minecraft.util.Tuple;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import top.theillusivec4.caelus.api.CaelusAPI;
-import top.theillusivec4.caelus.api.event.RenderCapeCheckEvent;
+import top.theillusivec4.caelus.api.event.RenderElytraEvent;
 
 public class CaelusHooks {
 
@@ -49,15 +50,14 @@ public class CaelusHooks {
         }
     }
 
-    public static boolean fireRenderCapeCheckEvent(PlayerEntity player) {
-        RenderCapeCheckEvent evt = new RenderCapeCheckEvent(player);
+    public static Tuple<Boolean, Boolean> fireRenderElytraEvent(LivingEntity livingEntity) {
+        RenderElytraEvent evt = new RenderElytraEvent(livingEntity);
         MinecraftForge.EVENT_BUS.post(evt);
-        Event.Result doRender = evt.getResult();
-
-        if(doRender == Event.Result.DEFAULT) {
-            return player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() != Items.ELYTRA;
-        } else {
-            return doRender == Event.Result.ALLOW;
-        }
+        ItemStack stack = livingEntity.getItemStackFromSlot(EquipmentSlotType.CHEST);
+        boolean renderElytra = evt.getRenderElytra() == Event.Result.DEFAULT
+                ? stack.getItem() instanceof ElytraItem : evt.getRenderElytra() == Event.Result.ALLOW;
+        boolean renderEnchantmentGlow = evt.getRenderEnchantmentGlow() == Event.Result.DEFAULT
+                ? stack.isEnchanted() : evt.getRenderEnchantmentGlow() == Event.Result.ALLOW;
+        return new Tuple<>(renderElytra, renderEnchantmentGlow);
     }
 }

@@ -20,14 +20,17 @@
 package top.theillusivec4.caelus;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.client.renderer.entity.layers.LayerCape;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.layers.CapeLayer;
+import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemElytra;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -47,11 +50,11 @@ import top.theillusivec4.caelus.api.CaelusAPI;
 import top.theillusivec4.caelus.client.EventHandlerClient;
 import top.theillusivec4.caelus.client.KeyRegistry;
 import top.theillusivec4.caelus.client.renderer.CaelusCapeLayer;
+import top.theillusivec4.caelus.client.renderer.CaelusElytraLayer;
 import top.theillusivec4.caelus.common.CaelusConfig;
 import top.theillusivec4.caelus.common.network.NetworkHandler;
 
 import java.util.List;
-import java.util.Map;
 
 @Mod(Caelus.MODID)
 public class Caelus {
@@ -73,24 +76,24 @@ public class Caelus {
     @SubscribeEvent
     public void attachAttribute(EntityEvent.EntityConstructing evt) {
 
-        if (evt.getEntity() instanceof EntityPlayer) {
-            ((EntityPlayer) evt.getEntity()).getAttributeMap().registerAttribute(CaelusAPI.ELYTRA_FLIGHT);
+        if (evt.getEntity() instanceof PlayerEntity) {
+            ((PlayerEntity) evt.getEntity()).getAttributes().registerAttribute(CaelusAPI.ELYTRA_FLIGHT);
         }
     }
 
     @SubscribeEvent
     public void onLivingEquipmentChange(LivingEquipmentChangeEvent evt) {
 
-        if (evt.getEntityLiving() instanceof EntityPlayer && evt.getSlot() == EntityEquipmentSlot.CHEST) {
+        if (evt.getEntityLiving() instanceof PlayerEntity && evt.getSlot() == EquipmentSlotType.CHEST) {
             ItemStack from = evt.getFrom();
             ItemStack to = evt.getTo();
             IAttributeInstance attributeInstance = evt.getEntityLiving().getAttribute(CaelusAPI.ELYTRA_FLIGHT);
 
-            if (from.getItem() instanceof ItemElytra) {
+            if (from.getItem() instanceof ElytraItem) {
                 attributeInstance.removeModifier(CaelusAPI.ELYTRA_MODIFIER);
             }
 
-            if (to.getItem() instanceof ItemElytra && !attributeInstance.hasModifier(CaelusAPI.ELYTRA_MODIFIER) && ItemElytra.isUsable(to)) {
+            if (to.getItem() instanceof ElytraItem && !attributeInstance.hasModifier(CaelusAPI.ELYTRA_MODIFIER) && ElytraItem.isUsable(to)) {
                 attributeInstance.applyModifier(CaelusAPI.ELYTRA_MODIFIER);
             }
         }
@@ -107,20 +110,21 @@ public class Caelus {
 
         @SubscribeEvent
         public static void postSetup(FMLLoadCompleteEvent evt) {
-            Map<String, RenderPlayer> renderPlayerMap = Minecraft.getInstance().getRenderManager().getSkinMap();
-            for(RenderPlayer render : renderPlayerMap.values()) {
-                List<LayerRenderer> list = ObfuscationReflectionHelper.getPrivateValue(RenderLivingBase.class, render, "field_177097_h");
-                LayerRenderer remove = null;
-                for(LayerRenderer layer : list) {
-                    if (layer instanceof LayerCape) {
-                        remove = layer;
-                        break;
-                    }
+            EntityRendererManager rendererManager = Minecraft.getInstance().getRenderManager();
+            rendererManager.getSkinMap().values().forEach(renderer -> {
+                List<LayerRenderer> list = ObfuscationReflectionHelper.getPrivateValue(LivingRenderer.class, renderer, "field_177097_h");
+                list.removeIf(layer -> layer instanceof CapeLayer || layer instanceof ElytraLayer);
+                list.add(new CaelusCapeLayer(renderer));
+                list.add(new CaelusElytraLayer<>(renderer));
+            });
+            rendererManager.renderers.values().forEach(renderer -> {
+                if (renderer instanceof LivingRenderer) {
+                    LivingRenderer<? extends LivingEntity, ? extends EntityModel> livingRenderer = (LivingRenderer<? extends LivingEntity, ? extends EntityModel>) renderer;
+                    List<LayerRenderer> list = ObfuscationReflectionHelper.getPrivateValue(LivingRenderer.class, livingRenderer, "field_177097_h");
+                    list.removeIf(layer -> layer instanceof ElytraLayer);
+                    list.add(new CaelusElytraLayer<>(livingRenderer));
                 }
-
-                list.remove(remove);
-                list.add(new CaelusCapeLayer(render));
-            }
+            });
         }
     }
 }
