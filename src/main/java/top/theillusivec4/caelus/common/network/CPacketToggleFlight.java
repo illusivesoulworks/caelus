@@ -20,9 +20,9 @@
 package top.theillusivec4.caelus.common.network;
 
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 import top.theillusivec4.caelus.api.CaelusAPI;
 
@@ -38,7 +38,7 @@ public class CPacketToggleFlight {
 
     public static void handle(CPacketToggleFlight msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            EntityPlayerMP sender = ctx.get().getSender();
+            ServerPlayerEntity sender = ctx.get().getSender();
 
             if (sender != null) {
 
@@ -46,10 +46,10 @@ public class CPacketToggleFlight {
 
                 if (attributeInstance.hasModifier(CaelusAPI.DISABLE_FLIGHT)) {
                     attributeInstance.removeModifier(CaelusAPI.DISABLE_FLIGHT);
-                    sender.sendStatusMessage(new TextComponentTranslation("caelus.enableFlight"), true);
+                    sender.sendStatusMessage(new TranslationTextComponent("caelus.enableFlight"), true);
                 } else {
                     attributeInstance.applyModifier(CaelusAPI.DISABLE_FLIGHT);
-                    sender.sendStatusMessage(new TextComponentTranslation("caelus.disableFlight"), true);
+                    sender.sendStatusMessage(new TranslationTextComponent("caelus.disableFlight"), true);
                 }
             }
         });

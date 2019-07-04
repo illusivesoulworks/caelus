@@ -20,9 +20,9 @@
 package top.theillusivec4.caelus.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -56,14 +56,14 @@ public class EventHandlerClient {
     public void onRenderGameOverlay(RenderGameOverlayEvent.Post evt) {
 
         if (CaelusConfig.CLIENT.toggleIcon.get() && evt.getType() == RenderGameOverlayEvent.ElementType.POTION_ICONS) {
-            EntityPlayerSP playerSP = Minecraft.getInstance().player;
+            ClientPlayerEntity playerSP = Minecraft.getInstance().player;
 
             if (playerSP != null) {
                 IAttributeInstance attributeInstance = playerSP.getAttribute(CaelusAPI.ELYTRA_FLIGHT);
 
                 if (attributeInstance.hasModifier(CaelusAPI.DISABLE_FLIGHT)) {
                     Minecraft.getInstance().getTextureManager().bindTexture(Caelus.DISABLED_ICON);
-                    GuiIngameForge.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, 24, 24, 24, 24);
+                    AbstractGui.blit(0, 0, 0, 0, 24, 24, 24, 24);
                 }
             }
         }

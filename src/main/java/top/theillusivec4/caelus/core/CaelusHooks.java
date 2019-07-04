@@ -19,13 +19,14 @@
 
 package top.theillusivec4.caelus.core;
 
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.network.play.client.CPacketEntityAction;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.Items;
+import net.minecraft.network.play.ServerPlayNetHandler;
+import net.minecraft.network.play.client.CEntityActionPacket;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import top.theillusivec4.caelus.api.CaelusAPI;
@@ -33,28 +34,28 @@ import top.theillusivec4.caelus.api.event.RenderCapeCheckEvent;
 
 public class CaelusHooks {
 
-    public static void setElytraState(NetHandlerPlayServer server) {
-        EntityPlayerMP player = server.player;
+    public static void setElytraState(ServerPlayNetHandler server) {
+        ServerPlayerEntity player = server.player;
 
         if (CaelusAPI.canElytraFly(player)) {
             player.setElytraFlying();
         }
     }
 
-    public static void sendElytraPacket(EntityPlayerSP playerSP) {
+    public static void sendElytraPacket(ClientPlayerEntity playerSP) {
 
         if (CaelusAPI.canElytraFly(playerSP)) {
-            playerSP.connection.sendPacket(new CPacketEntityAction(playerSP, CPacketEntityAction.Action.START_FALL_FLYING));
+            playerSP.connection.sendPacket(new CEntityActionPacket(playerSP, CEntityActionPacket.Action.START_FALL_FLYING));
         }
     }
 
-    public static boolean fireRenderCapeCheckEvent(EntityPlayer player) {
+    public static boolean fireRenderCapeCheckEvent(PlayerEntity player) {
         RenderCapeCheckEvent evt = new RenderCapeCheckEvent(player);
         MinecraftForge.EVENT_BUS.post(evt);
         Event.Result doRender = evt.getResult();
 
         if(doRender == Event.Result.DEFAULT) {
-            return player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() != Items.ELYTRA;
+            return player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() != Items.ELYTRA;
         } else {
             return doRender == Event.Result.ALLOW;
         }

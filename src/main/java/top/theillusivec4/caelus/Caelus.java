@@ -46,7 +46,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import top.theillusivec4.caelus.api.CaelusAPI;
 import top.theillusivec4.caelus.client.EventHandlerClient;
 import top.theillusivec4.caelus.client.KeyRegistry;
-import top.theillusivec4.caelus.client.renderer.LayerCaelusCape;
+import top.theillusivec4.caelus.client.renderer.CaelusCapeLayer;
 import top.theillusivec4.caelus.common.CaelusConfig;
 import top.theillusivec4.caelus.common.network.NetworkHandler;
 
@@ -119,7 +119,7 @@ public class Caelus {
                 }
 
                 list.remove(remove);
-                list.add(new LayerCaelusCape(render));
+                list.add(new CaelusCapeLayer(render));
             }
         }
     }

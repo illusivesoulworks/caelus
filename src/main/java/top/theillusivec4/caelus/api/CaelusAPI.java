@@ -19,15 +19,15 @@
 
 package top.theillusivec4.caelus.api;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemElytra;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
 import java.util.UUID;
 
@@ -45,7 +45,7 @@ public class CaelusAPI {
      * This is only here to provide access to the vanilla elytra's specific attribute modifier if absolutely needed.
      */
     public static final AttributeModifier ELYTRA_MODIFIER = new AttributeModifier(UUID.fromString("5b6c3728-9c24-42ae-83ac-70d61d8b8199"),
-            "Elytra modifier", 1.0f, 0);
+            "Elytra modifier", 1.0f, AttributeModifier.Operation.ADDITION);
 
     /**
      * The attribute modifier used for disabling elytra flight when the toggle keybinding is pressed
@@ -53,20 +53,20 @@ public class CaelusAPI {
      * This is only here to provide access to the specific disabling modifier if absolutely needed.
      */
     public static final AttributeModifier DISABLE_FLIGHT = new AttributeModifier(UUID.fromString("faadb8f3-c95c-44ce-ba68-0f31bd1b47d5"),
-            "Toggled modifier", -1.0d, 2);
+            "Toggled modifier", -1.0d, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
     /**
      * Checks whether or not an entity is able to elytra fly
-     * Checks against the elytra flight attribute if the entity is a {@link EntityPlayer}
+     * Checks against the elytra flight attribute if the entity is a {@link PlayerEntity}
      * Otherwise checks against the ItemStack in the chest slot to see if it's a vanilla elytra item
      * @param entityLivingBase  The entity to check for elytra flight capabilities
      * @return                  True if the entity can elytra fly, false otherwise.
      */
-    public static boolean canElytraFly(EntityLivingBase entityLivingBase) {
+    public static boolean canElytraFly(LivingEntity entityLivingBase) {
 
-        if (!(entityLivingBase instanceof EntityPlayer)) {
-            ItemStack stack = entityLivingBase.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-            return stack.getItem() == Items.ELYTRA && ItemElytra.isUsable(stack);
+        if (!(entityLivingBase instanceof PlayerEntity)) {
+            ItemStack stack = entityLivingBase.getItemStackFromSlot(EquipmentSlotType.CHEST);
+            return stack.getItem() == Items.ELYTRA && ElytraItem.isUsable(stack);
         }
         return entityLivingBase.getAttribute(CaelusAPI.ELYTRA_FLIGHT).getValue() >= 1.0d;
     }
