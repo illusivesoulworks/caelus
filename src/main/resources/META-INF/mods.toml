@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[25,)"
+loaderVersion="[27,)"
 issueTrackerURL="https://github.com/TheIllusiveC4/Caelus/issues"
 displayURL="${mod_url}"
 logoFile="${mod_icon}"
@@ -14,12 +14,12 @@ ${mod_description}
 [[dependencies.caelus]]
     modId="forge"
     mandatory=true
-    versionRange="[25,)"
+    versionRange="[27,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.caelus]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.13.2,1.14)"
+    versionRange="[1.14,1.15)"
     ordering="NONE"
     side="BOTH"
