@@ -63,7 +63,7 @@ public class EventHandlerClient {
 
                 if (attributeInstance.hasModifier(CaelusAPI.DISABLE_FLIGHT)) {
                     Minecraft.getInstance().getTextureManager().bindTexture(Caelus.DISABLED_ICON);
-                    AbstractGui.blit(0, 0, 0, 0, 24, 24, 24, 24);
+                    AbstractGui.blit(1, 1, 0, 0, 24, 24, 24, 24);
                 }
             }
         }
