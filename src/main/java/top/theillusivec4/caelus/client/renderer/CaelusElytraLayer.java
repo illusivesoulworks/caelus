@@ -33,7 +33,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import top.theillusivec4.caelus.core.CaelusHooks;
+import top.theillusivec4.caelus.core.CaelusClientHooks;
 
 import javax.annotation.Nonnull;
 
@@ -51,7 +51,7 @@ public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>>
         ItemStack itemstack = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
         if (itemstack.getItem() != Items.ELYTRA) {
-            Tuple<Boolean, Boolean> evt = CaelusHooks.fireRenderElytraEvent(entityIn);
+            Tuple<Boolean, Boolean> evt = CaelusClientHooks.fireRenderElytraEvent(entityIn);
 
             if (evt.getA()) {
                 GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);

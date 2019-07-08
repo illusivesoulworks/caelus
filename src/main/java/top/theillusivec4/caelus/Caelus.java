@@ -22,9 +22,6 @@ package top.theillusivec4.caelus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.client.renderer.entity.layers.CapeLayer;
-import net.minecraft.client.renderer.entity.layers.ElytraLayer;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -40,7 +37,6 @@ import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -52,8 +48,6 @@ import top.theillusivec4.caelus.client.KeyRegistry;
 import top.theillusivec4.caelus.client.renderer.CaelusElytraLayer;
 import top.theillusivec4.caelus.common.CaelusConfig;
 import top.theillusivec4.caelus.common.network.NetworkHandler;
-
-import java.util.List;
 
 @Mod(Caelus.MODID)
 public class Caelus {

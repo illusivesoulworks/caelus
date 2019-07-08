@@ -30,7 +30,7 @@ function initializeCoreMod() {
                                 var inst = instruction;
                                 print("Found node ", inst.toString());
                                 code.insert(inst, new JumpInsnNode(opcodes.IFEQ, jumpLabel))
-                                code.insert(inst, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/core/CaelusHooks", "fireAndCheckRenderElytraEvent", "(Lnet/minecraft/entity/LivingEntity;)Z", false))
+                                code.insert(inst, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/core/CaelusClientHooks", "fireAndCheckRenderElytraEvent", "(Lnet/minecraft/entity/LivingEntity;)Z", false))
                                 code.insert(inst, new VarInsnNode(opcodes.ALOAD, 1))
                                 break;
                             }
