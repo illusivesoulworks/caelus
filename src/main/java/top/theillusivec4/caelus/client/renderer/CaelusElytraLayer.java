@@ -28,6 +28,9 @@ import net.minecraft.client.renderer.entity.model.ElytraModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerModelPart;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import top.theillusivec4.caelus.core.CaelusHooks;
@@ -45,36 +48,40 @@ public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>>
 
     @Override
     public void render(@Nonnull T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        Tuple<Boolean, Boolean> evt = CaelusHooks.fireRenderElytraEvent(entityIn);
+        ItemStack itemstack = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
-        if (evt.getA()) {
-            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        if (itemstack.getItem() != Items.ELYTRA) {
+            Tuple<Boolean, Boolean> evt = CaelusHooks.fireRenderElytraEvent(entityIn);
 
-            if (entityIn instanceof AbstractClientPlayerEntity) {
-                AbstractClientPlayerEntity abstractclientplayerentity = (AbstractClientPlayerEntity)entityIn;
+            if (evt.getA()) {
+                GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+                GlStateManager.enableBlend();
+                GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
-                if (abstractclientplayerentity.isPlayerInfoSet() && abstractclientplayerentity.getLocationElytra() != null) {
-                    this.bindTexture(abstractclientplayerentity.getLocationElytra());
-                } else if (abstractclientplayerentity.hasPlayerInfo() && abstractclientplayerentity.getLocationCape() != null && abstractclientplayerentity.isWearing(PlayerModelPart.CAPE)) {
-                    this.bindTexture(abstractclientplayerentity.getLocationCape());
+                if (entityIn instanceof AbstractClientPlayerEntity) {
+                    AbstractClientPlayerEntity abstractclientplayerentity = (AbstractClientPlayerEntity) entityIn;
+
+                    if (abstractclientplayerentity.isPlayerInfoSet() && abstractclientplayerentity.getLocationElytra() != null) {
+                        this.bindTexture(abstractclientplayerentity.getLocationElytra());
+                    } else if (abstractclientplayerentity.hasPlayerInfo() && abstractclientplayerentity.getLocationCape() != null && abstractclientplayerentity.isWearing(PlayerModelPart.CAPE)) {
+                        this.bindTexture(abstractclientplayerentity.getLocationCape());
+                    } else {
+                        this.bindTexture(TEXTURE_ELYTRA);
+                    }
                 } else {
                     this.bindTexture(TEXTURE_ELYTRA);
                 }
-            } else {
-                this.bindTexture(TEXTURE_ELYTRA);
-            }
-            GlStateManager.pushMatrix();
-            GlStateManager.translatef(0.0F, 0.0F, 0.125F);
-            this.modelElytra.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-            this.modelElytra.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+                GlStateManager.pushMatrix();
+                GlStateManager.translatef(0.0F, 0.0F, 0.125F);
+                this.modelElytra.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+                this.modelElytra.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
-            if (evt.getB()) {
-                ArmorLayer.func_215338_a(this::bindTexture, entityIn, this.modelElytra, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+                if (evt.getB()) {
+                    ArmorLayer.func_215338_a(this::bindTexture, entityIn, this.modelElytra, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+                }
+                GlStateManager.disableBlend();
+                GlStateManager.popMatrix();
             }
-            GlStateManager.disableBlend();
-            GlStateManager.popMatrix();
         }
     }
 }

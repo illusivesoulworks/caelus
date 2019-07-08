@@ -1,5 +1,6 @@
 {
   "ClientPlayerEntity": "ClientPlayerEntity.js",
   "LivingEntity": "LivingEntity.js",
-  "ServerPlayNetHandler": "ServerPlayNetHandler.js"
+  "ServerPlayNetHandler": "ServerPlayNetHandler.js",
+  "CapeLayer": "CapeLayer.js"
 }

@@ -49,7 +49,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import top.theillusivec4.caelus.api.CaelusAPI;
 import top.theillusivec4.caelus.client.EventHandlerClient;
 import top.theillusivec4.caelus.client.KeyRegistry;
-import top.theillusivec4.caelus.client.renderer.CaelusCapeLayer;
 import top.theillusivec4.caelus.client.renderer.CaelusElytraLayer;
 import top.theillusivec4.caelus.common.CaelusConfig;
 import top.theillusivec4.caelus.common.network.NetworkHandler;
@@ -111,18 +110,11 @@ public class Caelus {
         @SubscribeEvent
         public static void postSetup(FMLLoadCompleteEvent evt) {
             EntityRendererManager rendererManager = Minecraft.getInstance().getRenderManager();
-            rendererManager.getSkinMap().values().forEach(renderer -> {
-                List<LayerRenderer> list = ObfuscationReflectionHelper.getPrivateValue(LivingRenderer.class, renderer, "field_177097_h");
-                list.removeIf(layer -> layer instanceof CapeLayer || layer instanceof ElytraLayer);
-                list.add(new CaelusCapeLayer(renderer));
-                list.add(new CaelusElytraLayer<>(renderer));
-            });
+            rendererManager.getSkinMap().values().forEach(renderer -> renderer.addLayer(new CaelusElytraLayer<>(renderer)));
             rendererManager.renderers.values().forEach(renderer -> {
                 if (renderer instanceof LivingRenderer) {
                     LivingRenderer<? extends LivingEntity, ? extends EntityModel> livingRenderer = (LivingRenderer<? extends LivingEntity, ? extends EntityModel>) renderer;
-                    List<LayerRenderer> list = ObfuscationReflectionHelper.getPrivateValue(LivingRenderer.class, livingRenderer, "field_177097_h");
-                    list.removeIf(layer -> layer instanceof ElytraLayer);
-                    list.add(new CaelusElytraLayer<>(livingRenderer));
+                    livingRenderer.addLayer(new CaelusElytraLayer(livingRenderer));
                 }
             });
         }

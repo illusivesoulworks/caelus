@@ -25,7 +25,7 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
 
 /**
- * This event is fired when the game checks if the elytra should be rendered.<br>
+ * This event is fired when the game checks if a non-vanilla elytra should be rendered.<br>
  * This event is fired client-side only.<br>
  *
  * <br>
@@ -37,40 +37,35 @@ import net.minecraftforge.eventbus.api.Cancelable;
  **/
 public class RenderElytraEvent extends LivingEvent {
 
-    private Result renderElytra = Result.DEFAULT;
-    private Result renderEnchantmentGlow = Result.DEFAULT;
+    private boolean renderElytra = false;
+    private boolean renderEnchantmentGlow = false;
 
     public RenderElytraEvent(LivingEntity livingEntity) {
         super(livingEntity);
     }
 
-    public Result getRenderElytra() {
+    public boolean getRenderElytra() {
         return renderElytra;
     }
 
     /**
-     * Result.ALLOW enables elytra rendering
-     * Result.DEFAULT checks if the entity is wearing an elytra item in the chest slot and renders the elytra if found
-     * Result.DENY prevents elytra rendering
+     * Determines whether or not to render the elytra model given the entity is not already wearing an elytra in the chest slot
      *
      * Note that this result will also affect cape rendering as rendering elytras will disable rendering capes;
      * however, elytras will still render with cape textures when appropriate
      */
-    public void setRenderElytra(Result renderElytra) {
+    public void setRenderElytra(boolean renderElytra) {
         this.renderElytra = renderElytra;
     }
 
-    public Result getRenderEnchantmentGlow() {
+    public boolean getRenderEnchantmentGlow() {
         return renderEnchantmentGlow;
     }
 
     /**
-     * Result.ALLOW enables enchantment rendering on the elytra
-     * Result.DEFAULT checks if the ItemStack found in the entity's chest slot is enchanted and renders the enchantment
-     * on the elytra if true
-     * Result.DENY prevents enchantment rendering on the elytra
+     * Determines whether or not the elytra texture will have an enchantment glow
      */
-    public void setRenderEnchantmentGlow(Result renderEnchantmentGlow) {
+    public void setRenderEnchantmentGlow(boolean renderEnchantmentGlow) {
         this.renderEnchantmentGlow = renderEnchantmentGlow;
     }
 }

@@ -22,14 +22,10 @@ package top.theillusivec4.caelus.core;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ElytraItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.network.play.client.CEntityActionPacket;
 import net.minecraft.util.Tuple;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.Event;
 import top.theillusivec4.caelus.api.CaelusAPI;
 import top.theillusivec4.caelus.api.event.RenderElytraEvent;
 
@@ -50,14 +46,15 @@ public class CaelusHooks {
         }
     }
 
+    public static boolean fireAndCheckRenderElytraEvent(LivingEntity livingEntity) {
+        RenderElytraEvent evt = new RenderElytraEvent(livingEntity);
+        MinecraftForge.EVENT_BUS.post(evt);
+        return evt.getRenderElytra();
+    }
+
     public static Tuple<Boolean, Boolean> fireRenderElytraEvent(LivingEntity livingEntity) {
         RenderElytraEvent evt = new RenderElytraEvent(livingEntity);
         MinecraftForge.EVENT_BUS.post(evt);
-        ItemStack stack = livingEntity.getItemStackFromSlot(EquipmentSlotType.CHEST);
-        boolean renderElytra = evt.getRenderElytra() == Event.Result.DEFAULT
-                ? stack.getItem() instanceof ElytraItem : evt.getRenderElytra() == Event.Result.ALLOW;
-        boolean renderEnchantmentGlow = evt.getRenderEnchantmentGlow() == Event.Result.DEFAULT
-                ? stack.isEnchanted() : evt.getRenderEnchantmentGlow() == Event.Result.ALLOW;
-        return new Tuple<>(renderElytra, renderEnchantmentGlow);
+        return new Tuple<>(evt.getRenderElytra(), evt.getRenderEnchantmentGlow());
     }
 }
