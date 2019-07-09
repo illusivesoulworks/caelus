@@ -45,6 +45,7 @@ public class NetworkHandler {
 
     public static void register() {
         registerMessage(CPacketToggleFlight.class, CPacketToggleFlight::encode, CPacketToggleFlight::decode, CPacketToggleFlight::handle);
+        registerMessage(CPacketSetFlight.class, CPacketSetFlight::encode, CPacketSetFlight::decode, CPacketSetFlight::handle);
     }
 
     private static <MSG> void registerMessage(Class<MSG> messageType, BiConsumer<MSG, PacketBuffer> encoder,
