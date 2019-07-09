@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [0.9] - 2019.07.08
+### Fixed
+- Workaround fix for client-side desync of elytra flight attribute on dimension change
+
 ## [0.8] - 2019.07.08
 ### Fixed
 - Fixed class-loading client server-side
