@@ -52,65 +52,75 @@ import top.theillusivec4.caelus.common.network.NetworkHandler;
 @Mod(Caelus.MODID)
 public class Caelus {
 
-    public static final String MODID = "caelus";
+  public static final String MODID = "caelus";
 
-    public static final ResourceLocation DISABLED_ICON = new ResourceLocation(Caelus.MODID, "textures/gui/flight_disabled.png");
+  public static final ResourceLocation DISABLED_ICON =
+      new ResourceLocation(Caelus.MODID, "textures/gui/flight_disabled.png");
 
-    public Caelus() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CaelusConfig.clientSpec);
-        MinecraftForge.EVENT_BUS.register(this);
+  public Caelus() {
+
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+    ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CaelusConfig.clientSpec);
+    MinecraftForge.EVENT_BUS.register(this);
+  }
+
+  private void setup(FMLCommonSetupEvent evt) {
+
+    NetworkHandler.register();
+  }
+
+  @SubscribeEvent
+  public void attachAttribute(EntityEvent.EntityConstructing evt) {
+
+    if (evt.getEntity() instanceof PlayerEntity) {
+      ((PlayerEntity) evt.getEntity()).getAttributes().registerAttribute(CaelusAPI.ELYTRA_FLIGHT);
     }
+  }
 
-    private void setup(FMLCommonSetupEvent evt) {
-        NetworkHandler.register();
+  @SubscribeEvent
+  public void onLivingEquipmentChange(LivingEquipmentChangeEvent evt) {
+
+    if (evt.getEntityLiving() instanceof PlayerEntity && evt.getSlot() == EquipmentSlotType.CHEST) {
+      ItemStack from = evt.getFrom();
+      ItemStack to = evt.getTo();
+      IAttributeInstance attributeInstance =
+          evt.getEntityLiving().getAttribute(CaelusAPI.ELYTRA_FLIGHT);
+
+      if (from.getItem() instanceof ElytraItem) {
+        attributeInstance.removeModifier(CaelusAPI.ELYTRA_MODIFIER);
+      }
+
+      if (to.getItem() instanceof ElytraItem &&
+          !attributeInstance.hasModifier(CaelusAPI.ELYTRA_MODIFIER) && ElytraItem.isUsable(to)) {
+        attributeInstance.applyModifier(CaelusAPI.ELYTRA_MODIFIER);
+      }
+    }
+  }
+
+  @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+  public static class ClientSetup {
+
+    @SubscribeEvent
+    public static void clientSetup(FMLClientSetupEvent evt) {
+
+      KeyRegistry.register();
+      MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
     }
 
     @SubscribeEvent
-    public void attachAttribute(EntityEvent.EntityConstructing evt) {
+    public static void postSetup(FMLLoadCompleteEvent evt) {
 
-        if (evt.getEntity() instanceof PlayerEntity) {
-            ((PlayerEntity) evt.getEntity()).getAttributes().registerAttribute(CaelusAPI.ELYTRA_FLIGHT);
+      EntityRendererManager rendererManager = Minecraft.getInstance().getRenderManager();
+      rendererManager.getSkinMap()
+                     .values()
+                     .forEach(renderer -> renderer.addLayer(new CaelusElytraLayer<>(renderer)));
+      rendererManager.renderers.values().forEach(renderer -> {
+        if (renderer instanceof LivingRenderer) {
+          LivingRenderer<? extends LivingEntity, ? extends EntityModel> livingRenderer =
+              (LivingRenderer<? extends LivingEntity, ? extends EntityModel>) renderer;
+          livingRenderer.addLayer(new CaelusElytraLayer(livingRenderer));
         }
+      });
     }
-
-    @SubscribeEvent
-    public void onLivingEquipmentChange(LivingEquipmentChangeEvent evt) {
-
-        if (evt.getEntityLiving() instanceof PlayerEntity && evt.getSlot() == EquipmentSlotType.CHEST) {
-            ItemStack from = evt.getFrom();
-            ItemStack to = evt.getTo();
-            IAttributeInstance attributeInstance = evt.getEntityLiving().getAttribute(CaelusAPI.ELYTRA_FLIGHT);
-
-            if (from.getItem() instanceof ElytraItem) {
-                attributeInstance.removeModifier(CaelusAPI.ELYTRA_MODIFIER);
-            }
-
-            if (to.getItem() instanceof ElytraItem && !attributeInstance.hasModifier(CaelusAPI.ELYTRA_MODIFIER) && ElytraItem.isUsable(to)) {
-                attributeInstance.applyModifier(CaelusAPI.ELYTRA_MODIFIER);
-            }
-        }
-    }
-
-    @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class ClientSetup {
-
-        @SubscribeEvent
-        public static void clientSetup(FMLClientSetupEvent evt) {
-            KeyRegistry.register();
-            MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
-        }
-
-        @SubscribeEvent
-        public static void postSetup(FMLLoadCompleteEvent evt) {
-            EntityRendererManager rendererManager = Minecraft.getInstance().getRenderManager();
-            rendererManager.getSkinMap().values().forEach(renderer -> renderer.addLayer(new CaelusElytraLayer<>(renderer)));
-            rendererManager.renderers.values().forEach(renderer -> {
-                if (renderer instanceof LivingRenderer) {
-                    LivingRenderer<? extends LivingEntity, ? extends EntityModel> livingRenderer = (LivingRenderer<? extends LivingEntity, ? extends EntityModel>) renderer;
-                    livingRenderer.addLayer(new CaelusElytraLayer(livingRenderer));
-                }
-            });
-        }
-    }
+  }
 }

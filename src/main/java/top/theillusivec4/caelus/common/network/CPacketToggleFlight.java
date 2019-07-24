@@ -30,29 +30,33 @@ import java.util.function.Supplier;
 
 public class CPacketToggleFlight {
 
-    public static void encode(CPacketToggleFlight msg, PacketBuffer buf) {}
+  public static void encode(CPacketToggleFlight msg, PacketBuffer buf) {
 
-    public static CPacketToggleFlight decode(PacketBuffer buf) {
-        return new CPacketToggleFlight();
-    }
+  }
 
-    public static void handle(CPacketToggleFlight msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayerEntity sender = ctx.get().getSender();
+  public static CPacketToggleFlight decode(PacketBuffer buf) {
 
-            if (sender != null) {
+    return new CPacketToggleFlight();
+  }
 
-                IAttributeInstance attributeInstance = sender.getAttribute(CaelusAPI.ELYTRA_FLIGHT);
+  public static void handle(CPacketToggleFlight msg, Supplier<NetworkEvent.Context> ctx) {
 
-                if (attributeInstance.hasModifier(CaelusAPI.DISABLE_FLIGHT)) {
-                    attributeInstance.removeModifier(CaelusAPI.DISABLE_FLIGHT);
-                    sender.sendStatusMessage(new TranslationTextComponent("caelus.enableFlight"), true);
-                } else {
-                    attributeInstance.applyModifier(CaelusAPI.DISABLE_FLIGHT);
-                    sender.sendStatusMessage(new TranslationTextComponent("caelus.disableFlight"), true);
-                }
-            }
-        });
-        ctx.get().setPacketHandled(true);
-    }
+    ctx.get().enqueueWork(() -> {
+      ServerPlayerEntity sender = ctx.get().getSender();
+
+      if (sender != null) {
+
+        IAttributeInstance attributeInstance = sender.getAttribute(CaelusAPI.ELYTRA_FLIGHT);
+
+        if (attributeInstance.hasModifier(CaelusAPI.DISABLE_FLIGHT)) {
+          attributeInstance.removeModifier(CaelusAPI.DISABLE_FLIGHT);
+          sender.sendStatusMessage(new TranslationTextComponent("caelus.enableFlight"), true);
+        } else {
+          attributeInstance.applyModifier(CaelusAPI.DISABLE_FLIGHT);
+          sender.sendStatusMessage(new TranslationTextComponent("caelus.disableFlight"), true);
+        }
+      }
+    });
+    ctx.get().setPacketHandled(true);
+  }
 }

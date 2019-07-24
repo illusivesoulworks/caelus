@@ -25,30 +25,32 @@ import top.theillusivec4.caelus.Caelus;
 
 public class CaelusConfig {
 
-    private static final String CONFIG_PREFIX = "gui." + Caelus.MODID + ".config.";
+  private static final String CONFIG_PREFIX = "gui." + Caelus.MODID + ".config.";
 
-    public static class Client {
+  public static class Client {
 
-        public final ForgeConfigSpec.BooleanValue toggleIcon;
+    public final ForgeConfigSpec.BooleanValue toggleIcon;
 
-        Client(ForgeConfigSpec.Builder builder) {
-            builder.comment("Client only settings, mostly things related to rendering")
-                    .push("client");
+    Client(ForgeConfigSpec.Builder builder) {
 
-            toggleIcon = builder
-                    .comment("Set to true to enable an icon that appears on the HUD when elytra flight is disabled")
-                    .translation(CONFIG_PREFIX + "toggleIcon")
-                    .define("toggleIcon", true);
+      builder.comment("Client only settings, mostly things related to rendering").push("client");
 
-            builder.pop();
-        }
+      toggleIcon = builder.comment("Set to true to enable an icon that appears on the HUD when " +
+                                   "elytra flight is disabled")
+                          .translation(CONFIG_PREFIX + "toggleIcon")
+                          .define("toggleIcon", true);
+
+      builder.pop();
     }
+  }
 
-    public static final ForgeConfigSpec clientSpec;
-    public static final Client CLIENT;
-    static {
-        final Pair<Client, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Client::new);
-        clientSpec = specPair.getRight();
-        CLIENT = specPair.getLeft();
-    }
+  public static final ForgeConfigSpec clientSpec;
+  public static final Client          CLIENT;
+
+  static {
+    final Pair<Client, ForgeConfigSpec> specPair =
+        new ForgeConfigSpec.Builder().configure(Client::new);
+    clientSpec = specPair.getRight();
+    CLIENT = specPair.getLeft();
+  }
 }

@@ -32,25 +32,30 @@ import java.util.function.Supplier;
 
 public class NetworkHandler {
 
-    private static final String PTC_VERSION = "1";
+  private static final String PTC_VERSION = "1";
 
-    public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder
-            .named(new ResourceLocation(Caelus.MODID, "main"))
-            .networkProtocolVersion(() -> PTC_VERSION)
-            .clientAcceptedVersions(PTC_VERSION::equals)
-            .serverAcceptedVersions(PTC_VERSION::equals)
-            .simpleChannel();
+  public static final SimpleChannel INSTANCE =
+      NetworkRegistry.ChannelBuilder.named(new ResourceLocation(Caelus.MODID, "main"))
+                                    .networkProtocolVersion(() -> PTC_VERSION)
+                                    .clientAcceptedVersions(PTC_VERSION::equals)
+                                    .serverAcceptedVersions(PTC_VERSION::equals)
+                                    .simpleChannel();
 
-    private static int id = 0;
+  private static int id = 0;
 
-    public static void register() {
-        registerMessage(CPacketToggleFlight.class, CPacketToggleFlight::encode, CPacketToggleFlight::decode, CPacketToggleFlight::handle);
-        registerMessage(CPacketSetFlight.class, CPacketSetFlight::encode, CPacketSetFlight::decode, CPacketSetFlight::handle);
-    }
+  public static void register() {
 
-    private static <MSG> void registerMessage(Class<MSG> messageType, BiConsumer<MSG, PacketBuffer> encoder,
-                                              Function<PacketBuffer, MSG> decoder,
-                                              BiConsumer<MSG, Supplier<NetworkEvent.Context>> messageConsumer) {
-        INSTANCE.registerMessage(id++, messageType, encoder, decoder, messageConsumer);
-    }
+    registerMessage(CPacketToggleFlight.class, CPacketToggleFlight::encode,
+                    CPacketToggleFlight::decode, CPacketToggleFlight::handle);
+    registerMessage(CPacketSetFlight.class, CPacketSetFlight::encode, CPacketSetFlight::decode,
+                    CPacketSetFlight::handle);
+  }
+
+  private static <MSG> void registerMessage(Class<MSG> messageType,
+                                            BiConsumer<MSG, PacketBuffer> encoder,
+                                            Function<PacketBuffer, MSG> decoder,
+                                            BiConsumer<MSG, Supplier<NetworkEvent.Context>> messageConsumer) {
+
+    INSTANCE.registerMessage(id++, messageType, encoder, decoder, messageConsumer);
+  }
 }

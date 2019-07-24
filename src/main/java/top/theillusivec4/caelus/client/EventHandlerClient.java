@@ -34,38 +34,40 @@ import top.theillusivec4.caelus.common.network.NetworkHandler;
 
 public class EventHandlerClient {
 
-    private static int cooldown = 0;
+  private static int cooldown = 0;
 
-    @SubscribeEvent
-    public void onKeyPress(TickEvent.ClientTickEvent evt) {
+  @SubscribeEvent
+  public void onKeyPress(TickEvent.ClientTickEvent evt) {
 
-        if (evt.phase == TickEvent.Phase.END) {
+    if (evt.phase == TickEvent.Phase.END) {
 
-            if (KeyRegistry.toggleFlight.isKeyDown() && Minecraft.getInstance().isGameFocused() && cooldown <= 0) {
-                NetworkHandler.INSTANCE.sendToServer(new CPacketToggleFlight());
-                cooldown = 10;
-            }
+      if (KeyRegistry.toggleFlight.isKeyDown() && Minecraft.getInstance().isGameFocused() &&
+          cooldown <= 0) {
+        NetworkHandler.INSTANCE.sendToServer(new CPacketToggleFlight());
+        cooldown = 10;
+      }
 
-            if (cooldown > 0) {
-                cooldown--;
-            }
-        }
+      if (cooldown > 0) {
+        cooldown--;
+      }
     }
+  }
 
-    @SubscribeEvent
-    public void onRenderGameOverlay(RenderGameOverlayEvent.Post evt) {
+  @SubscribeEvent
+  public void onRenderGameOverlay(RenderGameOverlayEvent.Post evt) {
 
-        if (CaelusConfig.CLIENT.toggleIcon.get() && evt.getType() == RenderGameOverlayEvent.ElementType.POTION_ICONS) {
-            ClientPlayerEntity playerSP = Minecraft.getInstance().player;
+    if (CaelusConfig.CLIENT.toggleIcon.get() &&
+        evt.getType() == RenderGameOverlayEvent.ElementType.POTION_ICONS) {
+      ClientPlayerEntity playerSP = Minecraft.getInstance().player;
 
-            if (playerSP != null) {
-                IAttributeInstance attributeInstance = playerSP.getAttribute(CaelusAPI.ELYTRA_FLIGHT);
+      if (playerSP != null) {
+        IAttributeInstance attributeInstance = playerSP.getAttribute(CaelusAPI.ELYTRA_FLIGHT);
 
-                if (attributeInstance.hasModifier(CaelusAPI.DISABLE_FLIGHT)) {
-                    Minecraft.getInstance().getTextureManager().bindTexture(Caelus.DISABLED_ICON);
-                    AbstractGui.blit(1, 1, 0, 0, 24, 24, 24, 24);
-                }
-            }
+        if (attributeInstance.hasModifier(CaelusAPI.DISABLE_FLIGHT)) {
+          Minecraft.getInstance().getTextureManager().bindTexture(Caelus.DISABLED_ICON);
+          AbstractGui.blit(1, 1, 0, 0, 24, 24, 24, 24);
         }
+      }
     }
+  }
 }

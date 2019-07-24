@@ -37,51 +37,65 @@ import top.theillusivec4.caelus.core.CaelusHooks;
 
 import javax.annotation.Nonnull;
 
-public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>> extends ElytraLayer<T, M> {
+public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>>
+    extends ElytraLayer<T, M> {
 
-    private static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation("textures/entity/elytra.png");
-    private final ElytraModel<T> modelElytra = new ElytraModel<>();
+  private static final ResourceLocation TEXTURE_ELYTRA =
+      new ResourceLocation("textures/entity/elytra.png");
+  private final        ElytraModel<T>   modelElytra    = new ElytraModel<>();
 
-    public CaelusElytraLayer(IEntityRenderer<T, M> renderer) {
-        super(renderer);
-    }
+  public CaelusElytraLayer(IEntityRenderer<T, M> renderer) {
 
-    @Override
-    public void render(@Nonnull T entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        ItemStack itemstack = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST);
+    super(renderer);
+  }
 
-        if (itemstack.getItem() != Items.ELYTRA) {
-            Tuple<Boolean, Boolean> evt = CaelusHooks.fireRenderElytraEvent(entityIn);
+  @Override
+  public void render(@Nonnull T entityIn, float limbSwing, float limbSwingAmount,
+                     float partialTicks, float ageInTicks, float netHeadYaw, float headPitch,
+                     float scale) {
 
-            if (evt.getA()) {
-                GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-                GlStateManager.enableBlend();
-                GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+    ItemStack itemstack = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
-                if (entityIn instanceof AbstractClientPlayerEntity) {
-                    AbstractClientPlayerEntity abstractclientplayerentity = (AbstractClientPlayerEntity) entityIn;
+    if (itemstack.getItem() != Items.ELYTRA) {
+      Tuple<Boolean, Boolean> evt = CaelusHooks.fireRenderElytraEvent(entityIn);
 
-                    if (abstractclientplayerentity.isPlayerInfoSet() && abstractclientplayerentity.getLocationElytra() != null) {
-                        this.bindTexture(abstractclientplayerentity.getLocationElytra());
-                    } else if (abstractclientplayerentity.hasPlayerInfo() && abstractclientplayerentity.getLocationCape() != null && abstractclientplayerentity.isWearing(PlayerModelPart.CAPE)) {
-                        this.bindTexture(abstractclientplayerentity.getLocationCape());
-                    } else {
-                        this.bindTexture(TEXTURE_ELYTRA);
-                    }
-                } else {
-                    this.bindTexture(TEXTURE_ELYTRA);
-                }
-                GlStateManager.pushMatrix();
-                GlStateManager.translatef(0.0F, 0.0F, 0.125F);
-                this.modelElytra.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-                this.modelElytra.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+      if (evt.getA()) {
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
-                if (evt.getB()) {
-                    ArmorLayer.func_215338_a(this::bindTexture, entityIn, this.modelElytra, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-                }
-                GlStateManager.disableBlend();
-                GlStateManager.popMatrix();
-            }
+        if (entityIn instanceof AbstractClientPlayerEntity) {
+          AbstractClientPlayerEntity abstractclientplayerentity =
+              (AbstractClientPlayerEntity) entityIn;
+
+          if (abstractclientplayerentity.isPlayerInfoSet() &&
+              abstractclientplayerentity.getLocationElytra() != null) {
+            this.bindTexture(abstractclientplayerentity.getLocationElytra());
+          } else if (abstractclientplayerentity.hasPlayerInfo() &&
+                     abstractclientplayerentity.getLocationCape() != null &&
+                     abstractclientplayerentity.isWearing(PlayerModelPart.CAPE)) {
+            this.bindTexture(abstractclientplayerentity.getLocationCape());
+          } else {
+            this.bindTexture(TEXTURE_ELYTRA);
+          }
+        } else {
+          this.bindTexture(TEXTURE_ELYTRA);
         }
+        GlStateManager.pushMatrix();
+        GlStateManager.translatef(0.0F, 0.0F, 0.125F);
+        this.modelElytra.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks,
+                                           netHeadYaw, headPitch, scale);
+        this.modelElytra.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw,
+                                headPitch, scale);
+
+        if (evt.getB()) {
+          ArmorLayer.func_215338_a(this::bindTexture, entityIn, this.modelElytra, limbSwing,
+                                   limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch,
+                                   scale);
+        }
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
+      }
     }
+  }
 }

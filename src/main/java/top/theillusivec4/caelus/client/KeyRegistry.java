@@ -25,10 +25,11 @@ import org.lwjgl.glfw.GLFW;
 
 public class KeyRegistry {
 
-    public static KeyBinding toggleFlight;
+  public static KeyBinding toggleFlight;
 
-    public static void register() {
-        toggleFlight = new KeyBinding("key.caelus.toggle.desc", GLFW.GLFW_KEY_V, "key.caelus.category");
-        ClientRegistry.registerKeyBinding(toggleFlight);
-    }
+  public static void register() {
+
+    toggleFlight = new KeyBinding("key.caelus.toggle.desc", GLFW.GLFW_KEY_V, "key.caelus.category");
+    ClientRegistry.registerKeyBinding(toggleFlight);
+  }
 }

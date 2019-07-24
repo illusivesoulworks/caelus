@@ -28,25 +28,30 @@ import java.util.function.Supplier;
 
 public class CPacketSetFlight {
 
-    public static void encode(CPacketSetFlight msg, PacketBuffer buf) {}
+  public static void encode(CPacketSetFlight msg, PacketBuffer buf) {
 
-    public static CPacketSetFlight decode(PacketBuffer buf) {
-        return new CPacketSetFlight();
-    }
+  }
 
-    public static void handle(CPacketSetFlight msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayerEntity sender = ctx.get().getSender();
+  public static CPacketSetFlight decode(PacketBuffer buf) {
 
-            if (sender != null) {
+    return new CPacketSetFlight();
+  }
 
-                if (!sender.onGround && sender.getMotion().y < 0.0D && !sender.isElytraFlying() && !sender.isInWater() && CaelusAPI.canElytraFly(sender)) {
-                    sender.setElytraFlying();
-                } else {
-                    sender.clearElytraFlying();
-                }
-            }
-        });
-        ctx.get().setPacketHandled(true);
-    }
+  public static void handle(CPacketSetFlight msg, Supplier<NetworkEvent.Context> ctx) {
+
+    ctx.get().enqueueWork(() -> {
+      ServerPlayerEntity sender = ctx.get().getSender();
+
+      if (sender != null) {
+
+        if (!sender.onGround && sender.getMotion().y < 0.0D && !sender.isElytraFlying() &&
+            !sender.isInWater() && CaelusAPI.canElytraFly(sender)) {
+          sender.setElytraFlying();
+        } else {
+          sender.clearElytraFlying();
+        }
+      }
+    });
+    ctx.get().setPacketHandled(true);
+  }
 }

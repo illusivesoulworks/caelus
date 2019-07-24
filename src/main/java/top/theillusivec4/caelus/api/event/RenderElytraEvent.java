@@ -25,7 +25,8 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
 
 /**
- * This event is fired when the game checks if a non-vanilla elytra should be rendered.<br>
+ * This event is fired when the game checks if a non-vanilla elytra should be
+ * rendered.<br>
  * This event is fired client-side only.<br>
  *
  * <br>
@@ -37,35 +38,42 @@ import net.minecraftforge.eventbus.api.Cancelable;
  **/
 public class RenderElytraEvent extends LivingEvent {
 
-    private boolean renderElytra = false;
-    private boolean renderEnchantmentGlow = false;
+  private boolean renderElytra          = false;
+  private boolean renderEnchantmentGlow = false;
 
-    public RenderElytraEvent(LivingEntity livingEntity) {
-        super(livingEntity);
-    }
+  public RenderElytraEvent(LivingEntity livingEntity) {
 
-    public boolean getRenderElytra() {
-        return renderElytra;
-    }
+    super(livingEntity);
+  }
 
-    /**
-     * Determines whether or not to render the elytra model given the entity is not already wearing an elytra in the chest slot
-     *
-     * Note that this result will also affect cape rendering as rendering elytras will disable rendering capes;
-     * however, elytras will still render with cape textures when appropriate
-     */
-    public void setRenderElytra(boolean renderElytra) {
-        this.renderElytra = renderElytra;
-    }
+  public boolean getRenderElytra() {
 
-    public boolean getRenderEnchantmentGlow() {
-        return renderEnchantmentGlow;
-    }
+    return renderElytra;
+  }
 
-    /**
-     * Determines whether or not the elytra texture will have an enchantment glow
-     */
-    public void setRenderEnchantmentGlow(boolean renderEnchantmentGlow) {
-        this.renderEnchantmentGlow = renderEnchantmentGlow;
-    }
+  /**
+   * Determines whether or not to render the elytra model given the entity is
+   * not already wearing an elytra in the chest slot.
+   * <p>
+   * Note that this result will also affect cape rendering as rendering elytras
+   * will disable rendering capes;
+   * however, elytras will still render with cape textures when appropriate.
+   */
+  public void setRenderElytra(boolean renderElytra) {
+
+    this.renderElytra = renderElytra;
+  }
+
+  public boolean getRenderEnchantmentGlow() {
+
+    return renderEnchantmentGlow;
+  }
+
+  /**
+   * Determines whether or not the elytra texture will have an enchantment glow
+   */
+  public void setRenderEnchantmentGlow(boolean renderEnchantmentGlow) {
+
+    this.renderEnchantmentGlow = renderEnchantmentGlow;
+  }
 }

@@ -30,19 +30,22 @@ import top.theillusivec4.caelus.common.network.NetworkHandler;
 
 public class CaelusHooks {
 
-    public static void sendElytraPacket(ClientPlayerEntity playerSP) {
-        NetworkHandler.INSTANCE.send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight());
-    }
+  public static void sendElytraPacket(ClientPlayerEntity playerSP) {
 
-    public static boolean fireAndCheckRenderElytraEvent(LivingEntity livingEntity) {
-        RenderElytraEvent evt = new RenderElytraEvent(livingEntity);
-        MinecraftForge.EVENT_BUS.post(evt);
-        return evt.getRenderElytra();
-    }
+    NetworkHandler.INSTANCE.send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight());
+  }
 
-    public static Tuple<Boolean, Boolean> fireRenderElytraEvent(LivingEntity livingEntity) {
-        RenderElytraEvent evt = new RenderElytraEvent(livingEntity);
-        MinecraftForge.EVENT_BUS.post(evt);
-        return new Tuple<>(evt.getRenderElytra(), evt.getRenderEnchantmentGlow());
-    }
+  public static boolean fireAndCheckRenderElytraEvent(LivingEntity livingEntity) {
+
+    RenderElytraEvent evt = new RenderElytraEvent(livingEntity);
+    MinecraftForge.EVENT_BUS.post(evt);
+    return evt.getRenderElytra();
+  }
+
+  public static Tuple<Boolean, Boolean> fireRenderElytraEvent(LivingEntity livingEntity) {
+
+    RenderElytraEvent evt = new RenderElytraEvent(livingEntity);
+    MinecraftForge.EVENT_BUS.post(evt);
+    return new Tuple<>(evt.getRenderElytra(), evt.getRenderEnchantmentGlow());
+  }
 }
