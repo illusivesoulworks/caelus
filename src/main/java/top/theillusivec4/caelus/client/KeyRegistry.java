@@ -22,14 +22,18 @@ package top.theillusivec4.caelus.client;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import org.lwjgl.glfw.GLFW;
+import top.theillusivec4.caelus.Caelus;
 
 public class KeyRegistry {
+
+  private static final String TOGGLE_DESC = "key." + Caelus.MODID + ".toggle.desc";
+  private static final String CONFIG_CATEGORY = "key." + Caelus.MODID + ".category";
 
   public static KeyBinding toggleFlight;
 
   public static void register() {
 
-    toggleFlight = new KeyBinding("key.caelus.toggle.desc", GLFW.GLFW_KEY_V, "key.caelus.category");
+    toggleFlight = new KeyBinding(TOGGLE_DESC, GLFW.GLFW_KEY_V, CONFIG_CATEGORY);
     ClientRegistry.registerKeyBinding(toggleFlight);
   }
 }

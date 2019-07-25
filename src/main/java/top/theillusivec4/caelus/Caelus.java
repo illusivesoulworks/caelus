@@ -80,20 +80,23 @@ public class Caelus {
   @SubscribeEvent
   public void onLivingEquipmentChange(LivingEquipmentChangeEvent evt) {
 
-    if (evt.getEntityLiving() instanceof PlayerEntity && evt.getSlot() == EquipmentSlotType.CHEST) {
-      ItemStack from = evt.getFrom();
-      ItemStack to = evt.getTo();
-      IAttributeInstance attributeInstance =
-          evt.getEntityLiving().getAttribute(CaelusAPI.ELYTRA_FLIGHT);
+    if (!(evt.getEntityLiving() instanceof PlayerEntity) ||
+        evt.getSlot() != EquipmentSlotType.CHEST) {
+      return;
+    }
 
-      if (from.getItem() instanceof ElytraItem) {
-        attributeInstance.removeModifier(CaelusAPI.ELYTRA_MODIFIER);
-      }
+    ItemStack from = evt.getFrom();
+    ItemStack to = evt.getTo();
+    IAttributeInstance attributeInstance =
+        evt.getEntityLiving().getAttribute(CaelusAPI.ELYTRA_FLIGHT);
 
-      if (to.getItem() instanceof ElytraItem &&
-          !attributeInstance.hasModifier(CaelusAPI.ELYTRA_MODIFIER) && ElytraItem.isUsable(to)) {
-        attributeInstance.applyModifier(CaelusAPI.ELYTRA_MODIFIER);
-      }
+    if (from.getItem() instanceof ElytraItem) {
+      attributeInstance.removeModifier(CaelusAPI.ELYTRA_MODIFIER);
+    }
+
+    if (to.getItem() instanceof ElytraItem &&
+        !attributeInstance.hasModifier(CaelusAPI.ELYTRA_MODIFIER) && ElytraItem.isUsable(to)) {
+      attributeInstance.applyModifier(CaelusAPI.ELYTRA_MODIFIER);
     }
   }
 

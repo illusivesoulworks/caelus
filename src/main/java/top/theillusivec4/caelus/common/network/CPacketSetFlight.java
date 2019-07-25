@@ -42,14 +42,15 @@ public class CPacketSetFlight {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity sender = ctx.get().getSender();
 
-      if (sender != null) {
+      if (sender == null) {
+        return;
+      }
 
-        if (!sender.onGround && sender.getMotion().y < 0.0D && !sender.isElytraFlying() &&
-            !sender.isInWater() && CaelusAPI.canElytraFly(sender)) {
-          sender.setElytraFlying();
-        } else {
-          sender.clearElytraFlying();
-        }
+      if (!sender.onGround && sender.getMotion().y < 0.0D && !sender.isElytraFlying() &&
+          !sender.isInWater() && CaelusAPI.canElytraFly(sender)) {
+        sender.setElytraFlying();
+      } else {
+        sender.clearElytraFlying();
       }
     });
     ctx.get().setPacketHandled(true);

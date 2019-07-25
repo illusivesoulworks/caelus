@@ -24,11 +24,15 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
+import top.theillusivec4.caelus.Caelus;
 import top.theillusivec4.caelus.api.CaelusAPI;
 
 import java.util.function.Supplier;
 
 public class CPacketToggleFlight {
+
+  private static final String ENABLE_FLIGHT  = Caelus.MODID + ".enableFlight";
+  private static final String DISABLE_FLIGHT = Caelus.MODID + ".disableFlight";
 
   public static void encode(CPacketToggleFlight msg, PacketBuffer buf) {
 
@@ -44,17 +48,18 @@ public class CPacketToggleFlight {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity sender = ctx.get().getSender();
 
-      if (sender != null) {
+      if (sender == null) {
+        return;
+      }
 
-        IAttributeInstance attributeInstance = sender.getAttribute(CaelusAPI.ELYTRA_FLIGHT);
+      IAttributeInstance attributeInstance = sender.getAttribute(CaelusAPI.ELYTRA_FLIGHT);
 
-        if (attributeInstance.hasModifier(CaelusAPI.DISABLE_FLIGHT)) {
-          attributeInstance.removeModifier(CaelusAPI.DISABLE_FLIGHT);
-          sender.sendStatusMessage(new TranslationTextComponent("caelus.enableFlight"), true);
-        } else {
-          attributeInstance.applyModifier(CaelusAPI.DISABLE_FLIGHT);
-          sender.sendStatusMessage(new TranslationTextComponent("caelus.disableFlight"), true);
-        }
+      if (attributeInstance.hasModifier(CaelusAPI.DISABLE_FLIGHT)) {
+        attributeInstance.removeModifier(CaelusAPI.DISABLE_FLIGHT);
+        sender.sendStatusMessage(new TranslationTextComponent(ENABLE_FLIGHT), true);
+      } else {
+        attributeInstance.applyModifier(CaelusAPI.DISABLE_FLIGHT);
+        sender.sendStatusMessage(new TranslationTextComponent(DISABLE_FLIGHT), true);
       }
     });
     ctx.get().setPacketHandled(true);
