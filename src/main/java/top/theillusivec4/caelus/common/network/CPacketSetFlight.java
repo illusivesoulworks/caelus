@@ -19,12 +19,11 @@
 
 package top.theillusivec4.caelus.common.network;
 
+import java.util.function.Supplier;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 import top.theillusivec4.caelus.api.CaelusAPI;
-
-import java.util.function.Supplier;
 
 public class CPacketSetFlight {
 

@@ -25,9 +25,8 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
 
 /**
- * This event is fired when the game checks if a non-vanilla elytra should be
- * rendered.<br>
- * This event is fired client-side only.<br>
+ * This event is fired when the game checks if a non-vanilla elytra should be rendered.<br> This
+ * event is fired client-side only.<br>
  *
  * <br>
  * This event is not {@link Cancelable}. <br>
@@ -38,7 +37,7 @@ import net.minecraftforge.eventbus.api.Cancelable;
  **/
 public class RenderElytraEvent extends LivingEvent {
 
-  private boolean renderElytra          = false;
+  private boolean renderElytra = false;
   private boolean renderEnchantmentGlow = false;
 
   public RenderElytraEvent(LivingEntity livingEntity) {
@@ -52,12 +51,11 @@ public class RenderElytraEvent extends LivingEvent {
   }
 
   /**
-   * Determines whether or not to render the elytra model given the entity is
-   * not already wearing an elytra in the chest slot.
+   * Determines whether or not to render the elytra model given the entity is not already wearing an
+   * elytra in the chest slot.
    * <p>
-   * Note that this result will also affect cape rendering as rendering elytras
-   * will disable rendering capes;
-   * however, elytras will still render with cape textures when appropriate.
+   * Note that this result will also affect cape rendering as rendering elytras will disable
+   * rendering capes; however, elytras will still render with cape textures when appropriate.
    */
   public void setRenderElytra(boolean renderElytra) {
 

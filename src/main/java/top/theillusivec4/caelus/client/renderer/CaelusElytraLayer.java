@@ -20,6 +20,7 @@
 package top.theillusivec4.caelus.client.renderer;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import javax.annotation.Nonnull;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.ArmorLayer;
@@ -35,14 +36,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import top.theillusivec4.caelus.core.CaelusHooks;
 
-import javax.annotation.Nonnull;
-
-public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>>
-    extends ElytraLayer<T, M> {
+public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>> extends
+    ElytraLayer<T, M> {
 
   private static final ResourceLocation TEXTURE_ELYTRA =
       new ResourceLocation("textures/entity/elytra.png");
-  private final        ElytraModel<T>   modelElytra    = new ElytraModel<>();
+
+  private final ElytraModel<T> modelElytra = new ElytraModel<>();
 
   public CaelusElytraLayer(IEntityRenderer<T, M> renderer) {
 
@@ -51,8 +51,7 @@ public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>>
 
   @Override
   public void render(@Nonnull T entityIn, float limbSwing, float limbSwingAmount,
-                     float partialTicks, float ageInTicks, float netHeadYaw, float headPitch,
-                     float scale) {
+      float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 
     ItemStack itemstack = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
@@ -65,15 +64,16 @@ public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>>
         GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
         if (entityIn instanceof AbstractClientPlayerEntity) {
-          AbstractClientPlayerEntity abstractclientplayerentity =
-              (AbstractClientPlayerEntity) entityIn;
+          AbstractClientPlayerEntity abstractclientplayerentity = (AbstractClientPlayerEntity) entityIn;
+          boolean hasElytra = abstractclientplayerentity.isPlayerInfoSet()
+              && abstractclientplayerentity.getLocationElytra() != null;
+          boolean hasCape = abstractclientplayerentity.hasPlayerInfo()
+              && abstractclientplayerentity.getLocationCape() != null
+              && abstractclientplayerentity.isWearing(PlayerModelPart.CAPE);
 
-          if (abstractclientplayerentity.isPlayerInfoSet() &&
-              abstractclientplayerentity.getLocationElytra() != null) {
+          if (hasElytra) {
             this.bindTexture(abstractclientplayerentity.getLocationElytra());
-          } else if (abstractclientplayerentity.hasPlayerInfo() &&
-                     abstractclientplayerentity.getLocationCape() != null &&
-                     abstractclientplayerentity.isWearing(PlayerModelPart.CAPE)) {
+          } else if (hasCape) {
             this.bindTexture(abstractclientplayerentity.getLocationCape());
           } else {
             this.bindTexture(TEXTURE_ELYTRA);
@@ -81,18 +81,20 @@ public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>>
         } else {
           this.bindTexture(TEXTURE_ELYTRA);
         }
+
         GlStateManager.pushMatrix();
         GlStateManager.translatef(0.0F, 0.0F, 0.125F);
         this.modelElytra.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks,
-                                           netHeadYaw, headPitch, scale);
+            netHeadYaw, headPitch, scale);
         this.modelElytra.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw,
-                                headPitch, scale);
+            headPitch, scale);
 
         if (evt.getB()) {
           ArmorLayer.func_215338_a(this::bindTexture, entityIn, this.modelElytra, limbSwing,
-                                   limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch,
-                                   scale);
+              limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch,
+              scale);
         }
+
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
       }

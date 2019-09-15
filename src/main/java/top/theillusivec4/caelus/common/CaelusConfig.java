@@ -25,7 +25,16 @@ import top.theillusivec4.caelus.Caelus;
 
 public class CaelusConfig {
 
+  public static final ForgeConfigSpec clientSpec;
+  public static final Client CLIENT;
   private static final String CONFIG_PREFIX = "gui." + Caelus.MODID + ".config.";
+
+  static {
+    final Pair<Client, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
+        .configure(Client::new);
+    clientSpec = specPair.getRight();
+    CLIENT = specPair.getLeft();
+  }
 
   public static class Client {
 
@@ -36,21 +45,11 @@ public class CaelusConfig {
       builder.comment("Client only settings, mostly things related to rendering").push("client");
 
       toggleIcon = builder.comment("Set to true to enable an icon that appears on the HUD when " +
-                                   "elytra flight is disabled")
-                          .translation(CONFIG_PREFIX + "toggleIcon")
-                          .define("toggleIcon", true);
+          "elytra flight is disabled")
+          .translation(CONFIG_PREFIX + "toggleIcon")
+          .define("toggleIcon", true);
 
       builder.pop();
     }
-  }
-
-  public static final ForgeConfigSpec clientSpec;
-  public static final Client          CLIENT;
-
-  static {
-    final Pair<Client, ForgeConfigSpec> specPair =
-        new ForgeConfigSpec.Builder().configure(Client::new);
-    clientSpec = specPair.getRight();
-    CLIENT = specPair.getLeft();
   }
 }

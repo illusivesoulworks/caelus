@@ -80,8 +80,8 @@ public class Caelus {
   @SubscribeEvent
   public void onLivingEquipmentChange(LivingEquipmentChangeEvent evt) {
 
-    if (!(evt.getEntityLiving() instanceof PlayerEntity) ||
-        evt.getSlot() != EquipmentSlotType.CHEST) {
+    if (!(evt.getEntityLiving() instanceof PlayerEntity)
+        || evt.getSlot() != EquipmentSlotType.CHEST) {
       return;
     }
 
@@ -114,9 +114,8 @@ public class Caelus {
     public static void postSetup(FMLLoadCompleteEvent evt) {
 
       EntityRendererManager rendererManager = Minecraft.getInstance().getRenderManager();
-      rendererManager.getSkinMap()
-                     .values()
-                     .forEach(renderer -> renderer.addLayer(new CaelusElytraLayer<>(renderer)));
+      rendererManager.getSkinMap().values()
+          .forEach(renderer -> renderer.addLayer(new CaelusElytraLayer<>(renderer)));
       rendererManager.renderers.values().forEach(renderer -> {
         if (renderer instanceof LivingRenderer) {
           LivingRenderer<? extends LivingEntity, ? extends EntityModel> livingRenderer =

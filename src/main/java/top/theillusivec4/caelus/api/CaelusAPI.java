@@ -19,6 +19,7 @@
 
 package top.theillusivec4.caelus.api;
 
+import java.util.UUID;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
@@ -29,46 +30,37 @@ import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
-import java.util.UUID;
-
 public class CaelusAPI {
 
   /**
-   * The elytra flight attribute, will provide elytra flight if the value is 1.0
-   * or above. No flight otherwise.
+   * The elytra flight attribute, will provide elytra flight if the value is 1.0 or above. No flight
+   * otherwise.
    */
   public static final IAttribute ELYTRA_FLIGHT =
       new RangedAttribute(null, "caelus.elytraFlight", 0.0d, 0.0d, 1.0d).setShouldWatch(true);
 
   /**
-   * The attribute modifier used for the vanilla elytra item.
-   * Note: Modders, do not use this for most other implementations!
-   * For internal use only.
-   * This is only here to provide access to the vanilla elytra's specific attribute
-   * modifier if absolutely needed.
+   * The attribute modifier used for the vanilla elytra item. Note: Modders, do not use this for
+   * most other implementations! For internal use only. This is only here to provide access to the
+   * vanilla elytra's specific attribute modifier if absolutely needed.
    */
   public static final AttributeModifier ELYTRA_MODIFIER =
       new AttributeModifier(UUID.fromString("5b6c3728-9c24-42ae-83ac-70d61d8b8199"),
-                            "Elytra modifier", 1.0f, AttributeModifier.Operation.ADDITION);
+          "Elytra modifier", 1.0f, AttributeModifier.Operation.ADDITION);
 
   /**
-   * The attribute modifier used for disabling elytra flight when the toggle
-   * keybinding is pressed.
-   * Note: Modders, do not use this for most other implementations!
-   * For internal use only.
-   * This is only here to provide access to the specific disabling modifier if
-   * absolutely needed.
+   * The attribute modifier used for disabling elytra flight when the toggle keybinding is pressed.
+   * Note: Modders, do not use this for most other implementations! For internal use only. This is
+   * only here to provide access to the specific disabling modifier if absolutely needed.
    */
   public static final AttributeModifier DISABLE_FLIGHT =
       new AttributeModifier(UUID.fromString("faadb8f3-c95c-44ce-ba68-0f31bd1b47d5"),
-                            "Toggled modifier", -1.0d, AttributeModifier.Operation.MULTIPLY_TOTAL);
+          "Toggled modifier", -1.0d, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
   /**
-   * Checks whether or not an entity is able to elytra fly.
-   * Checks against the elytra flight attribute if the entity is a
-   * {@link PlayerEntity}
-   * Otherwise checks against the ItemStack in the chest slot to see if it's a
-   * vanilla elytra item.
+   * Checks whether or not an entity is able to elytra fly. Checks against the elytra flight
+   * attribute if the entity is a {@link PlayerEntity} Otherwise checks against the ItemStack in the
+   * chest slot to see if it's a vanilla elytra item.
    *
    * @param livingEntity The entity to check for elytra flight capabilities
    * @return True if the entity can elytra fly, false otherwise.
@@ -79,6 +71,7 @@ public class CaelusAPI {
       ItemStack stack = livingEntity.getItemStackFromSlot(EquipmentSlotType.CHEST);
       return stack.getItem() == Items.ELYTRA && ElytraItem.isUsable(stack);
     }
+
     return livingEntity.getAttribute(CaelusAPI.ELYTRA_FLIGHT).getValue() >= 1.0d;
   }
 }

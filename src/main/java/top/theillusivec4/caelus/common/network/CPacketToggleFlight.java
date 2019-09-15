@@ -19,6 +19,7 @@
 
 package top.theillusivec4.caelus.common.network;
 
+import java.util.function.Supplier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -27,11 +28,9 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import top.theillusivec4.caelus.Caelus;
 import top.theillusivec4.caelus.api.CaelusAPI;
 
-import java.util.function.Supplier;
-
 public class CPacketToggleFlight {
 
-  private static final String ENABLE_FLIGHT  = Caelus.MODID + ".enableFlight";
+  private static final String ENABLE_FLIGHT = Caelus.MODID + ".enableFlight";
   private static final String DISABLE_FLIGHT = Caelus.MODID + ".disableFlight";
 
   public static void encode(CPacketToggleFlight msg, PacketBuffer buf) {
