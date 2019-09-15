@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.0] - 2019.09.14
+### Changed
+- Updated to Forge RB 28.1.0
+
 ## [0.11] - 2019.08.05
 ### Changed
 - Updated to Forge version 28.0.45 to accommodate for a breaking change
