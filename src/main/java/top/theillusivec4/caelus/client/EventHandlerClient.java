@@ -23,18 +23,34 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
 import top.theillusivec4.caelus.Caelus;
 import top.theillusivec4.caelus.api.CaelusAPI;
 import top.theillusivec4.caelus.common.CaelusConfig;
+import top.theillusivec4.caelus.common.network.CPacketSetFlight;
 import top.theillusivec4.caelus.common.network.CPacketToggleFlight;
 import top.theillusivec4.caelus.common.network.NetworkHandler;
 
 public class EventHandlerClient {
 
   private static int cooldown = 0;
+  private static boolean triggerFlight = false;
+  private static boolean triggerJump = false;
+
+  @SubscribeEvent
+  public void onTrigger(InputUpdateEvent evt) {
+    ClientPlayerEntity player = (ClientPlayerEntity) evt.getPlayer();
+
+    if (player.onGround && triggerJump) {
+      evt.getMovementInput().jump = true;
+      triggerJump = false;
+      triggerFlight = true;
+    }
+  }
 
   @SubscribeEvent
   public void onKeyPress(TickEvent.ClientTickEvent evt) {
@@ -43,24 +59,52 @@ public class EventHandlerClient {
       return;
     }
 
-    final boolean isKeyDown = KeyRegistry.toggleFlight.isKeyDown();
+    final boolean isToggleKeyDown = KeyRegistry.toggleFlight.isKeyDown();
+    final boolean isTriggerKeyDown = KeyRegistry.triggerFlight.isKeyDown();
     final boolean isFocused = Minecraft.getInstance().isGameFocused();
 
-    if (isKeyDown && isFocused && cooldown <= 0) {
+    if (isToggleKeyDown && isFocused && cooldown <= 0) {
       NetworkHandler.INSTANCE.sendToServer(new CPacketToggleFlight());
       cooldown = 10;
     }
 
-    if (cooldown > 0) {
-      cooldown--;
+    ClientPlayerEntity player = Minecraft.getInstance().player;
+
+    if (player != null) {
+
+      final boolean canFly =
+          CaelusAPI.canElytraFly(player) && !player.isElytraFlying() && !player.abilities.isFlying;
+
+      if (canFly) {
+
+        if (isTriggerKeyDown && isFocused && !triggerJump) {
+
+          if (!player.onGround) {
+
+            if (player.getMotion().y < 0.0D) {
+              triggerElytra();
+            }
+          } else {
+            triggerJump = true;
+          }
+        }
+
+        if (triggerFlight && !player.onGround && player.getMotion().y < 0.0D) {
+          triggerElytra();
+        }
+      }
+
+      if (cooldown > 0) {
+        cooldown--;
+      }
     }
   }
 
   @SubscribeEvent
   public void onRenderGameOverlay(RenderGameOverlayEvent.Post evt) {
 
-    if (!CaelusConfig.CLIENT.toggleIcon.get() ||
-        evt.getType() != RenderGameOverlayEvent.ElementType.POTION_ICONS) {
+    if (!CaelusConfig.CLIENT.toggleIcon.get()
+        || evt.getType() != RenderGameOverlayEvent.ElementType.POTION_ICONS) {
       return;
     }
 
@@ -76,5 +120,11 @@ public class EventHandlerClient {
       Minecraft.getInstance().getTextureManager().bindTexture(Caelus.DISABLED_ICON);
       AbstractGui.blit(1, 1, 0, 0, 24, 24, 24, 24);
     }
+  }
+
+  private static void triggerElytra() {
+    triggerJump = false;
+    triggerFlight = false;
+    NetworkHandler.INSTANCE.send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight(false));
   }
 }

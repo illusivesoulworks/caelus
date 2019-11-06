@@ -32,7 +32,7 @@ public class CaelusHooks {
 
   public static void sendElytraPacket(ClientPlayerEntity playerSP) {
 
-    NetworkHandler.INSTANCE.send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight());
+    NetworkHandler.INSTANCE.send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight(true));
   }
 
   public static boolean fireAndCheckRenderElytraEvent(LivingEntity livingEntity) {

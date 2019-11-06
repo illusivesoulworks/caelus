@@ -27,13 +27,18 @@ import top.theillusivec4.caelus.api.CaelusAPI;
 
 public class CPacketSetFlight {
 
-  public static void encode(CPacketSetFlight msg, PacketBuffer buf) {
+  private final boolean withMotion;
 
+  public CPacketSetFlight(boolean withMotion) {
+    this.withMotion = withMotion;
+  }
+
+  public static void encode(CPacketSetFlight msg, PacketBuffer buf) {
+    buf.writeBoolean(msg.withMotion);
   }
 
   public static CPacketSetFlight decode(PacketBuffer buf) {
-
-    return new CPacketSetFlight();
+    return new CPacketSetFlight(buf.readBoolean());
   }
 
   public static void handle(CPacketSetFlight msg, Supplier<NetworkEvent.Context> ctx) {
@@ -45,11 +50,12 @@ public class CPacketSetFlight {
         return;
       }
 
-      if (!sender.onGround && sender.getMotion().y < 0.0D && !sender.isElytraFlying() &&
-          !sender.isInWater() && CaelusAPI.canElytraFly(sender)) {
+      sender.clearElytraFlying();
+      boolean isFalling = !msg.withMotion || sender.getMotion().y < 0.0D;
+
+      if (!sender.onGround && isFalling && !sender.isElytraFlying() && !sender.isInWater()
+          && CaelusAPI.canElytraFly(sender)) {
         sender.setElytraFlying();
-      } else {
-        sender.clearElytraFlying();
       }
     });
     ctx.get().setPacketHandled(true);
