@@ -17,7 +17,7 @@
  * License along with Caelus.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package top.theillusivec4.caelus.common.network;
+package top.theillusivec4.caelus.common.network.client;
 
 import java.util.function.Supplier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;

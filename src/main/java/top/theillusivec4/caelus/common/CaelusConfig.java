@@ -39,15 +39,18 @@ public class CaelusConfig {
   public static class Client {
 
     public final ForgeConfigSpec.BooleanValue toggleIcon;
+    public final ForgeConfigSpec.BooleanValue simpleTakeoff;
 
     Client(ForgeConfigSpec.Builder builder) {
 
       builder.comment("Client only settings, mostly things related to rendering").push("client");
 
-      toggleIcon = builder.comment("Set to true to enable an icon that appears on the HUD when " +
-          "elytra flight is disabled")
-          .translation(CONFIG_PREFIX + "toggleIcon")
-          .define("toggleIcon", true);
+      toggleIcon = builder.comment(
+          "Set to true to enable an icon that appears on the HUD when elytra flight is disabled")
+          .translation(CONFIG_PREFIX + "toggleIcon").define("toggleIcon", true);
+      simpleTakeoff = builder.comment(
+          "Set to true to enable holding down the Trigger Elytra keybind to automatically use a firework from inventory to takeoff from ground level")
+          .translation(CONFIG_PREFIX + "simpleTakeoff").define("simpleTakeoff", true);
 
       builder.pop();
     }

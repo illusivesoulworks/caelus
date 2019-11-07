@@ -28,6 +28,8 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import top.theillusivec4.caelus.Caelus;
+import top.theillusivec4.caelus.common.network.client.CPacketSetFlight;
+import top.theillusivec4.caelus.common.network.client.CPacketToggleFlight;
 
 public class NetworkHandler {
 

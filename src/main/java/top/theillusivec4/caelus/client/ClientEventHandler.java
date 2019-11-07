@@ -31,15 +31,24 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import top.theillusivec4.caelus.Caelus;
 import top.theillusivec4.caelus.api.CaelusAPI;
 import top.theillusivec4.caelus.common.CaelusConfig;
-import top.theillusivec4.caelus.common.network.CPacketSetFlight;
-import top.theillusivec4.caelus.common.network.CPacketToggleFlight;
 import top.theillusivec4.caelus.common.network.NetworkHandler;
+import top.theillusivec4.caelus.common.network.client.CPacketSetFlight;
+import top.theillusivec4.caelus.common.network.client.CPacketToggleFlight;
 
-public class EventHandlerClient {
+public class ClientEventHandler {
 
+  private static boolean triggerJump = false;
   private static int cooldown = 0;
   private static boolean triggerFlight = false;
-  private static boolean triggerJump = false;
+  private static int triggerFlightUse = 0;
+
+  private static void triggerElytra() {
+    NetworkHandler.INSTANCE
+        .send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight(false, triggerFlightUse > 0));
+    triggerJump = false;
+    triggerFlight = false;
+    triggerFlightUse = 0;
+  }
 
   @SubscribeEvent
   public void onTrigger(InputUpdateEvent evt) {
@@ -59,11 +68,11 @@ public class EventHandlerClient {
       return;
     }
 
-    final boolean isToggleKeyDown = KeyRegistry.toggleFlight.isKeyDown();
-    final boolean isTriggerKeyDown = KeyRegistry.triggerFlight.isKeyDown();
     final boolean isFocused = Minecraft.getInstance().isGameFocused();
+    final boolean isToggleKeyDown = KeyRegistry.toggleFlight.isKeyDown() && isFocused;
+    final boolean isTriggerKeyDown = KeyRegistry.triggerFlight.isKeyDown() && isFocused;
 
-    if (isToggleKeyDown && isFocused && cooldown <= 0) {
+    if (isToggleKeyDown && cooldown <= 0) {
       NetworkHandler.INSTANCE.sendToServer(new CPacketToggleFlight());
       cooldown = 10;
     }
@@ -77,7 +86,7 @@ public class EventHandlerClient {
 
       if (canFly) {
 
-        if (isTriggerKeyDown && isFocused && !triggerJump) {
+        if (isTriggerKeyDown && !triggerJump) {
 
           if (!player.onGround) {
 
@@ -96,6 +105,13 @@ public class EventHandlerClient {
 
       if (cooldown > 0) {
         cooldown--;
+      }
+
+      if (CaelusConfig.CLIENT.simpleTakeoff.get() && isTriggerKeyDown && (triggerFlight
+          || triggerJump)) {
+        triggerFlightUse++;
+      } else {
+        triggerFlightUse = 0;
       }
     }
   }
@@ -120,11 +136,5 @@ public class EventHandlerClient {
       Minecraft.getInstance().getTextureManager().bindTexture(Caelus.DISABLED_ICON);
       AbstractGui.blit(1, 1, 0, 0, 24, 24, 24, 24);
     }
-  }
-
-  private static void triggerElytra() {
-    triggerJump = false;
-    triggerFlight = false;
-    NetworkHandler.INSTANCE.send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight(false));
   }
 }

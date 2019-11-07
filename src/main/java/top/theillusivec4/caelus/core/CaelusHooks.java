@@ -25,8 +25,8 @@ import net.minecraft.util.Tuple;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.network.PacketDistributor;
 import top.theillusivec4.caelus.api.event.RenderElytraEvent;
-import top.theillusivec4.caelus.common.network.CPacketSetFlight;
 import top.theillusivec4.caelus.common.network.NetworkHandler;
+import top.theillusivec4.caelus.common.network.client.CPacketSetFlight;
 
 public class CaelusHooks {
 

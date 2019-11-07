@@ -43,7 +43,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import top.theillusivec4.caelus.api.CaelusAPI;
-import top.theillusivec4.caelus.client.EventHandlerClient;
+import top.theillusivec4.caelus.client.ClientEventHandler;
 import top.theillusivec4.caelus.client.KeyRegistry;
 import top.theillusivec4.caelus.client.renderer.CaelusElytraLayer;
 import top.theillusivec4.caelus.common.CaelusConfig;
@@ -65,7 +65,6 @@ public class Caelus {
   }
 
   private void setup(FMLCommonSetupEvent evt) {
-
     NetworkHandler.register();
   }
 
@@ -107,7 +106,7 @@ public class Caelus {
     public static void clientSetup(FMLClientSetupEvent evt) {
 
       KeyRegistry.register();
-      MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
+      MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
     }
 
     @SubscribeEvent
