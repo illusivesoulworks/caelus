@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.0.1] - 2019.11.07
+### Added
+- "Trigger Elytra" keybind, automatically activates the elytra either in mid-air or while on the ground
+- "Simple Takeoff" config option, when true the "Trigger Elytra" keybind can be held down to automatically use a firework from inventory after activating the elytra from the ground
+
 ## [1.0] - 2019.09.14
 ### Changed
 - Updated to Forge RB 28.1.0
