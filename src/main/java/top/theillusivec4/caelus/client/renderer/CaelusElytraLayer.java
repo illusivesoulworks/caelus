@@ -95,6 +95,7 @@ public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>>
               scale);
         }
 
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
       }
