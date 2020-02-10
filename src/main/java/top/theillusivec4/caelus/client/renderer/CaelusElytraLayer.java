@@ -19,86 +19,82 @@
 
 package top.theillusivec4.caelus.client.renderer;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import javax.annotation.Nonnull;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.ArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.model.ElytraModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerModelPart;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
-import top.theillusivec4.caelus.core.CaelusHooks;
+import top.theillusivec4.caelus.api.CaelusAPI;
+import top.theillusivec4.caelus.api.capability.IRenderElytra.State;
 
 public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>> extends
     ElytraLayer<T, M> {
 
-  private static final ResourceLocation TEXTURE_ELYTRA =
-      new ResourceLocation("textures/entity/elytra.png");
+  private static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation(
+      "textures/entity/elytra.png");
 
   private final ElytraModel<T> modelElytra = new ElytraModel<>();
 
   public CaelusElytraLayer(IEntityRenderer<T, M> renderer) {
-
     super(renderer);
   }
 
   @Override
-  public void render(@Nonnull T entityIn, float limbSwing, float limbSwingAmount,
-      float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-
+  public void render(@Nonnull MatrixStack matrixStackIn, @Nonnull IRenderTypeBuffer bufferIn,
+      int packedLightIn, T entityIn, float limbSwing, float limbSwingAmount, float partialTicks,
+      float ageInTicks, float netHeadYaw, float headPitch) {
     ItemStack itemstack = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
     if (itemstack.getItem() != Items.ELYTRA) {
-      Tuple<Boolean, Boolean> evt = CaelusHooks.fireRenderElytraEvent(entityIn);
+      CaelusAPI.getRenderElytra(entityIn).ifPresent(render -> {
 
-      if (evt.getA()) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        if (render.getRenderState() != State.NONE) {
+          ResourceLocation resourcelocation;
+          if (entityIn instanceof AbstractClientPlayerEntity) {
+            AbstractClientPlayerEntity abstractclientplayerentity = (AbstractClientPlayerEntity) entityIn;
+            boolean hasElytra = abstractclientplayerentity.isPlayerInfoSet()
+                && abstractclientplayerentity.getLocationElytra() != null;
+            boolean hasCape = abstractclientplayerentity.hasPlayerInfo()
+                && abstractclientplayerentity.getLocationCape() != null
+                && abstractclientplayerentity.isWearing(PlayerModelPart.CAPE);
 
-        if (entityIn instanceof AbstractClientPlayerEntity) {
-          AbstractClientPlayerEntity abstractclientplayerentity = (AbstractClientPlayerEntity) entityIn;
-          boolean hasElytra = abstractclientplayerentity.isPlayerInfoSet()
-              && abstractclientplayerentity.getLocationElytra() != null;
-          boolean hasCape = abstractclientplayerentity.hasPlayerInfo()
-              && abstractclientplayerentity.getLocationCape() != null
-              && abstractclientplayerentity.isWearing(PlayerModelPart.CAPE);
-
-          if (hasElytra) {
-            this.bindTexture(abstractclientplayerentity.getLocationElytra());
-          } else if (hasCape) {
-            this.bindTexture(abstractclientplayerentity.getLocationCape());
+            if (hasElytra) {
+              resourcelocation = abstractclientplayerentity.getLocationElytra();
+            } else if (hasCape) {
+              resourcelocation = abstractclientplayerentity.getLocationCape();
+            } else {
+              resourcelocation = TEXTURE_ELYTRA;
+            }
           } else {
-            this.bindTexture(TEXTURE_ELYTRA);
+            resourcelocation = TEXTURE_ELYTRA;
           }
-        } else {
-          this.bindTexture(TEXTURE_ELYTRA);
+
+          matrixStackIn.push();
+          matrixStackIn.translate(0.0D, 0.0D, 0.125D);
+          this.getEntityModel().setModelAttributes(this.modelElytra);
+          this.modelElytra
+              .render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+          IVertexBuilder ivertexbuilder = ItemRenderer
+              .getBuffer(bufferIn, this.modelElytra.getRenderType(resourcelocation), false,
+                  render.getRenderState() == State.ENCHANTED);
+          this.modelElytra
+              .render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.DEFAULT_LIGHT,
+                  1.0F, 1.0F, 1.0F, 1.0F);
+          matrixStackIn.pop();
         }
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translatef(0.0F, 0.0F, 0.125F);
-        this.modelElytra.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks,
-            netHeadYaw, headPitch, scale);
-        this.modelElytra.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw,
-            headPitch, scale);
-
-        if (evt.getB()) {
-          ArmorLayer.func_215338_a(this::bindTexture, entityIn, this.modelElytra, limbSwing,
-              limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch,
-              scale);
-        }
-
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
-      }
+      });
     }
   }
 }

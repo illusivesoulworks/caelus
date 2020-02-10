@@ -23,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,6 +33,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -43,10 +45,12 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import top.theillusivec4.caelus.api.CaelusAPI;
+import top.theillusivec4.caelus.api.capability.RenderElytraCapability;
 import top.theillusivec4.caelus.client.ClientEventHandler;
 import top.theillusivec4.caelus.client.KeyRegistry;
 import top.theillusivec4.caelus.client.renderer.CaelusElytraLayer;
 import top.theillusivec4.caelus.common.CaelusConfig;
+import top.theillusivec4.caelus.common.capability.CaelusCapability;
 import top.theillusivec4.caelus.common.network.NetworkHandler;
 
 @Mod(Caelus.MODID)
@@ -58,7 +62,6 @@ public class Caelus {
       new ResourceLocation(Caelus.MODID, "textures/gui/flight_disabled.png");
 
   public Caelus() {
-
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
     ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CaelusConfig.clientSpec);
     MinecraftForge.EVENT_BUS.register(this);
@@ -66,6 +69,16 @@ public class Caelus {
 
   private void setup(FMLCommonSetupEvent evt) {
     NetworkHandler.register();
+    CaelusCapability.register();
+  }
+
+  @SubscribeEvent
+  public void attachCapabilities(AttachCapabilitiesEvent<Entity> evt) {
+    Entity entity = evt.getObject();
+
+    if (entity instanceof PlayerEntity) {
+      evt.addCapability(RenderElytraCapability.ID_RENDER, CaelusCapability.createProvider());
+    }
   }
 
   @SubscribeEvent

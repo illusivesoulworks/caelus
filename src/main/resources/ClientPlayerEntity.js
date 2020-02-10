@@ -18,7 +18,7 @@ function initializeCoreMod() {
                     var method = methods[m];
 
                     if (method.name === "livingTick" || method.name === "func_70636_d") {
-                        print("Found method ", method.toString());
+                        print("Found method livingTick ", method.toString());
                         var code = method.instructions;
                         var instr = code.toArray();
                         var count = 0;
@@ -30,8 +30,7 @@ function initializeCoreMod() {
                                 var jumpLabel = instruction.label;
                                 var inst = instruction.getPrevious().getPrevious().getPrevious();
                                 print("Found node ", inst.toString());
-                                code.insertBefore(inst, new VarInsnNode(opcodes.ALOAD, 0))
-                                code.insertBefore(inst, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/core/CaelusHooks", "sendElytraPacket", "(Lnet/minecraft/client/entity/player/ClientPlayerEntity;)V", false))
+                                code.insertBefore(inst, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/core/CaelusHooks", "sendElytraPacket", "()V", false))
                                 code.insertBefore(inst, new JumpInsnNode(opcodes.GOTO, jumpLabel))
                                 break;
                             }

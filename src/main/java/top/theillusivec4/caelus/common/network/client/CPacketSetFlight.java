@@ -63,13 +63,12 @@ public class CPacketSetFlight {
       if (sender == null) {
         return;
       }
-
-      sender.clearElytraFlying();
+      sender.func_226568_ek_();
       boolean isFalling = !msg.withMotion || sender.getMotion().y < 0.0D;
 
       if (!sender.onGround && isFalling && !sender.isElytraFlying() && !sender.isInWater()
           && CaelusAPI.canElytraFly(sender)) {
-        sender.setElytraFlying();
+        sender.func_226567_ej_();
 
         if (msg.withFirework) {
           PlayerInventory inventory = sender.inventory;

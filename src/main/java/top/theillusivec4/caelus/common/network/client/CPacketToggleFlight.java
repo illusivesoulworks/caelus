@@ -50,7 +50,6 @@ public class CPacketToggleFlight {
       if (sender == null) {
         return;
       }
-
       IAttributeInstance attributeInstance = sender.getAttribute(CaelusAPI.ELYTRA_FLIGHT);
 
       if (attributeInstance.hasModifier(CaelusAPI.DISABLE_FLIGHT)) {

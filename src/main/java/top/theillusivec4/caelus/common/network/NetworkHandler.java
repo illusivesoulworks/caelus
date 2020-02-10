@@ -40,7 +40,6 @@ public class NetworkHandler {
   private static int id = 0;
 
   public static void register() {
-
     INSTANCE = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(Caelus.MODID, "main"))
         .networkProtocolVersion(() -> PTC_VERSION)
         .clientAcceptedVersions(PTC_VERSION::equals)

@@ -29,6 +29,9 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraftforge.common.util.LazyOptional;
+import top.theillusivec4.caelus.api.capability.IRenderElytra;
+import top.theillusivec4.caelus.api.capability.RenderElytraCapability;
 
 public class CaelusAPI {
 
@@ -36,26 +39,30 @@ public class CaelusAPI {
    * The elytra flight attribute, will provide elytra flight if the value is 1.0 or above. No flight
    * otherwise.
    */
-  public static final IAttribute ELYTRA_FLIGHT =
-      new RangedAttribute(null, "caelus.elytraFlight", 0.0d, 0.0d, 1.0d).setShouldWatch(true);
+  public static final IAttribute ELYTRA_FLIGHT = new RangedAttribute(null, "caelus.elytraFlight",
+      0.0d, 0.0d, 1.0d).setShouldWatch(true);
+
+  public static LazyOptional<IRenderElytra> getRenderElytra(LivingEntity livingEntity) {
+    return livingEntity.getCapability(RenderElytraCapability.RENDER_ELYTRA);
+  }
 
   /**
    * The attribute modifier used for the vanilla elytra item. Note: Modders, do not use this for
    * most other implementations! For internal use only. This is only here to provide access to the
    * vanilla elytra's specific attribute modifier if absolutely needed.
    */
-  public static final AttributeModifier ELYTRA_MODIFIER =
-      new AttributeModifier(UUID.fromString("5b6c3728-9c24-42ae-83ac-70d61d8b8199"),
-          "Elytra modifier", 1.0f, AttributeModifier.Operation.ADDITION);
+  public static final AttributeModifier ELYTRA_MODIFIER = new AttributeModifier(
+      UUID.fromString("5b6c3728-9c24-42ae-83ac-70d61d8b8199"), "Elytra modifier", 1.0f,
+      AttributeModifier.Operation.ADDITION);
 
   /**
    * The attribute modifier used for disabling elytra flight when the toggle keybinding is pressed.
    * Note: Modders, do not use this for most other implementations! For internal use only. This is
    * only here to provide access to the specific disabling modifier if absolutely needed.
    */
-  public static final AttributeModifier DISABLE_FLIGHT =
-      new AttributeModifier(UUID.fromString("faadb8f3-c95c-44ce-ba68-0f31bd1b47d5"),
-          "Toggled modifier", -1.0d, AttributeModifier.Operation.MULTIPLY_TOTAL);
+  public static final AttributeModifier DISABLE_FLIGHT = new AttributeModifier(
+      UUID.fromString("faadb8f3-c95c-44ce-ba68-0f31bd1b47d5"), "Toggled modifier", -1.0d,
+      AttributeModifier.Operation.MULTIPLY_TOTAL);
 
   /**
    * Checks whether or not an entity is able to elytra fly. Checks against the elytra flight

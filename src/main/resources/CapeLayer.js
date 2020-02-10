@@ -17,8 +17,8 @@ function initializeCoreMod() {
                 for (m in methods) {
                     var method = methods[m];
 
-                    if (method.name === "render" || method.name === "func_212842_a_") {
-                        print("Found method ", method.toString());
+                    if (method.name === "render" || method.name === "func_225628_a_") {
+                        print("Found method render ", method.toString());
                         var code = method.instructions;
                         var instr = code.toArray();
 
@@ -30,8 +30,8 @@ function initializeCoreMod() {
                                 var inst = instruction;
                                 print("Found node ", inst.toString());
                                 code.insert(inst, new JumpInsnNode(opcodes.IFEQ, jumpLabel))
-                                code.insert(inst, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/core/CaelusHooks", "fireAndCheckRenderElytraEvent", "(Lnet/minecraft/entity/LivingEntity;)Z", false))
-                                code.insert(inst, new VarInsnNode(opcodes.ALOAD, 1))
+                                code.insert(inst, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/core/CaelusHooks", "hasRenderElytra", "(Lnet/minecraft/entity/LivingEntity;)Z", false))
+                                code.insert(inst, new VarInsnNode(opcodes.ALOAD, 4))
                                 break;
                             }
                         }

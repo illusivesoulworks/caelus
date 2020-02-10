@@ -17,7 +17,7 @@ function initializeCoreMod() {
                     var method = methods[m];
 
                     if (method.name === "updateElytra" || method.name === "func_184616_r") {
-                        print("Found method ", method.toString());
+                        print("Found method updateElytra ", method.toString());
                         var code = method.instructions;
                         var instr = code.toArray();
                         var count = 0;
