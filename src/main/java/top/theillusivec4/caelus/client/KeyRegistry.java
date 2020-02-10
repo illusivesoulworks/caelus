@@ -22,7 +22,6 @@ package top.theillusivec4.caelus.client;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import org.lwjgl.glfw.GLFW;
 import top.theillusivec4.caelus.Caelus;
 
 public class KeyRegistry {
@@ -35,8 +34,10 @@ public class KeyRegistry {
   public static KeyBinding triggerFlight;
 
   public static void register() {
-    triggerFlight = new KeyBinding(TRIGGER_DESC, InputMappings.INPUT_INVALID.getKeyCode(), CONFIG_CATEGORY);
-    toggleFlight = new KeyBinding(TOGGLE_DESC, GLFW.GLFW_KEY_V, CONFIG_CATEGORY);
+    triggerFlight = new KeyBinding(TRIGGER_DESC, InputMappings.INPUT_INVALID.getKeyCode(),
+        CONFIG_CATEGORY);
+    toggleFlight = new KeyBinding(TOGGLE_DESC, InputMappings.INPUT_INVALID.getKeyCode(),
+        CONFIG_CATEGORY);
     ClientRegistry.registerKeyBinding(toggleFlight);
     ClientRegistry.registerKeyBinding(triggerFlight);
   }
