@@ -129,7 +129,7 @@ curseforge {
 }
 
 publishing {
-    tasks.publish.dependsOn 'build', 'curseforge'
+    tasks.publish.dependsOn 'build'
     publications {
 
         mavenJava(MavenPublication) {
