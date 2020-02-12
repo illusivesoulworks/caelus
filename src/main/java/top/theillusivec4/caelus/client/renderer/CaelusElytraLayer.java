@@ -37,7 +37,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import top.theillusivec4.caelus.api.CaelusAPI;
-import top.theillusivec4.caelus.api.capability.IRenderElytra.State;
+import top.theillusivec4.caelus.api.CaelusAPI.ElytraRender;
 
 public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>> extends
     ElytraLayer<T, M> {
@@ -58,43 +58,42 @@ public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>>
     ItemStack itemstack = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
     if (itemstack.getItem() != Items.ELYTRA) {
-      CaelusAPI.getRenderElytra(entityIn).ifPresent(render -> {
+      ElytraRender elytraRender = CaelusAPI.getElytraRender(entityIn);
 
-        if (render.getRenderState() != State.NONE) {
-          ResourceLocation resourcelocation;
-          if (entityIn instanceof AbstractClientPlayerEntity) {
-            AbstractClientPlayerEntity abstractclientplayerentity = (AbstractClientPlayerEntity) entityIn;
-            boolean hasElytra = abstractclientplayerentity.isPlayerInfoSet()
-                && abstractclientplayerentity.getLocationElytra() != null;
-            boolean hasCape = abstractclientplayerentity.hasPlayerInfo()
-                && abstractclientplayerentity.getLocationCape() != null
-                && abstractclientplayerentity.isWearing(PlayerModelPart.CAPE);
+      if (elytraRender != ElytraRender.DISABLED) {
+        ResourceLocation resourcelocation;
+        if (entityIn instanceof AbstractClientPlayerEntity) {
+          AbstractClientPlayerEntity abstractclientplayerentity = (AbstractClientPlayerEntity) entityIn;
+          boolean hasElytra = abstractclientplayerentity.isPlayerInfoSet()
+              && abstractclientplayerentity.getLocationElytra() != null;
+          boolean hasCape = abstractclientplayerentity.hasPlayerInfo()
+              && abstractclientplayerentity.getLocationCape() != null && abstractclientplayerentity
+              .isWearing(PlayerModelPart.CAPE);
 
-            if (hasElytra) {
-              resourcelocation = abstractclientplayerentity.getLocationElytra();
-            } else if (hasCape) {
-              resourcelocation = abstractclientplayerentity.getLocationCape();
-            } else {
-              resourcelocation = TEXTURE_ELYTRA;
-            }
+          if (hasElytra) {
+            resourcelocation = abstractclientplayerentity.getLocationElytra();
+          } else if (hasCape) {
+            resourcelocation = abstractclientplayerentity.getLocationCape();
           } else {
             resourcelocation = TEXTURE_ELYTRA;
           }
-
-          matrixStackIn.push();
-          matrixStackIn.translate(0.0D, 0.0D, 0.125D);
-          this.getEntityModel().setModelAttributes(this.modelElytra);
-          this.modelElytra
-              .render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-          IVertexBuilder ivertexbuilder = ItemRenderer
-              .getBuffer(bufferIn, this.modelElytra.getRenderType(resourcelocation), false,
-                  render.getRenderState() == State.ENCHANTED);
-          this.modelElytra
-              .render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.DEFAULT_LIGHT,
-                  1.0F, 1.0F, 1.0F, 1.0F);
-          matrixStackIn.pop();
+        } else {
+          resourcelocation = TEXTURE_ELYTRA;
         }
-      });
+
+        matrixStackIn.push();
+        matrixStackIn.translate(0.0D, 0.0D, 0.125D);
+        this.getEntityModel().setModelAttributes(this.modelElytra);
+        this.modelElytra
+            .render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        IVertexBuilder ivertexbuilder = ItemRenderer
+            .getBuffer(bufferIn, this.modelElytra.getRenderType(resourcelocation), false,
+                elytraRender == ElytraRender.ENCHANTED);
+        this.modelElytra
+            .render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.DEFAULT_LIGHT,
+                1.0F, 1.0F, 1.0F, 1.0F);
+        matrixStackIn.pop();
+      }
     }
   }
 }

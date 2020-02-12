@@ -22,7 +22,7 @@ package top.theillusivec4.caelus.core;
 import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.fml.network.PacketDistributor;
 import top.theillusivec4.caelus.api.CaelusAPI;
-import top.theillusivec4.caelus.api.capability.IRenderElytra.State;
+import top.theillusivec4.caelus.api.CaelusAPI.ElytraRender;
 import top.theillusivec4.caelus.common.network.NetworkHandler;
 import top.theillusivec4.caelus.common.network.client.CPacketSetFlight;
 
@@ -33,7 +33,6 @@ public class CaelusHooks {
   }
 
   public static boolean hasRenderElytra(LivingEntity livingEntity) {
-    return CaelusAPI.getRenderElytra(livingEntity)
-        .map(render -> render.getRenderState() != State.NONE).orElse(false);
+    return CaelusAPI.getElytraRender(livingEntity) != ElytraRender.DISABLED;
   }
 }

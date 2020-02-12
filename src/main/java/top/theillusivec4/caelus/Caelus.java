@@ -19,11 +19,11 @@
 
 package top.theillusivec4.caelus;
 
+import java.util.function.Function;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,9 +33,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -43,14 +43,15 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import top.theillusivec4.caelus.api.CaelusAPI;
-import top.theillusivec4.caelus.api.capability.RenderElytraCapability;
+import top.theillusivec4.caelus.api.CaelusAPI.ElytraRender;
+import top.theillusivec4.caelus.api.CaelusAPI.IMC;
 import top.theillusivec4.caelus.client.ClientEventHandler;
 import top.theillusivec4.caelus.client.KeyRegistry;
 import top.theillusivec4.caelus.client.renderer.CaelusElytraLayer;
 import top.theillusivec4.caelus.common.CaelusConfig;
-import top.theillusivec4.caelus.common.capability.CaelusCapability;
 import top.theillusivec4.caelus.common.network.NetworkHandler;
 
 @Mod(Caelus.MODID)
@@ -58,27 +59,26 @@ public class Caelus {
 
   public static final String MODID = "caelus";
 
-  public static final ResourceLocation DISABLED_ICON =
-      new ResourceLocation(Caelus.MODID, "textures/gui/flight_disabled.png");
+  public static final ResourceLocation DISABLED_ICON = new ResourceLocation(Caelus.MODID,
+      "textures/gui/flight_disabled.png");
 
   public Caelus() {
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+    IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    eventBus.addListener(this::setup);
+    eventBus.addListener(this::process);
     ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CaelusConfig.clientSpec);
     MinecraftForge.EVENT_BUS.register(this);
   }
 
   private void setup(FMLCommonSetupEvent evt) {
     NetworkHandler.register();
-    CaelusCapability.register();
   }
 
-  @SubscribeEvent
-  public void attachCapabilities(AttachCapabilitiesEvent<Entity> evt) {
-    Entity entity = evt.getObject();
-
-    if (entity instanceof PlayerEntity) {
-      evt.addCapability(RenderElytraCapability.ID_RENDER, CaelusCapability.createProvider());
-    }
+  private void process(InterModProcessEvent evt) {
+    evt.getIMCStream(IMC.ELYTRA_RENDER::equals)
+        .filter(msg -> msg.getMessageSupplier().get() instanceof Function)
+        .map(msg -> (Function<LivingEntity, ElytraRender>) msg.getMessageSupplier().get())
+        .forEach(func -> CaelusAPI.renderFunctions.add(func));
   }
 
   @SubscribeEvent
@@ -99,15 +99,15 @@ public class Caelus {
 
     ItemStack from = evt.getFrom();
     ItemStack to = evt.getTo();
-    IAttributeInstance attributeInstance =
-        evt.getEntityLiving().getAttribute(CaelusAPI.ELYTRA_FLIGHT);
+    IAttributeInstance attributeInstance = evt.getEntityLiving()
+        .getAttribute(CaelusAPI.ELYTRA_FLIGHT);
 
     if (from.getItem() instanceof ElytraItem) {
       attributeInstance.removeModifier(CaelusAPI.ELYTRA_MODIFIER);
     }
 
-    if (to.getItem() instanceof ElytraItem &&
-        !attributeInstance.hasModifier(CaelusAPI.ELYTRA_MODIFIER) && ElytraItem.isUsable(to)) {
+    if (to.getItem() instanceof ElytraItem && !attributeInstance
+        .hasModifier(CaelusAPI.ELYTRA_MODIFIER) && ElytraItem.isUsable(to)) {
       attributeInstance.applyModifier(CaelusAPI.ELYTRA_MODIFIER);
     }
   }
@@ -130,8 +130,7 @@ public class Caelus {
           .forEach(renderer -> renderer.addLayer(new CaelusElytraLayer<>(renderer)));
       rendererManager.renderers.values().forEach(renderer -> {
         if (renderer instanceof LivingRenderer) {
-          LivingRenderer<? extends LivingEntity, ? extends EntityModel> livingRenderer =
-              (LivingRenderer<? extends LivingEntity, ? extends EntityModel>) renderer;
+          LivingRenderer<? extends LivingEntity, ? extends EntityModel> livingRenderer = (LivingRenderer<? extends LivingEntity, ? extends EntityModel>) renderer;
           livingRenderer.addLayer(new CaelusElytraLayer(livingRenderer));
         }
       });

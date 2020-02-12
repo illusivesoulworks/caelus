@@ -19,7 +19,10 @@
 
 package top.theillusivec4.caelus.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
@@ -29,9 +32,6 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraftforge.common.util.LazyOptional;
-import top.theillusivec4.caelus.api.capability.IRenderElytra;
-import top.theillusivec4.caelus.api.capability.RenderElytraCapability;
 
 public class CaelusAPI {
 
@@ -41,10 +41,6 @@ public class CaelusAPI {
    */
   public static final IAttribute ELYTRA_FLIGHT = new RangedAttribute(null, "caelus.elytraFlight",
       0.0d, 0.0d, 1.0d).setShouldWatch(true);
-
-  public static LazyOptional<IRenderElytra> getRenderElytra(LivingEntity livingEntity) {
-    return livingEntity.getCapability(RenderElytraCapability.RENDER_ELYTRA);
-  }
 
   /**
    * The attribute modifier used for the vanilla elytra item. Note: Modders, do not use this for
@@ -80,5 +76,29 @@ public class CaelusAPI {
     }
 
     return livingEntity.getAttribute(CaelusAPI.ELYTRA_FLIGHT).getValue() >= 1.0d;
+  }
+
+  public static List<Function<LivingEntity, ElytraRender>> renderFunctions = new ArrayList<>();
+
+  public static ElytraRender getElytraRender(LivingEntity livingEntity) {
+    ElytraRender render = ElytraRender.DISABLED;
+
+    for (Function<LivingEntity, ElytraRender> func : renderFunctions) {
+      if (func.apply(livingEntity) == ElytraRender.NORMAL) {
+        render = ElytraRender.NORMAL;
+      } else if (func.apply(livingEntity) == ElytraRender.ENCHANTED) {
+        return ElytraRender.ENCHANTED;
+      }
+    }
+    return render;
+  }
+
+  public static final class IMC {
+
+    public static final String ELYTRA_RENDER = "elytraRender";
+  }
+
+  public enum ElytraRender {
+    DISABLED, NORMAL, ENCHANTED
   }
 }
