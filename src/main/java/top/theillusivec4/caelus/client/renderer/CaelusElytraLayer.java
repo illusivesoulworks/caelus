@@ -60,7 +60,7 @@ public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>>
     if (itemstack.getItem() != Items.ELYTRA) {
       ElytraRender elytraRender = CaelusAPI.getElytraRender(entityIn);
 
-      if (elytraRender != ElytraRender.DISABLED) {
+      if (elytraRender != ElytraRender.NONE) {
         ResourceLocation resourcelocation;
         if (entityIn instanceof AbstractClientPlayerEntity) {
           AbstractClientPlayerEntity abstractclientplayerentity = (AbstractClientPlayerEntity) entityIn;

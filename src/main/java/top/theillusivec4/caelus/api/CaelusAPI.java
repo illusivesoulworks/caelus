@@ -80,8 +80,14 @@ public class CaelusAPI {
 
   public static List<Function<LivingEntity, ElytraRender>> renderFunctions = new ArrayList<>();
 
+  /**
+   * Retrieves the render state of the elytra on the specified entity.
+   *
+   * @param livingEntity The entity to check for the elytra render.
+   * @return The render state of the elytra on the entity as an {@link ElytraRender}
+   */
   public static ElytraRender getElytraRender(LivingEntity livingEntity) {
-    ElytraRender render = ElytraRender.DISABLED;
+    ElytraRender render = ElytraRender.NONE;
 
     for (Function<LivingEntity, ElytraRender> func : renderFunctions) {
       if (func.apply(livingEntity) == ElytraRender.NORMAL) {
@@ -99,6 +105,6 @@ public class CaelusAPI {
   }
 
   public enum ElytraRender {
-    DISABLED, NORMAL, ENCHANTED
+    NONE, NORMAL, ENCHANTED
   }
 }

@@ -33,6 +33,6 @@ public class CaelusHooks {
   }
 
   public static boolean hasRenderElytra(LivingEntity livingEntity) {
-    return CaelusAPI.getElytraRender(livingEntity) != ElytraRender.DISABLED;
+    return CaelusAPI.getElytraRender(livingEntity) != ElytraRender.NONE;
   }
 }
