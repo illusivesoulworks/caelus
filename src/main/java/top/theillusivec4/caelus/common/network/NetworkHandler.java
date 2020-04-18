@@ -30,6 +30,7 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 import top.theillusivec4.caelus.Caelus;
 import top.theillusivec4.caelus.common.network.client.CPacketSetFlight;
 import top.theillusivec4.caelus.common.network.client.CPacketToggleFlight;
+import top.theillusivec4.caelus.common.network.client.CPacketUseFirework;
 
 public class NetworkHandler {
 
@@ -41,26 +42,20 @@ public class NetworkHandler {
 
   public static void register() {
     INSTANCE = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(Caelus.MODID, "main"))
-        .networkProtocolVersion(() -> PTC_VERSION)
-        .clientAcceptedVersions(PTC_VERSION::equals)
-        .serverAcceptedVersions(PTC_VERSION::equals)
-        .simpleChannel();
+        .networkProtocolVersion(() -> PTC_VERSION).clientAcceptedVersions(PTC_VERSION::equals)
+        .serverAcceptedVersions(PTC_VERSION::equals).simpleChannel();
 
-    registerMessage(CPacketToggleFlight.class,
-        CPacketToggleFlight::encode,
-        CPacketToggleFlight::decode,
-        CPacketToggleFlight::handle);
-    registerMessage(CPacketSetFlight.class,
-        CPacketSetFlight::encode,
-        CPacketSetFlight::decode,
+    registerMessage(CPacketToggleFlight.class, CPacketToggleFlight::encode,
+        CPacketToggleFlight::decode, CPacketToggleFlight::handle);
+    registerMessage(CPacketSetFlight.class, CPacketSetFlight::encode, CPacketSetFlight::decode,
         CPacketSetFlight::handle);
+    registerMessage(CPacketUseFirework.class, CPacketUseFirework::encode,
+        CPacketUseFirework::decode, CPacketUseFirework::handle);
   }
 
-  private static <M> void registerMessage(Class<M> messageType,
-      BiConsumer<M, PacketBuffer> encoder,
+  private static <M> void registerMessage(Class<M> messageType, BiConsumer<M, PacketBuffer> encoder,
       Function<PacketBuffer, M> decoder,
       BiConsumer<M, Supplier<NetworkEvent.Context>> messageConsumer) {
-
     INSTANCE.registerMessage(id++, messageType, encoder, decoder, messageConsumer);
   }
 }

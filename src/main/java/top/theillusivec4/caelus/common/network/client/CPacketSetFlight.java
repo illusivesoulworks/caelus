@@ -65,41 +65,6 @@ public class CPacketSetFlight {
       if (!sender.onGround && !sender.isElytraFlying() && !sender.isInWater() && CaelusAPI
           .canElytraFly(sender)) {
         sender.func_226567_ej_();
-
-        if (msg.withFirework) {
-          PlayerInventory inventory = sender.inventory;
-          ItemStack firework = ItemStack.EMPTY;
-
-          if (inventory.getCurrentItem().getItem() instanceof FireworkRocketItem) {
-            firework = inventory.getCurrentItem();
-          } else {
-            final List<NonNullList<ItemStack>> allInventories = ImmutableList
-                .of(inventory.offHandInventory, inventory.mainInventory);
-
-            for (List<ItemStack> list : allInventories) {
-
-              for (ItemStack stack : list) {
-
-                if (stack.getItem() instanceof FireworkRocketItem) {
-                  firework = stack;
-                  break;
-                }
-              }
-
-              if (!firework.isEmpty()) {
-                break;
-              }
-            }
-          }
-
-          if (!firework.isEmpty()) {
-            sender.world.addEntity(new FireworkRocketEntity(sender.world, firework.copy(), sender));
-
-            if (!sender.abilities.isCreativeMode) {
-              firework.shrink(1);
-            }
-          }
-        }
       }
     });
     ctx.get().setPacketHandled(true);

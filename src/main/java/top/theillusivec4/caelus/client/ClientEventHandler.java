@@ -34,8 +34,11 @@ import top.theillusivec4.caelus.common.CaelusConfig;
 import top.theillusivec4.caelus.common.network.NetworkHandler;
 import top.theillusivec4.caelus.common.network.client.CPacketSetFlight;
 import top.theillusivec4.caelus.common.network.client.CPacketToggleFlight;
+import top.theillusivec4.caelus.common.network.client.CPacketUseFirework;
 
 public class ClientEventHandler {
+
+  private static final int TRIGGER_FIREWORK_TICKS = 5;
 
   private static boolean triggerJump = false;
   private static int cooldown = 0;
@@ -44,10 +47,9 @@ public class ClientEventHandler {
 
   private static void triggerElytra() {
     NetworkHandler.INSTANCE
-        .send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight(triggerFlightUse > 0));
+        .send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight());
     triggerJump = false;
     triggerFlight = false;
-    triggerFlightUse = 0;
   }
 
   @SubscribeEvent
@@ -89,16 +91,13 @@ public class ClientEventHandler {
         if (isTriggerKeyDown && !triggerJump) {
 
           if (!player.onGround) {
-
-            if (player.getMotion().y < 0.0D) {
-              triggerElytra();
-            }
+            triggerElytra();
           } else {
             triggerJump = true;
           }
         }
 
-        if (triggerFlight && !player.onGround && player.getMotion().y < 0.0D) {
+        if (triggerFlight && !player.onGround) {
           triggerElytra();
         }
       }
@@ -107,9 +106,18 @@ public class ClientEventHandler {
         cooldown--;
       }
 
-      if (CaelusConfig.CLIENT.simpleTakeoff.get() && isTriggerKeyDown && (triggerFlight
-          || triggerJump)) {
-        triggerFlightUse++;
+      if (CaelusConfig.CLIENT.simpleTakeoff.get()) {
+
+        if (isTriggerKeyDown) {
+          triggerFlightUse++;
+        } else {
+
+          if (triggerFlightUse > TRIGGER_FIREWORK_TICKS) {
+              NetworkHandler.INSTANCE
+                  .send(PacketDistributor.SERVER.noArg(), new CPacketUseFirework());
+          }
+          triggerFlightUse = 0;
+        }
       } else {
         triggerFlightUse = 0;
       }
