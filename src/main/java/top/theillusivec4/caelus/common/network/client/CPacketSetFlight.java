@@ -34,25 +34,22 @@ import top.theillusivec4.caelus.api.CaelusAPI;
 
 public class CPacketSetFlight {
 
-  private final boolean withMotion;
   private final boolean withFirework;
 
-  public CPacketSetFlight(boolean withMotion) {
-    this(withMotion, false);
+  public CPacketSetFlight() {
+    this(false);
   }
 
-  public CPacketSetFlight(boolean withMotion, boolean withFirework) {
-    this.withMotion = withMotion;
+  public CPacketSetFlight(boolean withFirework) {
     this.withFirework = withFirework;
   }
 
   public static void encode(CPacketSetFlight msg, PacketBuffer buf) {
-    buf.writeBoolean(msg.withMotion);
     buf.writeBoolean(msg.withFirework);
   }
 
   public static CPacketSetFlight decode(PacketBuffer buf) {
-    return new CPacketSetFlight(buf.readBoolean(), buf.readBoolean());
+    return new CPacketSetFlight(buf.readBoolean());
   }
 
   public static void handle(CPacketSetFlight msg, Supplier<NetworkEvent.Context> ctx) {
@@ -64,10 +61,9 @@ public class CPacketSetFlight {
         return;
       }
       sender.func_226568_ek_();
-      boolean isFalling = !msg.withMotion || sender.getMotion().y < 0.0D;
 
-      if (!sender.onGround && isFalling && !sender.isElytraFlying() && !sender.isInWater()
-          && CaelusAPI.canElytraFly(sender)) {
+      if (!sender.onGround && !sender.isElytraFlying() && !sender.isInWater() && CaelusAPI
+          .canElytraFly(sender)) {
         sender.func_226567_ej_();
 
         if (msg.withFirework) {

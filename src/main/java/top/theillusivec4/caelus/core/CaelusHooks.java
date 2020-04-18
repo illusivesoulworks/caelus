@@ -19,6 +19,8 @@
 
 package top.theillusivec4.caelus.core;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.fml.network.PacketDistributor;
 import top.theillusivec4.caelus.api.CaelusAPI;
@@ -29,10 +31,23 @@ import top.theillusivec4.caelus.common.network.client.CPacketSetFlight;
 public class CaelusHooks {
 
   public static void sendElytraPacket() {
-    NetworkHandler.INSTANCE.send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight(true));
+    ClientPlayerEntity clientPlayerEntity = Minecraft.getInstance().player;
+
+    if (clientPlayerEntity != null && canElytraFly(clientPlayerEntity)) {
+      NetworkHandler.INSTANCE.send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight());
+    }
   }
 
   public static boolean hasRenderElytra(LivingEntity livingEntity) {
     return CaelusAPI.getElytraRender(livingEntity) != ElytraRender.NONE;
+  }
+
+  private static boolean canElytraFly(ClientPlayerEntity clientPlayerEntity) {
+    if (!clientPlayerEntity.onGround && !clientPlayerEntity.isElytraFlying() && !clientPlayerEntity
+        .isInWater() && CaelusAPI.canElytraFly(clientPlayerEntity)) {
+      clientPlayerEntity.func_226567_ej_();
+      return true;
+    }
+    return false;
   }
 }

@@ -44,7 +44,7 @@ public class ClientEventHandler {
 
   private static void triggerElytra() {
     NetworkHandler.INSTANCE
-        .send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight(false, triggerFlightUse > 0));
+        .send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight(triggerFlightUse > 0));
     triggerJump = false;
     triggerFlight = false;
     triggerFlightUse = 0;
