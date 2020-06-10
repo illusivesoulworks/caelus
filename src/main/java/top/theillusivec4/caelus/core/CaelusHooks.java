@@ -23,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.fml.network.PacketDistributor;
+import top.theillusivec4.caelus.Caelus;
 import top.theillusivec4.caelus.api.CaelusAPI;
 import top.theillusivec4.caelus.api.CaelusAPI.ElytraRender;
 import top.theillusivec4.caelus.common.network.NetworkHandler;
@@ -40,6 +41,10 @@ public class CaelusHooks {
 
   public static boolean hasRenderElytra(LivingEntity livingEntity) {
     return CaelusAPI.getElytraRender(livingEntity) != ElytraRender.NONE;
+  }
+
+  public static boolean hasRenderCape(LivingEntity livingEntity){
+    return CaelusAPI.getElytraRender(livingEntity) == ElytraRender.NONE;
   }
 
   private static boolean canElytraFly(ClientPlayerEntity clientPlayerEntity) {
