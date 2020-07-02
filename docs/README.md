@@ -4,7 +4,7 @@
 
 Caelus is a small utility mod that abstracts the hardcoded vanilla elytra behavior into a more generic elytra flight attribute and exposes this to mod developers seeking to implement elytra flight for their own mods.
 
-All modders have to do is call the CaelusAPI.ELYTRA_FLIGHT attribute where applicable. The attribute has a default value of 0, which forbids any elytra flight. Attribute values greater than or equal to 1 will enable elytra flight. The vanilla elytra item has also been changed to use this attribute, keeping its behavior the same as normal.
+All modders have to do is call the CaelusApi.ELYTRA_FLIGHT attribute where applicable. The attribute has a default value of 0, which forbids any elytra flight. Attribute values greater than or equal to 1 will enable elytra flight. The vanilla elytra item has also been changed to use this attribute, keeping its behavior the same as normal.
 
 ## Adding to Your Project:
 
@@ -17,7 +17,8 @@ repositories {
 }
 
 dependencies {
-    compile 'top.theillusivec4.caelus:caelus:${version}'
+    runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus:${version}")
+    compileOnly fg.deobf("top.theillusivec4.caelus:caelus:${version}:api")
 }
 ```
 
