@@ -1,5 +1,6 @@
 {
   "ClientPlayerEntity": "ClientPlayerEntity.js",
   "LivingEntity": "LivingEntity.js",
-  "CapeLayer": "CapeLayer.js"
+  "CapeLayer": "CapeLayer.js",
+  "PlayerEntity": "PlayerEntity.js"
 }

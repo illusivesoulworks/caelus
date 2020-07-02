@@ -17,17 +17,18 @@
  * License along with Caelus.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package top.theillusivec4.caelus.core;
+package top.theillusivec4.caelus.common;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.Effects;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.network.PacketDistributor;
-import top.theillusivec4.caelus.Caelus;
-import top.theillusivec4.caelus.api.CaelusAPI;
-import top.theillusivec4.caelus.api.CaelusAPI.ElytraRender;
+import top.theillusivec4.caelus.api.CaelusApi;
+import top.theillusivec4.caelus.api.RenderElytraEvent;
+import top.theillusivec4.caelus.common.network.CPacketSetFlight;
 import top.theillusivec4.caelus.common.network.NetworkHandler;
-import top.theillusivec4.caelus.common.network.client.CPacketSetFlight;
 
 public class CaelusHooks {
 
@@ -39,18 +40,18 @@ public class CaelusHooks {
     }
   }
 
-  public static boolean hasRenderElytra(LivingEntity livingEntity) {
-    return CaelusAPI.getElytraRender(livingEntity) != ElytraRender.NONE;
-  }
-
-  public static boolean hasRenderCape(LivingEntity livingEntity){
-    return CaelusAPI.getElytraRender(livingEntity) == ElytraRender.NONE;
+  public static boolean canRenderCape(PlayerEntity playerEntity) {
+    RenderElytraEvent renderElytraEvent = new RenderElytraEvent(playerEntity);
+    MinecraftForge.EVENT_BUS.post(renderElytraEvent);
+    return !renderElytraEvent.canRender();
   }
 
   private static boolean canElytraFly(ClientPlayerEntity clientPlayerEntity) {
-    if (!clientPlayerEntity.onGround && !clientPlayerEntity.isElytraFlying() && !clientPlayerEntity
-        .isInWater() && CaelusAPI.canElytraFly(clientPlayerEntity)) {
-      clientPlayerEntity.func_226567_ej_();
+
+    if (!clientPlayerEntity.func_233570_aj_() && !clientPlayerEntity.isElytraFlying()
+        && !clientPlayerEntity.isInWater() && !clientPlayerEntity.isPotionActive(Effects.LEVITATION)
+        && CaelusApi.canElytraFly(clientPlayerEntity)) {
+      clientPlayerEntity.startFallFlying();
       return true;
     }
     return false;

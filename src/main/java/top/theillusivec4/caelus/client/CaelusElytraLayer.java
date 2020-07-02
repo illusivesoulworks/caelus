@@ -17,7 +17,7 @@
  * License along with Caelus.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package top.theillusivec4.caelus.client.renderer;
+package top.theillusivec4.caelus.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -30,20 +30,17 @@ import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.model.ElytraModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerModelPart;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
-import top.theillusivec4.caelus.api.CaelusAPI;
-import top.theillusivec4.caelus.api.CaelusAPI.ElytraRender;
+import net.minecraftforge.common.MinecraftForge;
+import top.theillusivec4.caelus.api.RenderElytraEvent;
 
-public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>> extends
+public class CaelusElytraLayer<T extends PlayerEntity, M extends EntityModel<T>> extends
     ElytraLayer<T, M> {
-
-  private static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation(
-      "textures/entity/elytra.png");
 
   private final ElytraModel<T> modelElytra = new ElytraModel<>();
 
@@ -58,10 +55,12 @@ public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>>
     ItemStack itemstack = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
     if (itemstack.getItem() != Items.ELYTRA) {
-      ElytraRender elytraRender = CaelusAPI.getElytraRender(entityIn);
+      RenderElytraEvent renderElytraEvent = new RenderElytraEvent(entityIn);
+      MinecraftForge.EVENT_BUS.post(renderElytraEvent);
 
-      if (elytraRender != ElytraRender.NONE) {
+      if (renderElytraEvent.canRender()) {
         ResourceLocation resourcelocation;
+
         if (entityIn instanceof AbstractClientPlayerEntity) {
           AbstractClientPlayerEntity abstractclientplayerentity = (AbstractClientPlayerEntity) entityIn;
           boolean hasElytra = abstractclientplayerentity.isPlayerInfoSet()
@@ -75,23 +74,23 @@ public class CaelusElytraLayer<T extends LivingEntity, M extends EntityModel<T>>
           } else if (hasCape) {
             resourcelocation = abstractclientplayerentity.getLocationCape();
           } else {
-            resourcelocation = TEXTURE_ELYTRA;
+            resourcelocation = renderElytraEvent.getResourceLocation();
           }
         } else {
-          resourcelocation = TEXTURE_ELYTRA;
+          resourcelocation = renderElytraEvent.getResourceLocation();
         }
-
         matrixStackIn.push();
         matrixStackIn.translate(0.0D, 0.0D, 0.125D);
-        this.getEntityModel().setModelAttributes(this.modelElytra);
+        this.getEntityModel().copyModelAttributesTo(this.modelElytra);
         this.modelElytra
-            .render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            .setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw,
+                headPitch);
         IVertexBuilder ivertexbuilder = ItemRenderer
-            .getBuffer(bufferIn, this.modelElytra.getRenderType(resourcelocation), false,
-                elytraRender == ElytraRender.ENCHANTED);
+            .func_239391_c_(bufferIn, this.modelElytra.getRenderType(resourcelocation), false,
+                renderElytraEvent.isEnchanted());
         this.modelElytra
-            .render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.DEFAULT_LIGHT,
-                1.0F, 1.0F, 1.0F, 1.0F);
+            .render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F,
+                1.0F, 1.0F, 1.0F);
         matrixStackIn.pop();
       }
     }

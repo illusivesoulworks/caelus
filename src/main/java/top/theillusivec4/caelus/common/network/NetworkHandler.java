@@ -19,18 +19,10 @@
 
 package top.theillusivec4.caelus.common.network;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import top.theillusivec4.caelus.Caelus;
-import top.theillusivec4.caelus.common.network.client.CPacketSetFlight;
-import top.theillusivec4.caelus.common.network.client.CPacketToggleFlight;
-import top.theillusivec4.caelus.common.network.client.CPacketUseFirework;
 
 public class NetworkHandler {
 
@@ -45,17 +37,7 @@ public class NetworkHandler {
         .networkProtocolVersion(() -> PTC_VERSION).clientAcceptedVersions(PTC_VERSION::equals)
         .serverAcceptedVersions(PTC_VERSION::equals).simpleChannel();
 
-    registerMessage(CPacketToggleFlight.class, CPacketToggleFlight::encode,
-        CPacketToggleFlight::decode, CPacketToggleFlight::handle);
-    registerMessage(CPacketSetFlight.class, CPacketSetFlight::encode, CPacketSetFlight::decode,
-        CPacketSetFlight::handle);
-    registerMessage(CPacketUseFirework.class, CPacketUseFirework::encode,
-        CPacketUseFirework::decode, CPacketUseFirework::handle);
-  }
-
-  private static <M> void registerMessage(Class<M> messageType, BiConsumer<M, PacketBuffer> encoder,
-      Function<PacketBuffer, M> decoder,
-      BiConsumer<M, Supplier<NetworkEvent.Context>> messageConsumer) {
-    INSTANCE.registerMessage(id++, messageType, encoder, decoder, messageConsumer);
+    INSTANCE.registerMessage(id++, CPacketSetFlight.class, CPacketSetFlight::encode,
+        CPacketSetFlight::decode, CPacketSetFlight::handle);
   }
 }
