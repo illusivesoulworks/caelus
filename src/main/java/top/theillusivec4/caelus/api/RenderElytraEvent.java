@@ -30,6 +30,13 @@ public class RenderElytraEvent extends PlayerEvent {
     super(playerEntity);
   }
 
+  /**
+   * If true, will render the elytra model given the entity is not already wearing an elytra in the
+   * chest slot.
+   * <p>
+   * Note that this result will also affect cape rendering as rendering elytras will disable
+   * rendering capes; however, elytras will still render with cape textures when appropriate.
+   */
   public boolean canRender() {
     return this.render;
   }
@@ -38,6 +45,10 @@ public class RenderElytraEvent extends PlayerEvent {
     this.render = render;
   }
 
+  /**
+   * If true and {@link RenderElytraEvent#canRender()} is true, the elytra model will render with
+   * the enchantment glow.
+   */
   public boolean isEnchanted() {
     return this.enchanted;
   }
@@ -46,6 +57,9 @@ public class RenderElytraEvent extends PlayerEvent {
     this.enchanted = enchanted;
   }
 
+  /**
+   * The texture to render on the elytra model if {@link RenderElytraEvent#canRender()} is true.
+   */
   public ResourceLocation getResourceLocation() {
     return this.resourceLocation;
   }
