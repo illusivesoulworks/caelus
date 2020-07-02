@@ -4,6 +4,19 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
+/**
+ * This event is fired when the game attempts to render the elytra model while the player is not
+ * wearing a vanilla elytra. This can be used to enable rendering, enable enchantment glow, and/or
+ * use a custom texture.
+ * <br>
+ * This event is fired client-side only.
+ * <br>
+ * This event is not {@link net.minecraftforge.eventbus.api.Cancelable}. <br>
+ * <br>
+ * This event does not have a result. {@link HasResult} <br>
+ * <br>
+ * This event is fired on the {@link net.minecraftforge.common.MinecraftForge#EVENT_BUS}.
+ **/
 public class RenderElytraEvent extends PlayerEvent {
 
   private static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation(
