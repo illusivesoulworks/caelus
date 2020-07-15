@@ -30,7 +30,7 @@ function initializeCoreMod() {
                 print("Found node ", inst.toString());
                 code.insert(inst, new JumpInsnNode(opcodes.IFEQ, jumpLabel));
                 code.insert(inst, new MethodInsnNode(opcodes.INVOKESTATIC,
-                    "top/theillusivec4/caelus/core/CaelusHooks",
+                    "top/theillusivec4/caelus/common/CaelusHooks",
                     "canRenderCape",
                     "(Lnet/minecraft/entity/player/PlayerEntity;)Z",
                     false));
