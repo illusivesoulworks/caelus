@@ -45,7 +45,7 @@ public class MixinHooks {
 
       if (stack.getItem() instanceof ElytraItem && !attributeInstance
           .hasModifier(CaelusApi.VANILLA_ELYTRA_MODIFIER) && ElytraItem.isUsable(stack)) {
-        attributeInstance.removeModifier(CaelusApi.VANILLA_ELYTRA_MODIFIER);
+        attributeInstance.addTemporaryModifier(CaelusApi.VANILLA_ELYTRA_MODIFIER);
       }
     }
   }
