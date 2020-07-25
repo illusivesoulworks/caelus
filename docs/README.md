@@ -1,4 +1,4 @@
-# Caelus API [![](http://cf.way2muchnoise.eu/versions/caelus.svg)](https://www.curseforge.com/minecraft/mc-mods/caelus) [![](http://cf.way2muchnoise.eu/short_caelus_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/caelus/files) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg?&style=flat-square)](https://www.gnu.org/licenses/lgpl-3.0) [![](https://img.shields.io/discord/500852157503766538.svg?color=green&label=Discord&style=flat-square)](https://discord.gg/JWgrdwt)
+# Caelus API [![](http://cf.way2muchnoise.eu/versions/caelus-fabric.svg)](https://www.curseforge.com/minecraft/mc-mods/caelus-fabric) [![](http://cf.way2muchnoise.eu/short_caelus-fabric_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/caelus-fabric/files) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg?&style=flat-square)](https://www.gnu.org/licenses/lgpl-3.0) [![](https://img.shields.io/discord/500852157503766538.svg?color=green&label=Discord&style=flat-square)](https://discord.gg/JWgrdwt)
 
 ## Overview
 
@@ -9,6 +9,7 @@ All modders have to do is call the CaelusApi.ELYTRA_FLIGHT attribute where appli
 ## Adding to Your Project:
 
 Add the following to your build.gradle file:
+
 ```
 repositories {
     maven {
@@ -17,9 +18,8 @@ repositories {
 }
 
 dependencies {
-    runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus:${version}")
-    compileOnly fg.deobf("top.theillusivec4.caelus:caelus:${version}:api")
+    modImplementation "top.theillusivec4.caelus:caelus:${version}"
 }
 ```
 
- Replace ${version} with the version of Caelus that you want to use.
+Replace ${version} with the version of Caelus that you want to use.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019  C4
+ * Copyright (c) 2019-2020 C4
  *
  * This file is part of Caelus, a mod made for Minecraft.
  *
