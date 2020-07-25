@@ -1,59 +1,53 @@
-buildscript {
-    repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        maven { url 'https://plugins.gradle.org/m2/' }
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
-    }
+plugins {
+    id 'fabric-loom' version '0.4-SNAPSHOT'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'maven-publish'
 }
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'com.matthewprenger.cursegradle'
-apply plugin: 'maven-publish'
 
-version = "${version_minecraft}-${mod_version}"
-group = "${mod_group}"
-archivesBaseName = "${mod_id}"
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
 
 minecraft {
-    mappings channel: 'snapshot', version: "${version_mcp}".toString()
+}
 
-    runs {
-        client {
-            workingDirectory project.file('run')
-            
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                caelus {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-            
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                caelus {
-                    source sourceSets.main
-                }
-            }
-        }
+repositories {
+    maven {
+        url = "https://www.cursemaven.com"
     }
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${version_forge}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "fabric.mod.json"
+        expand 'version': project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "fabric.mod.json"
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
 }
 
 sourceSets {
@@ -64,81 +58,46 @@ sourceSets {
     }
 }
 
-jar {
-    manifest {
-        attributes(["Specification-Title": "${mod_name}",
-                    "Specification-Vendor": "${mod_author}",
-                    "Specification-Version": "${version}",
-                    "Implementation-Title": "${mod_name}",
-                    "Implementation-Version": "${version}",
-                    "Implementation-Vendor" :"${mod_author}",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
-    }
-}
-
-def reobfFile = file("build/reobfJar/output.jar")
-def reobfArtifact = artifacts.add('default', reobfFile) {
-    type 'jar'
-    builtBy 'reobfJar'
-}
-
-task apiJar(type: Jar) {
-    classifier = 'api'
-    include 'top/theillusivec4/caelus/api/**/*'
-    from sourceSets.main.allSource
-    from sourceSets.main.output
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allJava
-}
-
-task deobfJar(type: Jar) {
-    classifier = 'deobf'
-    from sourceSets.main.output
-}
-
-tasks.build.dependsOn apiJar, sourcesJar, deobfJar
-
-processResources {
-
-    from(sourceSets.main.resources.srcDirs) {
-        include 'META-INF/mods.toml'
-        expand 'version': project.version, 'mod_id' : mod_id, 'mod_name': mod_name, 'mod_url': mod_url, 'mod_author': mod_author, 'mod_description': mod_description, 'mod_icon': mod_icon
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'META-INF/mods.toml'
-    }
-}
-
-
 curseforge {
-
     project {
         apiKey = findProperty('curseKey') ?: 0
         id = "${curse_id}"
         releaseType = "${curse_release}"
         changelogType = 'markdown'
         changelog = file('docs/CHANGELOG.md')
+        addGameVersion "Java 8"
+        addGameVersion "Fabric"
+        addGameVersion project.minecraft_version
         addArtifact(sourcesJar)
-        addArtifact(apiJar)
-        addArtifact(deobfJar)
+        mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+
+        relations {
+            requiredDependency 'fabric-api'
+        }
+
+        afterEvaluate {
+            uploadTask.dependsOn(remapJar)
+        }
+    }
+
+    options {
+        forgeGradleIntegration = false
     }
 }
 
 publishing {
     tasks.publish.dependsOn 'build'
-    publications {
 
+    publications {
         mavenJava(MavenPublication) {
-            artifactId project.archivesBaseName
-            
-            artifact reobfArtifact
-            artifact sourcesJar
-            artifact apiJar
-            artifact deobfJar
+            artifactId = project.archives_base_name
+
+            artifact(remapJar) {
+                builtBy remapJar
+            }
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
         }
     }
 

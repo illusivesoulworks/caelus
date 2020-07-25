@@ -1,73 +1,39 @@
-/*
- * Copyright (C) 2019  C4
- *
- * This file is part of Caelus, a mod made for Minecraft.
- *
- * Caelus is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published
- * by the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Caelus is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with Caelus.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 package top.theillusivec4.caelus.api;
 
 import java.util.UUID;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.ai.attributes.RangedAttribute;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ElytraItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
+import net.minecraft.entity.attribute.ClampedEntityAttribute;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import top.theillusivec4.caelus.core.CaelusApiImpl;
 
-public class CaelusApi {
+public interface CaelusApi {
 
-  public static final String MODID = "caelus";
-  public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister
-      .create(Attribute.class, MODID);
+  static CaelusApi getInstance() {
+    return CaelusApiImpl.INSTANCE;
+  }
+
+  String MODID = "caelus";
 
   /**
    * The elytra flight attribute, will provide elytra flight if the value is 1.0 or above. No flight
    * otherwise.
    */
-  public static final RegistryObject<Attribute> ELYTRA_FLIGHT = ATTRIBUTES.register("elytra_flight",
-      () -> new RangedAttribute("caelus.elytraFlight", 0.0d, 0.0d, 1.0d).func_233753_a_(true));
+  EntityAttribute ELYTRA_FLIGHT = new ClampedEntityAttribute("caelus.elytra_flight", 0.0D, 0.0D,
+      1.0D).setTracked(true);
 
   /**
    * The attribute modifier used for the vanilla elytra item.
    */
-  public static final AttributeModifier ELYTRA_MODIFIER = new AttributeModifier(
+  EntityAttributeModifier VANILLA_ELYTRA_MODIFIER = new EntityAttributeModifier(
       UUID.fromString("5b6c3728-9c24-42ae-83ac-70d61d8b8199"), "Elytra modifier", 1.0f,
-      AttributeModifier.Operation.ADDITION);
+      EntityAttributeModifier.Operation.ADDITION);
 
   /**
-   * Checks whether or not an entity is able to elytra fly. Checks against the elytra flight
-   * attribute if the entity is a {@link PlayerEntity}. Otherwise checks against the ItemStack in
-   * the chest slot to see if it's a vanilla elytra item.
+   * Checks whether or not an entity is able to elytra fly.
    *
    * @param livingEntity The entity to check for elytra flight capabilities
    * @return True if the entity can elytra fly, false otherwise.
    */
-  public static boolean canElytraFly(LivingEntity livingEntity) {
-
-    if (!(livingEntity instanceof PlayerEntity)) {
-      ItemStack stack = livingEntity.getItemStackFromSlot(EquipmentSlotType.CHEST);
-      return stack.getItem() == Items.ELYTRA && ElytraItem.isUsable(stack);
-    }
-    ModifiableAttributeInstance attribute = livingEntity.getAttribute(ELYTRA_FLIGHT.get());
-    return attribute != null && attribute.getValue() >= 1.0d;
-  }
+  boolean canFly(LivingEntity livingEntity);
 }
