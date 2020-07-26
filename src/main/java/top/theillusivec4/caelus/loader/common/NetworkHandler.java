@@ -33,12 +33,8 @@ public class NetworkHandler {
         ((packetContext, packetByteBuf) -> packetContext.getTaskQueue().execute(() -> {
           PlayerEntity playerEntity = packetContext.getPlayer();
 
-          if (playerEntity != null) {
+          if (playerEntity != null && !MixinHooks.startFlight(playerEntity)) {
             playerEntity.stopFallFlying();
-
-            if (MixinHooks.canFly(playerEntity)) {
-              playerEntity.startFallFlying();
-            }
           }
         })));
   }

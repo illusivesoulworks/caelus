@@ -36,7 +36,7 @@ public class ClientMixinHooks {
   public static void checkFlight() {
     ClientPlayerEntity playerEntity = MinecraftClient.getInstance().player;
 
-    if (playerEntity != null && MixinHooks.canFly(playerEntity)) {
+    if (playerEntity != null && MixinHooks.startFlight(playerEntity)) {
       ClientSidePacketRegistry.INSTANCE
           .sendToServer(NetworkHandler.START_FLYING, new PacketByteBuf(Unpooled.buffer()));
     }

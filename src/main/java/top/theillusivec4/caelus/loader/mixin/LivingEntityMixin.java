@@ -24,6 +24,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -32,14 +33,21 @@ import top.theillusivec4.caelus.loader.common.MixinHooks;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 
+  @Shadow
+  int roll;
+
   public LivingEntityMixin(EntityType<?> type, World world) {
     super(type, world);
   }
 
   @SuppressWarnings("ConstantConditions")
-  @Inject(at = @At(value = "INVOKE", target = "net/minecraft/entity/LivingEntity.setFlag (IZ)V"), method = "initAi", cancellable = true)
-  public void setFlag(CallbackInfo cb) {
-    this.setFlag(7, MixinHooks.canFly((LivingEntity) (Object) this));
+  @Inject(at = @At(value = "HEAD"), method = "initAi", cancellable = true)
+  public void canFly(CallbackInfo cb) {
+    boolean flag = MixinHooks.canFly((LivingEntity) (Object) this, roll, this.getFlag(7));
+
+    if (!this.world.isClient) {
+      this.setFlag(7, flag);
+    }
     cb.cancel();
   }
 }
