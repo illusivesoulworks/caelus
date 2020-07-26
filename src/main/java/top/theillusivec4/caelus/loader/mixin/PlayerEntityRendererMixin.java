@@ -39,7 +39,7 @@ public abstract class PlayerEntityRendererMixin extends
     super(dispatcher, model, shadowRadius);
   }
 
-  @Inject(method = "<init>*", at = @At("RETURN"))
+  @Inject(at = @At("RETURN"), method = "<init>(Lnet/minecraft/client/render/entity/EntityRenderDispatcher;Z)V")
   private void onConstructed(CallbackInfo cb) {
     this.addFeature(new CaelusElytraRenderer<>(this));
   }
