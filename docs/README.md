@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    modImplementation "top.theillusivec4.caelus:caelus:${version}"
+    modImplementation "top.theillusivec4.caelus:caelus-fabric:${version}"
 }
 ```
 
