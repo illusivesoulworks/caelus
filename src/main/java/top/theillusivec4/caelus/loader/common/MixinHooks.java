@@ -26,29 +26,14 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import top.theillusivec4.caelus.api.CaelusApi;
 
 public class MixinHooks {
 
-  public static boolean canFly(LivingEntity livingEntity, int roll, boolean flag) {
+  public static boolean canFly(LivingEntity livingEntity, boolean flag) {
     boolean bl = flag;
-    if (bl && !livingEntity.isOnGround() && !livingEntity.hasVehicle() && !livingEntity
-        .hasStatusEffect(StatusEffects.LEVITATION) && CaelusApi.getInstance()
-        .canFly(livingEntity)) {
-      bl = true;
-      ItemStack itemStack = livingEntity.getEquippedStack(EquipmentSlot.CHEST);
-
-      if (itemStack.getItem() == Items.ELYTRA && ElytraItem.isUsable(itemStack)) {
-
-        if (!livingEntity.world.isClient && (roll + 1) % 20 == 0) {
-          itemStack.damage(1, livingEntity,
-              livingEntity1 -> livingEntity1.sendEquipmentBreakStatus(EquipmentSlot.CHEST));
-        }
-      }
-    } else {
-      bl = false;
-    }
+    bl = bl && !livingEntity.isOnGround() && !livingEntity.hasVehicle() && !livingEntity
+        .hasStatusEffect(StatusEffects.LEVITATION) && CaelusApi.getInstance().canFly(livingEntity);
     return bl;
   }
 
