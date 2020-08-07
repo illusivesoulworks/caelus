@@ -21,6 +21,7 @@ package top.theillusivec4.caelus.common;
 
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
 import top.theillusivec4.caelus.api.CaelusApi;
 
@@ -33,12 +34,12 @@ public class MixinHooks {
     return bl;
   }
 
-  public static boolean startFlight(ClientPlayerEntity clientPlayerEntity) {
+  public static boolean startFlight(PlayerEntity playerEntity) {
 
-    if (!clientPlayerEntity.isOnGround() && !clientPlayerEntity.isElytraFlying()
-        && !clientPlayerEntity.isInWater() && !clientPlayerEntity.isPotionActive(Effects.LEVITATION)
-        && CaelusApi.canElytraFly(clientPlayerEntity)) {
-      clientPlayerEntity.startFallFlying();
+    if (!playerEntity.isOnGround() && !playerEntity.isElytraFlying()
+        && !playerEntity.isInWater() && !playerEntity.isPotionActive(Effects.LEVITATION)
+        && CaelusApi.canElytraFly(playerEntity)) {
+      playerEntity.startFallFlying();
       return true;
     }
     return false;
