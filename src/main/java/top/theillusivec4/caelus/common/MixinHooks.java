@@ -19,36 +19,23 @@
 
 package top.theillusivec4.caelus.common;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effects;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.network.PacketDistributor;
 import top.theillusivec4.caelus.api.CaelusApi;
-import top.theillusivec4.caelus.api.RenderElytraEvent;
-import top.theillusivec4.caelus.common.network.CPacketSetFlight;
-import top.theillusivec4.caelus.common.network.NetworkHandler;
 
-public class CaelusHooks {
+public class MixinHooks {
 
-  public static void sendElytraPacket() {
-    ClientPlayerEntity clientPlayerEntity = Minecraft.getInstance().player;
-
-    if (clientPlayerEntity != null && canElytraFly(clientPlayerEntity)) {
-      NetworkHandler.INSTANCE.send(PacketDistributor.SERVER.noArg(), new CPacketSetFlight());
-    }
+  public static boolean canFly(LivingEntity livingEntity, boolean flag) {
+    boolean bl = flag;
+    bl = bl && !livingEntity.isOnGround() && !livingEntity.isPassenger() && !livingEntity
+        .isPotionActive(Effects.LEVITATION) && CaelusApi.canElytraFly(livingEntity);
+    return bl;
   }
 
-  public static boolean canRenderCape(PlayerEntity playerEntity) {
-    RenderElytraEvent renderElytraEvent = new RenderElytraEvent(playerEntity);
-    MinecraftForge.EVENT_BUS.post(renderElytraEvent);
-    return !renderElytraEvent.canRender();
-  }
+  public static boolean startFlight(ClientPlayerEntity clientPlayerEntity) {
 
-  private static boolean canElytraFly(ClientPlayerEntity clientPlayerEntity) {
-
-    if (!clientPlayerEntity.func_233570_aj_() && !clientPlayerEntity.isElytraFlying()
+    if (!clientPlayerEntity.isOnGround() && !clientPlayerEntity.isElytraFlying()
         && !clientPlayerEntity.isInWater() && !clientPlayerEntity.isPotionActive(Effects.LEVITATION)
         && CaelusApi.canElytraFly(clientPlayerEntity)) {
       clientPlayerEntity.startFallFlying();

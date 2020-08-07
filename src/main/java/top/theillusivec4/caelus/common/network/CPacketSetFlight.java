@@ -45,7 +45,7 @@ public class CPacketSetFlight {
       }
       sender.stopFallFlying();
 
-      if (!sender.func_233570_aj_() && !sender.isElytraFlying() && !sender.isInWater() && !sender
+      if (!sender.isOnGround() && !sender.isElytraFlying() && !sender.isInWater() && !sender
           .isPotionActive(Effects.LEVITATION) && CaelusApi.canElytraFly(sender)) {
         sender.startFallFlying();
       }

@@ -23,7 +23,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -63,9 +62,9 @@ public class Caelus {
       attributeInstance.removeModifier(CaelusApi.ELYTRA_MODIFIER);
       ItemStack stack = evt.player.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
-      if (stack.getItem() instanceof ElytraItem && !attributeInstance
-          .hasModifier(CaelusApi.ELYTRA_MODIFIER) && ElytraItem.isUsable(stack)) {
-        attributeInstance.func_233767_b_(CaelusApi.ELYTRA_MODIFIER);
+      if (stack.canElytraFly(evt.player) && !attributeInstance
+          .hasModifier(CaelusApi.ELYTRA_MODIFIER)) {
+        attributeInstance.applyNonPersistentModifier(CaelusApi.ELYTRA_MODIFIER);
       }
     }
   }
