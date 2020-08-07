@@ -6,7 +6,7 @@ This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
 ## [2.0-beta6] - 2020.08.06
 ### Changed
-- Updated to Forge 32.0.72+
+- Updated to Forge 32.0.101+
 - Javascript coremods replaced with mixins
 
 ## [2.0-beta5] - 2020.07.14
