@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project uses [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.0.7] - 2020.08.06
+### Fixed
+- Fixed custom elytra not glowing with enchantments
+
 ## [0.0.6] - 2020.08.01
 ### Changed
 - Changed LivingEntity mixin to be less intrusive for compatibility
