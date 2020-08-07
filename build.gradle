@@ -59,6 +59,13 @@ minecraft {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${version_forge}"
+
+    annotationProcessor 'org.spongepowered:mixin:0.8'
+    annotationProcessor 'com.google.code.gson:gson:2.8.0'
+    annotationProcessor 'com.google.guava:guava:21.0'
+    annotationProcessor 'org.ow2.asm:asm-tree:7.2'
+    annotationProcessor 'org.ow2.asm:asm-commons:7.2'
+    annotationProcessor 'org.ow2.asm:asm-util:7.2'
 }
 
 sourceSets {
@@ -77,7 +84,8 @@ jar {
                     "Implementation-Title": "${mod_name}",
                     "Implementation-Version": "${version}",
                     "Implementation-Vendor" :"${mod_author}",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                    "MixinConfigs": "${mod_id}.mixins.json"],)
     }
 }
 
