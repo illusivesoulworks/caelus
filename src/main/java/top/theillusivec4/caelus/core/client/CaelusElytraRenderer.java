@@ -90,7 +90,7 @@ public class CaelusElytraRenderer<T extends PlayerEntity, M extends EntityModel<
         this.modelElytra
             .setAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         VertexConsumer vertices = ItemRenderer
-            .method_29711(bufferIn, this.modelElytra.getLayer(identifier), false,
+            .getGlintVertexConsumer(bufferIn, this.modelElytra.getLayer(identifier), false,
                 renderElytraEvent.isGlowing());
         Color color = renderElytraEvent.getColor();
         float red = color.getRed() / 255.0F;
