@@ -17,8 +17,8 @@ repositories {
 }
 
 dependencies {
-    runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus:${version}")
-    compileOnly fg.deobf("top.theillusivec4.caelus:caelus:${version}:api")
+    runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${version}")
+    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:${version}:api")
 }
 ```
 
