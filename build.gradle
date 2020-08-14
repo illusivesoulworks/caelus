@@ -17,9 +17,9 @@ apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "${version_minecraft}-${mod_version}"
+version = "${mod_version}"
 group = "${mod_group}"
-archivesBaseName = "${mod_id}"
+archivesBaseName = "${mod_id}-forge"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
@@ -29,7 +29,7 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-            arg "-mixin.config="+archivesBaseName+".mixins.json"
+            arg "-mixin.config=" + "${mod_id}".toString() + ".mixins.json"
             
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
@@ -43,7 +43,7 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-            arg "-mixin.config="+archivesBaseName+".mixins.json"
+            arg "-mixin.config=" + "${mod_id}".toString() + ".mixins.json"
             
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
@@ -100,12 +100,7 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
 }
 
-task deobfJar(type: Jar) {
-    classifier = 'deobf'
-    from sourceSets.main.output
-}
-
-tasks.build.dependsOn apiJar, sourcesJar, deobfJar
+tasks.build.dependsOn apiJar, sourcesJar
 
 processResources {
 
@@ -130,7 +125,6 @@ curseforge {
         changelog = file('docs/CHANGELOG.md')
         addArtifact(sourcesJar)
         addArtifact(apiJar)
-        addArtifact(deobfJar)
     }
 }
 
@@ -144,7 +138,6 @@ publishing {
             artifact reobfArtifact
             artifact sourcesJar
             artifact apiJar
-            artifact deobfJar
         }
     }
 

@@ -8,6 +8,10 @@ This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 ### Fixed
 - Fixed dedicated server crash [#8](https://github.com/TheIllusiveC4/Caelus/issues/8)
 
+## [1.16.2-2.0.0.0] - 2020.08.14
+### Changed
+- Updated to Minecraft 1.16.2
+
 ## [2.0-beta6] - 2020.08.06
 ### Changed
 - Updated to Forge 32.0.101+
