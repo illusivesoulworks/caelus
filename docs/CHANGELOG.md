@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project uses [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.0.9-1.16.3] - 2020.09.24
+### Changed
+- Updated to 1.16.3
+- No longer requires Fabric API
+
 ## [0.0.8] - 2020.08.11
 ### Changed
 - Updated to 1.16.2
