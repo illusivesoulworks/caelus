@@ -44,7 +44,7 @@ public class CaelusApi {
    * otherwise.
    */
   public static final RegistryObject<Attribute> ELYTRA_FLIGHT = ATTRIBUTES.register("elytra_flight",
-      () -> new RangedAttribute("caelus.elytraFlight", 0.0d, 0.0d, 1.0d).func_233753_a_(true));
+      () -> new RangedAttribute("caelus.elytraFlight", 0.0d, 0.0d, 1.0d).setShouldWatch(true));
 
   /**
    * The attribute modifier used for the vanilla elytra item.
