@@ -2,7 +2,7 @@ buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
         maven { url 'https://plugins.gradle.org/m2/' }
-        maven { url='https://dist.creeper.host/Sponge/maven' }
+        maven { url = 'https://dist.creeper.host/Sponge/maven' }
         jcenter()
         mavenCentral()
     }
@@ -82,11 +82,7 @@ jar {
     }
 }
 
-def reobfFile = file("build/reobfJar/output.jar")
-def reobfArtifact = artifacts.add('default', reobfFile) {
-    type 'jar'
-    builtBy 'reobfJar'
-}
+jar.finalizedBy('reobfJar')
 
 task apiJar(type: Jar) {
     classifier = 'api'
@@ -134,8 +130,7 @@ publishing {
 
         mavenJava(MavenPublication) {
             artifactId project.archivesBaseName
-            
-            artifact reobfArtifact
+
             artifact sourcesJar
             artifact apiJar
         }

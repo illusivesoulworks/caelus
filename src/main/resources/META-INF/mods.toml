@@ -1,6 +1,6 @@
 modLoader="javafml"
-loaderVersion="[33,)"
-license="LGPLv3"
+loaderVersion="[34,)"
+license="LGPL-3.0-or-later"
 issueTrackerURL="https://github.com/TheIllusiveC4/Caelus/issues"
 logoFile="${mod_icon}"
 [[mods]]
@@ -15,12 +15,12 @@ ${mod_description}
 [[dependencies.caelus]]
     modId="forge"
     mandatory=true
-    versionRange="[33.0.2,)"
+    versionRange="[34,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.caelus]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.2,1.17)"
+    versionRange="[1.16.3,1.17)"
     ordering="NONE"
     side="BOTH"
