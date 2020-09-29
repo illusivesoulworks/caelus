@@ -12,13 +12,13 @@ import top.theillusivec4.caelus.client.ClientMixinHooks;
 @Mixin(ClientPlayerEntity.class)
 public class ClientPlayerEntityMixin {
 
-  @Inject(at = @At(value = "INVOKE_ASSIGN", target = "net/minecraft/client/entity/player/ClientPlayerEntity.getItemStackFromSlot (Lnet/minecraft/inventory/EquipmentSlotType;)Lnet/minecraft/item/ItemStack;"), method = "livingTick")
-  public void onElytraCheck(CallbackInfo cb) {
+  @Inject(at = @At(value = "INVOKE", target = "net/minecraft/item/ItemStack.canElytraFly (Lnet/minecraft/entity/LivingEntity;)Z"), method = "livingTick")
+  public void _caelus_checkFlight(CallbackInfo cb) {
     ClientMixinHooks.checkFlight();
   }
 
-  @ModifyVariable(at = @At(value = "INVOKE_ASSIGN", target = "net/minecraft/client/entity/player/ClientPlayerEntity.getItemStackFromSlot (Lnet/minecraft/inventory/EquipmentSlotType;)Lnet/minecraft/item/ItemStack;"), method = "livingTick")
-  public ItemStack changeEquippedStack(ItemStack stack) {
+  @ModifyVariable(at = @At(value = "INVOKE", target = "net/minecraft/item/ItemStack.canElytraFly (Lnet/minecraft/entity/LivingEntity;)Z"), method = "livingTick")
+  public ItemStack _caelus_changeEquippedStack(ItemStack stack) {
     return ItemStack.EMPTY;
   }
 }
