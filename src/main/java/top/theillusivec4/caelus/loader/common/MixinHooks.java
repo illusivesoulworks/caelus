@@ -27,6 +27,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import top.theillusivec4.caelus.api.CaelusApi;
+import top.theillusivec4.caelus.loader.integration.TrinketsIntegration;
 
 public class MixinHooks {
 
@@ -54,7 +55,9 @@ public class MixinHooks {
 
     if (attributeInstance != null) {
       attributeInstance.removeModifier(CaelusApi.VANILLA_ELYTRA_MODIFIER);
-      ItemStack stack = playerEntity.getEquippedStack(EquipmentSlot.CHEST);
+      ItemStack stack =
+          CaelusMod.isTrinketsLoaded ? TrinketsIntegration.getCapeStack(playerEntity) :
+              playerEntity.getEquippedStack(EquipmentSlot.CHEST);
 
       if (stack.getItem() instanceof ElytraItem && !attributeInstance
           .hasModifier(CaelusApi.VANILLA_ELYTRA_MODIFIER) && ElytraItem.isUsable(stack)) {
