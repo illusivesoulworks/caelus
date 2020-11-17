@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project uses [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.0.11-1.16.4] - 2020.11.16
+### Added
+- Added French localization (thanks Lykrast!)
+- Added Russian localization (thanks DrHesperusModoVestnic!)
+### Changed
+- Updated to 1.16.4
+
 ## [0.0.10-1.16.3] - 2020.11.03
 ### Added
 - Added Trinkets support [#13](https://github.com/TheIllusiveC4/Caelus/issues/13)
