@@ -50,6 +50,6 @@ public class CaelusApiImpl implements CaelusApi {
 
   @Override
   public boolean isElytra(Item item) {
-    return ELYTRA.contains(item);
+    return item instanceof ElytraItem || ELYTRA.contains(item);
   }
 }

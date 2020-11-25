@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project uses [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.0.14-1.16.4] - 2020.11.25
+### Changed
+- Elytra classification checks for ElytraItem instances in addition to tags
+
 ## [0.0.13-1.16.4] - 2020.11.25
 ### Added
 - Elytra classification with the "c:elytra" item tag
