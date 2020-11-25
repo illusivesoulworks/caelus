@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import top.theillusivec4.caelus.api.CaelusApi;
 import top.theillusivec4.caelus.loader.common.MixinHooks;
 
-@Mixin(PlayerEntity.class)
+@Mixin(value = PlayerEntity.class, priority = 100)
 public class PlayerEntityMixin {
 
   @Inject(at = @At("RETURN"), method = "createPlayerAttributes() Lnet/minecraft/entity/attribute/DefaultAttributeContainer$Builder;")
