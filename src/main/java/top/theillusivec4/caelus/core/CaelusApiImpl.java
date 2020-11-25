@@ -19,27 +19,37 @@
 
 package top.theillusivec4.caelus.core;
 
+import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ElytraItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.tag.Tag;
+import net.minecraft.util.Identifier;
 import top.theillusivec4.caelus.api.CaelusApi;
 
 public class CaelusApiImpl implements CaelusApi {
 
   public static final CaelusApi INSTANCE = new CaelusApiImpl();
+  public static final Tag<Item> ELYTRA =
+      TagRegistry.item(new Identifier("c", "elytra"));
 
   @Override
   public boolean canFly(LivingEntity livingEntity) {
 
     if (!(livingEntity instanceof PlayerEntity)) {
       ItemStack stack = livingEntity.getEquippedStack(EquipmentSlot.CHEST);
-      return stack.getItem() == Items.ELYTRA && ElytraItem.isUsable(stack);
+      return ELYTRA.contains(stack.getItem()) && ElytraItem.isUsable(stack);
     }
     EntityAttributeInstance attribute = livingEntity.getAttributeInstance(CaelusApi.ELYTRA_FLIGHT);
     return attribute != null && attribute.getValue() >= 1.0d;
+  }
+
+  @Override
+  public boolean isElytra(Item item) {
+    return ELYTRA.contains(item);
   }
 }

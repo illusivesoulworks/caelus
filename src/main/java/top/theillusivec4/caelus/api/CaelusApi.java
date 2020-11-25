@@ -24,6 +24,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.item.Item;
 import top.theillusivec4.caelus.core.CaelusApiImpl;
 
 public interface CaelusApi {
@@ -55,4 +56,6 @@ public interface CaelusApi {
    * @return True if the entity can elytra fly, false otherwise.
    */
   boolean canFly(LivingEntity livingEntity);
+
+  boolean isElytra(Item item);
 }

@@ -34,13 +34,17 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation fabricApi.module("fabric-api-base", project.fabric_version)
     modImplementation fabricApi.module("fabric-networking-v0", project.fabric_version)
+    modImplementation fabricApi.module("fabric-tag-extensions-v0", project.fabric_version)
+    modImplementation fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
 
     // Optional
     modCompileOnly "com.github.emilyploszaj:trinkets:${project.trinkets_version}"
-    modRuntime "com.github.emilyploszaj:trinkets:${project.trinkets_version}"
+//    modRuntime "com.github.emilyploszaj:trinkets:${project.trinkets_version}"
 
     include fabricApi.module("fabric-api-base", project.fabric_version)
     include fabricApi.module("fabric-networking-v0", project.fabric_version)
+    include fabricApi.module("fabric-tag-extensions-v0", project.fabric_version)
+    include fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
 }
 
 processResources {

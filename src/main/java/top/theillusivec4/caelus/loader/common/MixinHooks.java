@@ -59,7 +59,7 @@ public class MixinHooks {
           CaelusMod.isTrinketsLoaded ? TrinketsIntegration.getCapeStack(playerEntity) :
               playerEntity.getEquippedStack(EquipmentSlot.CHEST);
 
-      if (stack.getItem() instanceof ElytraItem && !attributeInstance
+      if (CaelusApi.getInstance().isElytra(stack.getItem()) && !attributeInstance
           .hasModifier(CaelusApi.VANILLA_ELYTRA_MODIFIER) && ElytraItem.isUsable(stack)) {
         attributeInstance.addTemporaryModifier(CaelusApi.VANILLA_ELYTRA_MODIFIER);
       }
