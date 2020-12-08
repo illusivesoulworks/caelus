@@ -39,7 +39,7 @@ public interface CaelusApi {
    * The elytra flight attribute, will provide elytra flight if the value is 1.0 or above. No flight
    * otherwise.
    */
-  EntityAttribute ELYTRA_FLIGHT = new ClampedEntityAttribute("caelus.elytra_flight", 0.0D, 0.0D,
+  EntityAttribute ELYTRA_FLIGHT = new ClampedEntityAttribute("attribute.name.generic.caelus.flight", 0.0D, 0.0D,
       1.0D).setTracked(true);
 
   /**
