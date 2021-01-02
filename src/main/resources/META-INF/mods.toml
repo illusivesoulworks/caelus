@@ -14,7 +14,7 @@ ${mod_description}
 [[dependencies.caelus]]
     modId="forge"
     mandatory=true
-    versionRange="[31.1.0,)"
+    versionRange="[31.2.37,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.caelus]]

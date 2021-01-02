@@ -26,13 +26,17 @@ function initializeCoreMod() {
                         for (var i = 0; i < instr.length; i++) {
                             var instruction = instr[i];
 
-                            if (instruction.getOpcode() == opcodes.IF_ACMPNE) {
-                                var jumpLabel = instruction.label;
-                                var inst = instruction.getPrevious().getPrevious().getPrevious();
-                                print("Found node ", inst.toString());
-                                code.insertBefore(inst, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/core/CaelusHooks", "sendElytraPacket", "()V", false))
-                                code.insertBefore(inst, new JumpInsnNode(opcodes.GOTO, jumpLabel))
-                                break;
+                            if (instruction.getOpcode() === opcodes.IFEQ) {
+                                count++;
+
+                                if (count === 20) {
+                                    var jumpLabel = instruction.label;
+                                    var inst = instruction.getPrevious().getPrevious().getPrevious();
+                                    print("Found node ", inst.toString());
+                                    code.insertBefore(inst, new MethodInsnNode(opcodes.INVOKESTATIC, "top/theillusivec4/caelus/core/CaelusHooks", "sendElytraPacket", "()V", false))
+                                    code.insertBefore(inst, new JumpInsnNode(opcodes.GOTO, jumpLabel))
+                                    break;
+                                }
                             }
                         }
                     }

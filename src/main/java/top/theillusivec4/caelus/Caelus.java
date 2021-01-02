@@ -28,7 +28,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -58,7 +57,6 @@ import top.theillusivec4.caelus.common.network.NetworkHandler;
 public class Caelus {
 
   public static final String MODID = "caelus";
-
   public static final ResourceLocation DISABLED_ICON = new ResourceLocation(Caelus.MODID,
       "textures/gui/flight_disabled.png");
 
@@ -99,15 +97,16 @@ public class Caelus {
 
     ItemStack from = evt.getFrom();
     ItemStack to = evt.getTo();
+    LivingEntity livingEntity = evt.getEntityLiving();
     IAttributeInstance attributeInstance = evt.getEntityLiving()
         .getAttribute(CaelusAPI.ELYTRA_FLIGHT);
 
-    if (from.getItem() instanceof ElytraItem) {
+    if (from.canElytraFly(livingEntity)) {
       attributeInstance.removeModifier(CaelusAPI.ELYTRA_MODIFIER);
     }
 
-    if (to.getItem() instanceof ElytraItem && !attributeInstance
-        .hasModifier(CaelusAPI.ELYTRA_MODIFIER) && ElytraItem.isUsable(to)) {
+    if (to.canElytraFly(livingEntity) &&
+        !attributeInstance.hasModifier(CaelusAPI.ELYTRA_MODIFIER)) {
       attributeInstance.applyModifier(CaelusAPI.ELYTRA_MODIFIER);
     }
   }
@@ -130,7 +129,8 @@ public class Caelus {
           .forEach(renderer -> renderer.addLayer(new CaelusElytraLayer<>(renderer)));
       rendererManager.renderers.values().forEach(renderer -> {
         if (renderer instanceof LivingRenderer) {
-          LivingRenderer<? extends LivingEntity, ? extends EntityModel> livingRenderer = (LivingRenderer<? extends LivingEntity, ? extends EntityModel>) renderer;
+          LivingRenderer<? extends LivingEntity, ? extends EntityModel> livingRenderer =
+              (LivingRenderer<? extends LivingEntity, ? extends EntityModel>) renderer;
           livingRenderer.addLayer(new CaelusElytraLayer(livingRenderer));
         }
       });
