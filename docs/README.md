@@ -23,3 +23,9 @@ dependencies {
 ```
 
  Replace ${version} with the version of Caelus that you want to use.
+ 
+## Developing
+
+Help! I'm getting Mixin crashes when I try to launch in development on Forge!
+
+Caelus API uses Mixins to implement its core features. This may cause issues when depending on Caelus API for your project inside a development environment since ForgeGradle/MixinGradle do not yet support this natively like on the Fabric toolchain. As a workaround, please disable the refmaps in development by setting the mixin.env.disableRefMap JVM argument to true in your run configuration.
