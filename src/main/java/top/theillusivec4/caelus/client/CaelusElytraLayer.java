@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.model.ElytraModel;
@@ -86,7 +87,7 @@ public class CaelusElytraLayer<T extends PlayerEntity, M extends EntityModel<T>>
             .setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw,
                 headPitch);
         IVertexBuilder ivertexbuilder = ItemRenderer
-            .getArmorVertexBuilder(bufferIn, this.modelElytra.getRenderType(resourcelocation), false,
+            .getArmorVertexBuilder(bufferIn, RenderType.getArmorCutoutNoCull(resourcelocation), false,
                 renderElytraEvent.isEnchanted());
         this.modelElytra
             .render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F,
