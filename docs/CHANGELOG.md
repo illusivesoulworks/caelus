@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.16.5-2.1.1.0] - 2021.01.21
+### Added
+- Added taggable elytra implementations with "forge:elytra"
+
 ## [1.16.4-2.1.0.2] - 2021.01.06
 ### Fixed
 - Fixed enchantment glint not being applied to the render layer

@@ -28,10 +28,14 @@ import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ElytraItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeTagHandler;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class CaelusApi {
 
@@ -54,6 +58,12 @@ public class CaelusApi {
       AttributeModifier.Operation.ADDITION);
 
   /**
+   * Tag for elytra and elytra-like items
+   */
+  public static final ITag.INamedTag<Item> ELYTRA = ForgeTagHandler.createOptionalTag(
+      ForgeRegistries.ITEMS, new ResourceLocation("forge", "elytra"));
+
+  /**
    * Checks whether or not an entity is able to elytra fly. Checks against the elytra flight
    * attribute if the entity is a {@link PlayerEntity}. Otherwise checks against the ItemStack in
    * the chest slot to see if it's a vanilla elytra item.
@@ -65,9 +75,19 @@ public class CaelusApi {
 
     if (!(livingEntity instanceof PlayerEntity)) {
       ItemStack stack = livingEntity.getItemStackFromSlot(EquipmentSlotType.CHEST);
-      return stack.getItem() == Items.ELYTRA && ElytraItem.isUsable(stack);
+      return isElytra(stack) && ElytraItem.isUsable(stack);
     }
     ModifiableAttributeInstance attribute = livingEntity.getAttribute(ELYTRA_FLIGHT.get());
     return attribute != null && attribute.getValue() >= 1.0d;
+  }
+
+  /**
+   * Checks whether the stack is an elytra or elytra-like item
+   *
+   * @param stack The ItemStack being checked
+   * @return True if the ItemStack is an elytra or elytra-like item
+   */
+  public static boolean isElytra(ItemStack stack) {
+    return stack.getItem() instanceof ElytraItem || ELYTRA.contains(stack.getItem());
   }
 }

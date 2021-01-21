@@ -62,8 +62,8 @@ public class Caelus {
       attributeInstance.removeModifier(CaelusApi.ELYTRA_MODIFIER);
       ItemStack stack = evt.player.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
-      if (stack.canElytraFly(evt.player) && !attributeInstance
-          .hasModifier(CaelusApi.ELYTRA_MODIFIER)) {
+      if ((CaelusApi.isElytra(stack) || stack.canElytraFly(evt.player)) &&
+          !attributeInstance.hasModifier(CaelusApi.ELYTRA_MODIFIER)) {
         attributeInstance.applyNonPersistentModifier(CaelusApi.ELYTRA_MODIFIER);
       }
     }
