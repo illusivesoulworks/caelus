@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.model.ElytraModel;
@@ -52,8 +51,9 @@ public class CaelusElytraLayer<T extends PlayerEntity, M extends EntityModel<T>>
 
   @Override
   public void render(@Nonnull MatrixStack matrixStackIn, @Nonnull IRenderTypeBuffer bufferIn,
-      int packedLightIn, T entityIn, float limbSwing, float limbSwingAmount, float partialTicks,
-      float ageInTicks, float netHeadYaw, float headPitch) {
+                     int packedLightIn, T entityIn, float limbSwing, float limbSwingAmount,
+                     float partialTicks,
+                     float ageInTicks, float netHeadYaw, float headPitch) {
     ItemStack itemstack = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
     if (itemstack.getItem() != Items.ELYTRA) {
@@ -64,7 +64,8 @@ public class CaelusElytraLayer<T extends PlayerEntity, M extends EntityModel<T>>
         ResourceLocation resourcelocation;
 
         if (entityIn instanceof AbstractClientPlayerEntity) {
-          AbstractClientPlayerEntity abstractclientplayerentity = (AbstractClientPlayerEntity) entityIn;
+          AbstractClientPlayerEntity abstractclientplayerentity =
+              (AbstractClientPlayerEntity) entityIn;
           boolean hasElytra = abstractclientplayerentity.isPlayerInfoSet()
               && abstractclientplayerentity.getLocationElytra() != null;
           boolean hasCape = abstractclientplayerentity.hasPlayerInfo()
@@ -88,12 +89,17 @@ public class CaelusElytraLayer<T extends PlayerEntity, M extends EntityModel<T>>
             .setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw,
                 headPitch);
         IVertexBuilder ivertexbuilder = ItemRenderer
-            .getArmorVertexBuilder(bufferIn, this.modelElytra.getRenderType(resourcelocation), false,
+            .getArmorVertexBuilder(bufferIn, this.modelElytra.getRenderType(resourcelocation),
+                false,
                 renderElytraEvent.isEnchanted());
         Color color = renderElytraEvent.getColor();
+        float red = color.getRed() / 255.0F;
+        float green = color.getGreen() / 255.0F;
+        float blue = color.getBlue() / 255.0F;
+        float alpha = color.getAlpha() / 255.0F;
         this.modelElytra
-            .render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY,
-                color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+            .render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, red,
+                green, blue, alpha);
         matrixStackIn.pop();
       }
     }
