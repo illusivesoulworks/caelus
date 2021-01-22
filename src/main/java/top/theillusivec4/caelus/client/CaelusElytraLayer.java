@@ -88,7 +88,7 @@ public class CaelusElytraLayer<T extends PlayerEntity, M extends EntityModel<T>>
             .setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw,
                 headPitch);
         IVertexBuilder ivertexbuilder = ItemRenderer
-            .getArmorVertexBuilder(bufferIn, RenderType.getArmorCutoutNoCull(resourcelocation), false,
+            .getArmorVertexBuilder(bufferIn, this.modelElytra.getRenderType(resourcelocation), false,
                 renderElytraEvent.isEnchanted());
         Color color = renderElytraEvent.getColor();
         this.modelElytra
