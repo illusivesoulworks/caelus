@@ -1,5 +1,6 @@
 package top.theillusivec4.caelus.api;
 
+import java.awt.Color;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -25,6 +26,7 @@ public class RenderElytraEvent extends PlayerEvent {
   private boolean render = false;
   private boolean enchanted = false;
   private ResourceLocation resourceLocation = TEXTURE_ELYTRA;
+  private Color color = new Color(1.0F, 1.0F, 1.0F, 1.0F);
 
   public RenderElytraEvent(PlayerEntity playerEntity) {
     super(playerEntity);
@@ -66,5 +68,16 @@ public class RenderElytraEvent extends PlayerEvent {
 
   public void setResourceLocation(ResourceLocation resourceLocation) {
     this.resourceLocation = resourceLocation;
+  }
+
+  /**
+   * The color to render for the elytra model texture
+   */
+  public Color getColor() {
+    return this.color;
+  }
+
+  public void setColor(Color color) {
+    this.color = color;
   }
 }

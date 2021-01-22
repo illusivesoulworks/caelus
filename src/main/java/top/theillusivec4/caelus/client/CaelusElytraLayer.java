@@ -21,6 +21,7 @@ package top.theillusivec4.caelus.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import java.awt.Color;
 import javax.annotation.Nonnull;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -89,9 +90,10 @@ public class CaelusElytraLayer<T extends PlayerEntity, M extends EntityModel<T>>
         IVertexBuilder ivertexbuilder = ItemRenderer
             .getArmorVertexBuilder(bufferIn, RenderType.getArmorCutoutNoCull(resourcelocation), false,
                 renderElytraEvent.isEnchanted());
+        Color color = renderElytraEvent.getColor();
         this.modelElytra
-            .render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F,
-                1.0F, 1.0F, 1.0F);
+            .render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY,
+                color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
         matrixStackIn.pop();
       }
     }
