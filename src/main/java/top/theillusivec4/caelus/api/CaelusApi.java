@@ -58,15 +58,21 @@ public class CaelusApi {
       AttributeModifier.Operation.ADDITION);
 
   /**
-   * Tag for elytra and elytra-like items
+   * Tag for elytra items
    */
   public static final ITag.INamedTag<Item> ELYTRA = ForgeTagHandler.createOptionalTag(
       ForgeRegistries.ITEMS, new ResourceLocation("forge", "elytra"));
 
   /**
+   * Tag for elytra-like items
+   */
+  public static final ITag.INamedTag<Item> ELYTRA_LIKE = ForgeTagHandler.createOptionalTag(
+      ForgeRegistries.ITEMS, new ResourceLocation("forge", "elytra_like"));
+
+  /**
    * Checks whether or not an entity is able to elytra fly. Checks against the elytra flight
    * attribute if the entity is a {@link PlayerEntity}. Otherwise checks against the ItemStack in
-   * the chest slot to see if it's a vanilla elytra item.
+   * the chest slot to see if it's an elytra item.
    *
    * @param livingEntity The entity to check for elytra flight capabilities
    * @return True if the entity can elytra fly, false otherwise.
@@ -75,19 +81,40 @@ public class CaelusApi {
 
     if (!(livingEntity instanceof PlayerEntity)) {
       ItemStack stack = livingEntity.getItemStackFromSlot(EquipmentSlotType.CHEST);
-      return isElytra(stack) && ElytraItem.isUsable(stack);
+      return canElytraFly(livingEntity, stack);
     }
     ModifiableAttributeInstance attribute = livingEntity.getAttribute(ELYTRA_FLIGHT.get());
     return attribute != null && attribute.getValue() >= 1.0d;
   }
 
   /**
-   * Checks whether the stack is an elytra or elytra-like item
+   * Checks whether or not an ItemStack is able to grant elytra flight.
+   *
+   * @param livingEntity The entity to check for elytra flight capabilities
+   * @return True if the ItemStack can grant elytra flight, false otherwise.
+   */
+  public static boolean canElytraFly(LivingEntity livingEntity, ItemStack stack) {
+    return stack.canElytraFly(livingEntity) || isElytraLike(stack);
+  }
+
+  /**
+   * Checks whether the stack is an elytra.
    *
    * @param stack The ItemStack being checked
-   * @return True if the ItemStack is an elytra or elytra-like item
+   * @return True if the ItemStack is an elytra
    */
   public static boolean isElytra(ItemStack stack) {
     return stack.getItem() instanceof ElytraItem || ELYTRA.contains(stack.getItem());
+  }
+
+  /**
+   * Checks whether the stack is an elytra-like item. These items are NOT considered elytra but
+   * enable elytra flight like one.
+   *
+   * @param stack The ItemStack being checked
+   * @return True if the ItemStack is an elytra-like item
+   */
+  public static boolean isElytraLike(ItemStack stack) {
+    return ELYTRA_LIKE.contains(stack.getItem());
   }
 }

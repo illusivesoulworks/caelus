@@ -22,6 +22,7 @@ package top.theillusivec4.caelus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -55,14 +56,15 @@ public class Caelus {
 
   @SubscribeEvent
   public void playerTick(PlayerTickEvent evt) {
-    ModifiableAttributeInstance attributeInstance = evt.player
-        .getAttribute(CaelusApi.ELYTRA_FLIGHT.get());
+    PlayerEntity player = evt.player;
+    ModifiableAttributeInstance attributeInstance =
+        player.getAttribute(CaelusApi.ELYTRA_FLIGHT.get());
 
     if (attributeInstance != null) {
       attributeInstance.removeModifier(CaelusApi.ELYTRA_MODIFIER);
-      ItemStack stack = evt.player.getItemStackFromSlot(EquipmentSlotType.CHEST);
+      ItemStack stack = player.getItemStackFromSlot(EquipmentSlotType.CHEST);
 
-      if ((CaelusApi.isElytra(stack) || stack.canElytraFly(evt.player)) &&
+      if (CaelusApi.canElytraFly(player, stack) &&
           !attributeInstance.hasModifier(CaelusApi.ELYTRA_MODIFIER)) {
         attributeInstance.applyNonPersistentModifier(CaelusApi.ELYTRA_MODIFIER);
       }
