@@ -17,22 +17,21 @@
  * License along with Caelus.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package top.theillusivec4.caelus.api.event;
+package top.theillusivec4.caelus.common.util;
 
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.entity.player.PlayerEntity;
-import top.theillusivec4.caelus.api.RenderElytraInfo;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
+import top.theillusivec4.caelus.common.CaelusNetwork;
 
-public interface RenderElytraCallback {
+public class ClientCaelusHooks {
 
-  Event<RenderElytraCallback> EVENT = EventFactory
-      .createArrayBacked(RenderElytraCallback.class, (listeners) -> (playerEntity, info) -> {
+  public static void checkFlight() {
+    ClientPlayerEntity playerEntity = MinecraftClient.getInstance().player;
 
-        for (RenderElytraCallback listener : listeners) {
-          listener.process(playerEntity, info);
-        }
-      });
-
-  void process(PlayerEntity playerEntity, RenderElytraInfo info);
+    if (playerEntity != null && CommonCaelusHooks.startFlight(playerEntity)) {
+      ClientPlayNetworking.send(CaelusNetwork.START_FLYING, PacketByteBufs.create());
+    }
+  }
 }

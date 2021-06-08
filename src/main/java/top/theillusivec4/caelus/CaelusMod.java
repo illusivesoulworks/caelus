@@ -17,22 +17,20 @@
  * License along with Caelus.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package top.theillusivec4.caelus.loader.common;
+package top.theillusivec4.caelus;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.registry.Registry;
 import top.theillusivec4.caelus.api.CaelusApi;
+import top.theillusivec4.caelus.common.CaelusNetwork;
 
+@SuppressWarnings("unused")
 public class CaelusMod implements ModInitializer {
-
-  public static boolean isTrinketsLoaded = false;
 
   @Override
   public void onInitialize() {
-    Registry.register(Registry.ATTRIBUTE, "caelus.elytra_flight", CaelusApi.ELYTRA_FLIGHT);
-    NetworkHandler.setup();
-
-    isTrinketsLoaded = FabricLoader.getInstance().isModLoaded("trinkets");
+    Registry.register(Registry.ATTRIBUTE, "caelus.elytra_flight", CaelusApi.getInstance()
+        .getFlightAttribute());
+    CaelusNetwork.setup();
   }
 }

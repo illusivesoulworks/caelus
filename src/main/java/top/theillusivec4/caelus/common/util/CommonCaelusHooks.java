@@ -17,7 +17,7 @@
  * License along with Caelus.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package top.theillusivec4.caelus.loader.common;
+package top.theillusivec4.caelus.common.util;
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -27,9 +27,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ElytraItem;
 import net.minecraft.item.ItemStack;
 import top.theillusivec4.caelus.api.CaelusApi;
-import top.theillusivec4.caelus.loader.integration.TrinketsIntegration;
 
-public class MixinHooks {
+@SuppressWarnings("ConstantConditions")
+public class CommonCaelusHooks {
 
   public static boolean canFly(LivingEntity livingEntity, boolean flag) {
     boolean bl = flag;
@@ -40,9 +40,10 @@ public class MixinHooks {
 
   public static boolean startFlight(PlayerEntity playerEntity) {
 
-    if (!playerEntity.isOnGround() && !playerEntity.isFallFlying() && !playerEntity
-        .isTouchingWater() && !playerEntity.hasStatusEffect(StatusEffects.LEVITATION) && CaelusApi
-        .getInstance().canFly(playerEntity)) {
+    if (!playerEntity.isOnGround() && !playerEntity.isFallFlying() &&
+        !playerEntity.isTouchingWater() &&
+        !playerEntity.hasStatusEffect(StatusEffects.LEVITATION) &&
+        CaelusApi.getInstance().canFly(playerEntity)) {
       playerEntity.startFallFlying();
       return true;
     }
@@ -51,17 +52,15 @@ public class MixinHooks {
 
   public static void checkEquippedElytra(PlayerEntity playerEntity) {
     EntityAttributeInstance attributeInstance = playerEntity
-        .getAttributeInstance(CaelusApi.ELYTRA_FLIGHT);
+        .getAttributeInstance(CaelusApi.getInstance().getFlightAttribute());
 
     if (attributeInstance != null) {
-      attributeInstance.removeModifier(CaelusApi.VANILLA_ELYTRA_MODIFIER);
-      ItemStack stack =
-          CaelusMod.isTrinketsLoaded ? TrinketsIntegration.getCapeStack(playerEntity) :
-              playerEntity.getEquippedStack(EquipmentSlot.CHEST);
+      attributeInstance.removeModifier(CaelusApi.getInstance().getElytraModifier());
+      ItemStack stack = playerEntity.getEquippedStack(EquipmentSlot.CHEST);
 
-      if (CaelusApi.getInstance().isElytra(stack.getItem()) && !attributeInstance
-          .hasModifier(CaelusApi.VANILLA_ELYTRA_MODIFIER) && ElytraItem.isUsable(stack)) {
-        attributeInstance.addTemporaryModifier(CaelusApi.VANILLA_ELYTRA_MODIFIER);
+      if (stack.getItem() instanceof ElytraItem && !attributeInstance
+          .hasModifier(CaelusApi.getInstance().getElytraModifier()) && ElytraItem.isUsable(stack)) {
+        attributeInstance.addTemporaryModifier(CaelusApi.getInstance().getElytraModifier());
       }
     }
   }

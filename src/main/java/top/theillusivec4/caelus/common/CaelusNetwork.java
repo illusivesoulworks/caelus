@@ -17,41 +17,24 @@
  * License along with Caelus.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package top.theillusivec4.caelus.api;
+package top.theillusivec4.caelus.common;
 
-import java.awt.Color;
-import net.minecraft.entity.player.PlayerEntity;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.util.Identifier;
+import top.theillusivec4.caelus.api.CaelusApi;
+import top.theillusivec4.caelus.common.util.CommonCaelusHooks;
 
-public interface RenderElytraInfo {
+public class CaelusNetwork {
 
-  PlayerEntity getPlayer();
+  public static final Identifier START_FLYING =
+      new Identifier(CaelusApi.getInstance().getModId(), "start_flying");
 
-  /**
-   * Returns true if the elytra can render
-   */
-  boolean canRender();
-
-  void activateRender();
-
-  /**
-   * Returns true if the elytra has an enchantment glow
-   */
-  boolean isGlowing();
-
-  void activateGlow();
-
-  /**
-   * Returns the location of the elytra model's texture
-   */
-  Identifier getTextureOverride();
-
-  void setTextureOverride(Identifier identifier);
-
-  /**
-   * Returns the color to use for the elytra render
-   */
-  Color getColor();
-
-  void setColor(Color color);
+  public static void setup() {
+    ServerPlayNetworking.registerGlobalReceiver(START_FLYING,
+        (server, player, handler, buf, responseSender) -> server.execute(() -> {
+          if (player != null && !CommonCaelusHooks.startFlight(player)) {
+            player.stopFallFlying();
+          }
+        }));
+  }
 }

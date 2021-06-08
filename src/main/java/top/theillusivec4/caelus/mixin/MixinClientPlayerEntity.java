@@ -17,7 +17,7 @@
  * License along with Caelus.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package top.theillusivec4.caelus.loader.mixin;
+package top.theillusivec4.caelus.mixin;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -26,18 +26,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import top.theillusivec4.caelus.loader.client.ClientMixinHooks;
+import top.theillusivec4.caelus.common.util.ClientCaelusHooks;
 
+@SuppressWarnings("unused")
 @Mixin(ClientPlayerEntity.class)
-public class ClientPlayerEntityMixin {
+public class MixinClientPlayerEntity {
 
   @Inject(at = @At(value = "INVOKE_ASSIGN", target = "net/minecraft/client/network/ClientPlayerEntity.getEquippedStack (Lnet/minecraft/entity/EquipmentSlot;)Lnet/minecraft/item/ItemStack;"), method = "tickMovement")
-  public void onElytraCheck(CallbackInfo cb) {
-    ClientMixinHooks.checkFlight();
+  public void caelus$onElytraCheck(CallbackInfo cb) {
+    ClientCaelusHooks.checkFlight();
   }
 
   @ModifyVariable(at = @At(value = "INVOKE_ASSIGN", target = "net/minecraft/client/network/ClientPlayerEntity.getEquippedStack (Lnet/minecraft/entity/EquipmentSlot;)Lnet/minecraft/item/ItemStack;"), method = "tickMovement")
-  public ItemStack changeEquippedStack(ItemStack stack) {
+  public ItemStack caelus$swapFillerStack(ItemStack stack) {
     return ItemStack.EMPTY;
   }
 }

@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project uses [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.0.16-1.17] - 2021.06.08
+### Changed
+- Updated to Minecraft 1.17
+### Removed
+- Removed client-side API for elytra rendering
+- Removed elytra tagging system
+
 ## [0.0.15-1.16.4] - 2020.12.08
 ### Fixed
 - Fixed translation keys for elytra flight attribute [#16](https://github.com/TheIllusiveC4/Caelus/issues/16)

@@ -17,7 +17,7 @@
  * License along with Caelus.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package top.theillusivec4.caelus.loader.mixin;
+package top.theillusivec4.caelus.mixin;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -26,18 +26,20 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import top.theillusivec4.caelus.loader.common.MixinHooks;
+import top.theillusivec4.caelus.common.util.CommonCaelusHooks;
 
+@SuppressWarnings("unused")
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity {
+public abstract class MixinLivingEntity extends Entity {
 
-  public LivingEntityMixin(EntityType<?> type, World world) {
+  public MixinLivingEntity(EntityType<?> type, World world) {
     super(type, world);
   }
 
   @SuppressWarnings("ConstantConditions")
-  @ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;setFlag(IZ)V"), method = "initAi")
-  public boolean _caelus_setFlag(boolean value) {
-    return MixinHooks.canFly((LivingEntity) (Object) this, this.getFlag(7));
+  @ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;setFlag(IZ)V"), method = "tickFallFlying")
+  public boolean caelus$setFlag(boolean value) {
+    return CommonCaelusHooks
+        .canFly((LivingEntity) (Object) this, this.getFlag(Entity.FALL_FLYING_FLAG_INDEX));
   }
 }
