@@ -22,7 +22,9 @@ package top.theillusivec4.caelus.common.util;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
 import top.theillusivec4.caelus.common.CaelusNetwork;
 
 public class ClientCaelusHooks {
@@ -31,7 +33,14 @@ public class ClientCaelusHooks {
     ClientPlayerEntity playerEntity = MinecraftClient.getInstance().player;
 
     if (playerEntity != null && CommonCaelusHooks.startFlight(playerEntity)) {
-      ClientPlayNetworking.send(CaelusNetwork.START_FLYING, PacketByteBufs.create());
+      if (ClientPlayNetworking.canSend(CaelusNetwork.START_FLYING)) {
+        ClientPlayNetworking.send(CaelusNetwork.START_FLYING, PacketByteBufs.create());
+      } else {
+        ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
+        if (networkHandler != null) {
+          networkHandler.sendPacket(new ClientCommandC2SPacket(playerEntity, ClientCommandC2SPacket.Mode.START_FALL_FLYING));
+        }
+      }
     }
   }
 }
