@@ -20,17 +20,26 @@
 package top.theillusivec4.caelus;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.registry.Registry;
 import top.theillusivec4.caelus.api.CaelusApi;
 import top.theillusivec4.caelus.common.CaelusNetwork;
+import top.theillusivec4.caelus.common.integration.FallFlyingLibPlugin;
 
 @SuppressWarnings("unused")
 public class CaelusMod implements ModInitializer {
+
+  public static boolean isFallFlyingLibLoaded = false;
 
   @Override
   public void onInitialize() {
     Registry.register(Registry.ATTRIBUTE, "caelus.elytra_flight", CaelusApi.getInstance()
         .getFlightAttribute());
     CaelusNetwork.setup();
+    isFallFlyingLibLoaded = FabricLoader.getInstance().isModLoaded("fallflyinglib");
+
+    if (isFallFlyingLibLoaded) {
+      FallFlyingLibPlugin.init();
+    }
   }
 }

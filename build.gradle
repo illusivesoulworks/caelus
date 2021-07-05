@@ -25,6 +25,20 @@ repositories {
         name = "NerdHubMC"
         url = "https://maven.abusedmaster.xyz/"
     }
+    maven {
+        url = 'https://maven.cafeteria.dev'
+        content {
+            includeGroup 'net.adriantodt.fabricmc'
+        }
+    }
+    maven {
+        name = 'Ladysnake Mods'
+        url = 'https://ladysnake.jfrog.io/artifactory/mods'
+        content {
+            includeGroup 'io.github.ladysnake'
+            includeGroupByRegex 'io\\.github\\.onyxstudios.*'
+        }
+    }
 }
 
 dependencies {
@@ -41,6 +55,13 @@ dependencies {
     include fabricApi.module("fabric-networking-v0", project.fabric_version)
     include fabricApi.module("fabric-tag-extensions-v0", project.fabric_version)
     include fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
+
+    modCompileOnly "net.adriantodt.fabricmc:fallflyinglib:${project.ffl_version}", {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+    modRuntime "net.adriantodt.fabricmc:fallflyinglib:${project.ffl_version}", {
+        exclude group: "net.fabricmc.fabric-api"
+    }
 }
 
 processResources {
