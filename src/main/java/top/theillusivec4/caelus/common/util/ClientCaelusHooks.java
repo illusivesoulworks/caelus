@@ -33,12 +33,14 @@ public class ClientCaelusHooks {
     ClientPlayerEntity playerEntity = MinecraftClient.getInstance().player;
 
     if (playerEntity != null && CommonCaelusHooks.startFlight(playerEntity)) {
+
       if (ClientPlayNetworking.canSend(CaelusNetwork.START_FLYING)) {
         ClientPlayNetworking.send(CaelusNetwork.START_FLYING, PacketByteBufs.create());
       } else {
         ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
         if (networkHandler != null) {
-          networkHandler.sendPacket(new ClientCommandC2SPacket(playerEntity, ClientCommandC2SPacket.Mode.START_FALL_FLYING));
+          networkHandler.sendPacket(new ClientCommandC2SPacket(playerEntity,
+              ClientCommandC2SPacket.Mode.START_FALL_FLYING));
         }
       }
     }
