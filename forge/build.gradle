@@ -86,6 +86,7 @@ def replaceResources = tasks.register("replaceResources", Copy) {
 
 processResources {
     from("CHANGELOG.md")
+    from("../LICENSE")
     duplicatesStrategy(DuplicatesStrategy.FAIL)
     exclude('META-INF/mods.toml')
     configure { finalizedBy(replaceResources) }
