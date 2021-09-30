@@ -5,9 +5,11 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "MixinCaelusApi",
-    "MixinClientPlayerEntity",
     "MixinLivingEntity",
     "MixinPlayerEntity"
+  ],
+  "client": [
+    "MixinClientPlayerEntity"
   ],
   "server": [],
   "injectors": {
