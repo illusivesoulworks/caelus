@@ -62,6 +62,7 @@ dependencies {
     modRuntime "net.adriantodt.fabricmc:fallflyinglib:${project.ffl_version}", {
         exclude group: "net.fabricmc.fabric-api"
     }
+    modRuntime "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
 
 processResources {
