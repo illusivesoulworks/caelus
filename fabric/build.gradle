@@ -66,6 +66,7 @@ dependencies {
 }
 
 processResources {
+    from("CHANGELOG.md")
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
@@ -85,7 +86,7 @@ java {
 sourceSets {
     main {
         resources {
-            srcDirs += 'docs'
+            srcDirs += '../docs'
         }
     }
 }
@@ -99,8 +100,7 @@ curseforge {
         changelog = file('docs/CHANGELOG.md')
         addGameVersion "Java 16"
         addGameVersion "Fabric"
-        addGameVersion "1.17-Snapshot"
-        addGameVersion "1.17"
+        addGameVersion "1.17.1"
         addArtifact(sourcesJar)
         mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
 
