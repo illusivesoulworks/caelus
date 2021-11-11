@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.model.ElytraModel;
@@ -88,10 +89,9 @@ public class CaelusElytraLayer<T extends PlayerEntity, M extends EntityModel<T>>
         this.modelElytra
             .setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw,
                 headPitch);
-        IVertexBuilder ivertexbuilder = ItemRenderer
-            .getArmorVertexBuilder(bufferIn, this.modelElytra.getRenderType(resourcelocation),
-                false,
-                renderElytraEvent.isEnchanted());
+        IVertexBuilder ivertexbuilder = ItemRenderer.getArmorVertexBuilder(bufferIn,
+            RenderType.getArmorCutoutNoCull(resourcelocation), false,
+            renderElytraEvent.isEnchanted());
         Color color = renderElytraEvent.getColor();
         float red = color.getRed() / 255.0F;
         float green = color.getGreen() / 255.0F;
