@@ -28,7 +28,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
-import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -71,6 +70,6 @@ public class CaelusApiImpl extends CaelusApi {
       return attribute.getValue() >= 1.0d;
     }
     ItemStack stack = livingEntity.getItemBySlot(EquipmentSlot.CHEST);
-    return stack.getItem() instanceof ElytraItem && ElytraItem.isFlyEnabled(stack);
+    return stack.canElytraFly(livingEntity);
   }
 }

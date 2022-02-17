@@ -27,7 +27,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
@@ -74,8 +73,7 @@ public class Caelus {
       attributeInstance.removeModifier(elytraModifier);
       ItemStack stack = player.getItemBySlot(EquipmentSlot.CHEST);
 
-      if (stack.getItem() instanceof ElytraItem && ElytraItem.isFlyEnabled(stack) &&
-          !attributeInstance.hasModifier(elytraModifier)) {
+      if (stack.canElytraFly(player) && !attributeInstance.hasModifier(elytraModifier)) {
         attributeInstance.addTransientModifier(elytraModifier);
       }
     }
