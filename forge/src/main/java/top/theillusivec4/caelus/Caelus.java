@@ -74,8 +74,7 @@ public class Caelus {
       attributeInstance.removeModifier(elytraModifier);
       ItemStack stack = player.getItemBySlot(EquipmentSlot.CHEST);
 
-      if (stack.getItem() instanceof ElytraItem && ElytraItem.isFlyEnabled(stack) &&
-          !attributeInstance.hasModifier(elytraModifier)) {
+      if (stack.canElytraFly(player) && !attributeInstance.hasModifier(elytraModifier)) {
         attributeInstance.addTransientModifier(elytraModifier);
       }
     }
