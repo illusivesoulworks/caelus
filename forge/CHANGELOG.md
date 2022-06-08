@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.19-3.0.0.3] - 2022.06.07
+### Changed
+- Updated to Minecraft 1.19+
+- Updated to Forge 41+
+
 ## [1.18.1-3.0.0.2] - 2022.02.16
 ### Fixed
 - Fixed Caelus causing other modded elytras that do not depend on Caelus to stop functioning

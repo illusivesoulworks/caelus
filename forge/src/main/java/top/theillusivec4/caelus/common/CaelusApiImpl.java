@@ -30,6 +30,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import top.theillusivec4.caelus.api.CaelusApi;
 
@@ -39,7 +40,7 @@ public class CaelusApiImpl extends CaelusApi {
 
   public static final String MOD_ID = "caelus";
   public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister
-      .create(Attribute.class, MOD_ID);
+      .create(ForgeRegistries.ATTRIBUTES, MOD_ID);
 
   private static final RegistryObject<Attribute> FALL_FLYING = ATTRIBUTES.register("fall_flying",
       () -> new RangedAttribute("caelus.fallFlying", 0.0d, 0.0d, 1.0d).setSyncable(true));

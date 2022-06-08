@@ -29,7 +29,7 @@ archivesBaseName = "caelus-forge"
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'parchment', version: '2021.10.31-1.17.1'
+    mappings channel: 'parchment', version: '1.18.2-2022.06.05-1.19'
 
     runs {
         client {
@@ -38,7 +38,8 @@ minecraft {
             arg "-mixin.config=caelus.mixins.json"
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            property 'mixin.env.disableRefMap', 'true'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             mods {
                 caelus {
@@ -53,7 +54,8 @@ minecraft {
             arg "-mixin.config=caelus.mixins.json"
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            property 'mixin.env.disableRefMap', 'true'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             mods {
                 caelus {
