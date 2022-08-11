@@ -8,7 +8,7 @@ logoBlur=false
 modId="caelus"
 version="${version}"
 displayName="Caelus API"
-displayURL="https://github.com/TheIllusiveC4/CherishedWorlds"
+displayURL="https://github.com/TheIllusiveC4/Caelus"
 authors="C4"
 description='''
 A coremod and API to provide developers access to elytra flight mechanics through an entity attribute.
