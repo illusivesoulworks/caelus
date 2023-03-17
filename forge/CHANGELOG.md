@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.19.4-3.0.0.10] - 2023.03.17
+### Changed
+- Updated to Minecraft 1.19.4
+- Changed localization of attribute from "Elytra Flight" to "Fall Flying"
+
+## [1.19.3-3.0.0.9] - 2023.03.16
+### Fixed
+- Fixed Italian (it_it) localization
+
 ## [1.19.3-3.0.0.8] - 2023.03.16
 ### Added
 - Added Italian (it_it) localization (thanks WVam!) [#34](https://github.com/TheIllusiveC4/Caelus/pull/34)
