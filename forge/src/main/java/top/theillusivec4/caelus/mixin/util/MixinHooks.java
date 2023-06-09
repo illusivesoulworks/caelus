@@ -31,7 +31,7 @@ public class MixinHooks {
   @SuppressWarnings("ConstantConditions")
   public static boolean canFly(LivingEntity livingEntity, boolean flag) {
     boolean bl = flag;
-    bl = bl && !livingEntity.isOnGround() && !livingEntity.isPassenger() && !livingEntity
+    bl = bl && !livingEntity.onGround() && !livingEntity.isPassenger() && !livingEntity
         .hasEffect(MobEffects.LEVITATION) && CaelusApi.getInstance().canFly(livingEntity);
     return bl;
   }
@@ -39,7 +39,7 @@ public class MixinHooks {
   @SuppressWarnings("ConstantConditions")
   public static boolean startFlight(Player playerEntity) {
 
-    if (!playerEntity.isOnGround() && !playerEntity.isFallFlying() && !playerEntity.isInWater() &&
+    if (!playerEntity.onGround() && !playerEntity.isFallFlying() && !playerEntity.isInWater() &&
         !playerEntity.hasEffect(MobEffects.LEVITATION) &&
         CaelusApi.getInstance().canFly(playerEntity)) {
       playerEntity.startFallFlying();
