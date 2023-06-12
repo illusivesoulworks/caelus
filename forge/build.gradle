@@ -31,7 +31,7 @@ archivesBaseName = "caelus-forge"
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'parchment', version: '1.18.2-2022.06.05-1.19'
+    mappings channel: 'official', version: '1.20'
 
     runs {
         client {
@@ -113,7 +113,7 @@ jar {
                     "Implementation-Version"  : "${getArchiveVersion()}",
                     "Implementation-Vendor"   : "C4",
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                    "MixinConfigs"            : "caelus.mixins.json"],)
+                    "MixinConfigs"            : "caelus.mixins.json"])
     }
 }
 
@@ -155,7 +155,7 @@ curseforge {
 }
 
 modrinth {
-    token = findProperty('modrinthKey') ?: 0
+    token = findProperty('modrinthKey') ?: '0'
     projectId = "${modrinth_id}"
     versionName = getArchivesBaseName() + "-" + getVersion()
     versionType = "${release_type}"
