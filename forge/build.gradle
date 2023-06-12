@@ -66,22 +66,20 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 
-def replaceResources = tasks.register("replaceResources", Copy) {
-    it.outputs.upToDateWhen { false }
-
-    it.from(sourceSets.main.resources) {
-        include "META-INF/mods.toml"
-        expand 'version': version, 'mc_version_range': mc_version_range, 'forge_version_range': forge_version_range, "loader_version": loader_version
-    }
-    it.into "$buildDir/resources/main/"
-}
-
+def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
+def replaceProperties = [
+        mc_version_range: mc_version_range, forge_version: forge_version, forge_version_range: forge_version_range,
+        loader_version: loader_version, version: version,
+]
 processResources {
     from("CHANGELOG.md")
     from("../LICENSE")
-    duplicatesStrategy(DuplicatesStrategy.FAIL)
-    exclude('META-INF/mods.toml')
-    configure { finalizedBy(replaceResources) }
+    inputs.properties replaceProperties
+    replaceProperties.put 'project', project
+
+    filesMatching(resourceTargets) {
+        expand replaceProperties
+    }
 }
 
 sourceSets {
@@ -118,13 +116,11 @@ task sourcesJar(type: Jar) {
 }
 
 artifacts {
-	archives apiJar
+    archives apiJar
     archives sourcesJar
 }
 
 jar.finalizedBy('reobfJar')
-
-tasks.build.dependsOn apiJar, sourcesJar
 
 task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     apiToken = findProperty('curseKey')
