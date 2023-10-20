@@ -70,7 +70,7 @@ public class Caelus {
 
     if (attributeInstance != null) {
       AttributeModifier elytraModifier = CaelusApi.getInstance().getElytraModifier();
-      attributeInstance.removeModifier(elytraModifier);
+      attributeInstance.removeModifier(elytraModifier.getId());
       ItemStack stack = player.getItemBySlot(EquipmentSlot.CHEST);
 
       if (stack.canElytraFly(player) && !attributeInstance.hasModifier(elytraModifier)) {

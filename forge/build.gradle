@@ -19,7 +19,7 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'parchment', version: '1.19.3-2023.03.12-1.20'
+    mappings channel: 'parchment', version: "${parchment_mc_version}-${parchment_version}-${mc_version}"
 
     runs {
         client {
@@ -61,7 +61,7 @@ mixin {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${forge_version}"
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }

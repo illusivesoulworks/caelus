@@ -21,11 +21,10 @@
 
 package top.theillusivec4.caelus.common.network;
 
-import java.util.function.Supplier;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import top.theillusivec4.caelus.api.CaelusApi;
 
 public final class CPacketFlight {
@@ -38,9 +37,9 @@ public final class CPacketFlight {
   }
 
   @SuppressWarnings("ConstantConditions")
-  public static void handle(CPacketFlight msg, Supplier<NetworkEvent.Context> ctx) {
-    ctx.get().enqueueWork(() -> {
-      ServerPlayer sender = ctx.get().getSender();
+  public static void handle(CPacketFlight msg, CustomPayloadEvent.Context ctx) {
+    ctx.enqueueWork(() -> {
+      ServerPlayer sender = ctx.getSender();
 
       if (sender != null) {
         sender.stopFallFlying();
@@ -51,6 +50,6 @@ public final class CPacketFlight {
         }
       }
     });
-    ctx.get().setPacketHandled(true);
+    ctx.setPacketHandled(true);
   }
 }
