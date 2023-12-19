@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 Prior to version 3.1.0, this project used [Forge Recommended Versioning](https://mcforge.readthedocs.io/en/latest/conventions/versioning/).
 
 ## [5.0.0+1.20.4] - 2023.12.19
+### Added
+- Added NeoForge version
 ### Changed
 - Updated to Minecraft 1.20.4
 
