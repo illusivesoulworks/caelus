@@ -1,165 +1,124 @@
 plugins {
-    id 'eclipse'
     id 'idea'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
-    id 'com.modrinth.minotaur' version '2.+'
     id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
+    id 'com.modrinth.minotaur' version '2.+'
     id 'net.darkhax.curseforgegradle' version '1.+'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
-
-version = "${mod_version}"
-group = "top.theillusivec4.caelus"
-
 base {
-    archivesName = "caelus-forge"
+    archivesName = "${mod_id}-forge"
 }
+mixin {
+    add(sourceSets.main, "${mod_id}.refmap.json")
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+    config("${mod_id}.mixins.json")
+}
 
 minecraft {
-    mappings channel: 'parchment', version: "${parchment_mc_version}-${parchment_version}-${mc_version}"
+    mappings channel: 'parchment', version: "${parchment_mc_version}-${parchment_version}-${minecraft_version}"
+
+    copyIdeResources = true //Calls processResources when in dev
+
+    // Automatically enable forge AccessTransformers if the file exists
+    // This location is hardcoded in Forge and can not be changed.
+    // https://github.com/MinecraftForge/MinecraftForge/blob/be1698bb1554f9c8fa2f58e32b9ab70bc4385e60/fmlloader/src/main/java/net/minecraftforge/fml/loading/moddiscovery/ModFile.java#L123
+    if (file('src/main/resources/META-INF/accesstransformer.cfg').exists()) {
+        accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    }
 
     runs {
         client {
             workingDirectory project.file('run')
-
-            arg "-mixin.config=caelus.mixins.json"
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
+            ideaModule "${rootProject.name}.${project.name}.main"
+            taskName 'Client'
             property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
-                caelus {
+                modClientRun {
                     source sourceSets.main
+                    source project(":common").sourceSets.main
                 }
             }
         }
 
         server {
             workingDirectory project.file('run')
-
-            arg "-mixin.config=caelus.mixins.json"
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
+            ideaModule "${rootProject.name}.${project.name}.main"
+            taskName 'Server'
             property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
-                caelus {
+                modServerRun {
                     source sourceSets.main
+                    source project(":common").sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            ideaModule "${rootProject.name}.${project.name}.main"
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            taskName 'Data'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            mods {
+                modDataRun {
+                    source sourceSets.main
+                    source project(":common").sourceSets.main
                 }
             }
         }
     }
 }
 
-mixin {
-    add sourceSets.main, "caelus.refmap.json"
-}
+sourceSets.main.resources.srcDir 'src/generated/resources'
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-
-    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    compileOnly project(":common")
+    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 }
 
-def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
-def replaceProperties = [
-        mc_version_range: mc_version_range, forge_version: forge_version, forge_version_range: forge_version_range,
-        loader_version: loader_version, version: version,
-]
-processResources {
-    from("CHANGELOG.md")
-    from("../LICENSE")
-    inputs.properties replaceProperties
-    replaceProperties.put 'project', project
-
-    filesMatching(resourceTargets) {
-        expand replaceProperties
-    }
+tasks.withType(JavaCompile).configureEach {
+    source(project(":common").sourceSets.main.allSource)
 }
-
-sourceSets {
-    main {
-        resources {
-            srcDirs += '../docs'
-        }
-    }
+tasks.withType(Javadoc).configureEach {
+    source(project(":common").sourceSets.main.allJava)
 }
-
-jar {
-    manifest {
-        attributes(["Specification-Title"     : "Caelus API",
-                    "Specification-Vendor"    : "C4",
-                    "Specification-Version"   : "1",
-                    "Implementation-Title"    : "Caelus API",
-                    "Implementation-Version"  : "${getArchiveVersion()}",
-                    "Implementation-Vendor"   : "C4",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                    "MixinConfigs"            : "caelus.mixins.json"])
-    }
+tasks.named("sourcesJar", Jar) {
+    from(project(":common").sourceSets.main.allSource)
 }
 
 task apiJar(type: Jar) {
     archiveClassifier.set('api')
     include 'top/theillusivec4/caelus/api/**/*'
+    from(project(":common").sourceSets.main.allSource)
     from sourceSets.main.allSource
     from sourceSets.main.output
 }
 
-task sourcesJar(type: Jar) {
-    archiveClassifier.set('sources')
-    from sourceSets.main.allJava
+processResources {
+    from project(":common").sourceSets.main.resources
 }
 
 artifacts {
     archives apiJar
-    archives sourcesJar
 }
 
 jar.finalizedBy('reobfJar')
 
-task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
-    apiToken = findProperty('curseKey')
-    def projectId = "${curse_id}".toString()
-    def mainFile = upload(projectId, jar)
-    mainFile.changelogType = 'markdown'
-    mainFile.changelog = file('CHANGELOG_LATEST.md')
-    mainFile.releaseType = "${release_type}"
-    "${release_versions}".split(',').each {
-        mainFile.addGameVersion("${it}")
-    }
-    mainFile.withAdditionalFile(sourcesJar)
-    mainFile.withAdditionalFile(apiJar)
-}
-
-modrinth {
-    token = findProperty('modrinthKey') ?: 0
-    projectId = "${modrinth_id}"
-    versionName = getArchivesBaseName() + "-" + getVersion()
-    versionType = "${release_type}"
-    changelog = file('CHANGELOG_LATEST.md').text
-    uploadFile = jar
-    additionalFiles = [sourcesJar, apiJar]
-    gameVersions = "${release_versions}".split(",") as List<String>
-}
-
 publishing {
-    tasks.publish.dependsOn 'build'
     publications {
-
         mavenJava(MavenPublication) {
-            artifactId project.archivesBaseName
-
+            artifactId base.archivesName.get()
             artifact jar
             artifact sourcesJar
             artifact apiJar
         }
     }
-
     repositories {
 
         if (project.hasProperty('urlMaven')) {
@@ -178,6 +137,47 @@ publishing {
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    apiToken = findProperty('curseKey')
+    def projectId = "${cf_id}".toString()
+    def mainFile = upload(projectId, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+    mainFile.changelogType = 'markdown'
+    mainFile.changelog = file('../CHANGELOG_LATEST.md')
+    mainFile.releaseType = "${release_type}"
+    "${release_versions}".split(',').each {
+        mainFile.addGameVersion("${it}")
+    }
+    mainFile.withAdditionalFile(sourcesJar)
+    mainFile.withAdditionalFile(apiJar)
+
+    doLast {
+
+        if (project.hasProperty('cf_page') && mainFile.curseFileId != null) {
+            project.ext.curse_link = "${cf_page}/files/${mainFile.curseFileId}"
+        }
+    }
+}
+
+modrinth {
+    token = findProperty('modrinthKey') ?: 0
+    projectId = "${modrinth_id}"
+    versionName = getArchivesBaseName() + "-" + getVersion()
+    versionType = "${release_type}"
+    changelog = file('../CHANGELOG_LATEST.md').text
+    uploadFile = file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar")
+    additionalFiles = [sourcesJar, apiJar]
+    gameVersions = "${release_versions}".split(",") as List<String>
+}
+
+tasks.modrinth.doLast {
+
+    if (project.hasProperty('modrinth_page') && tasks.modrinth.newVersion != null) {
+        project.ext.modrinth_link = "${modrinth_page}/version/${tasks.modrinth.newVersion.id}"
+    }
+}
+
+sourceSets.each {
+    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
+    it.output.resourcesDir = dir
+    it.java.destinationDirectory = dir
 }

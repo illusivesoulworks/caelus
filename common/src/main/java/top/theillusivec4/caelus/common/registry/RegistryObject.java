@@ -16,27 +16,21 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package top.theillusivec4.caelus.api;
+package top.theillusivec4.caelus.common.registry;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.Cancelable;
+import java.util.function.Supplier;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 
-/**
- * This event is fired when the game checks if the player cape should be rendered.<br>
- * <br>
- * This event is fired on client-side only.
- * <br>
- * This event is {@link Cancelable}.
- * <br>
- * This event does not have a result. {@link HasResult} <br>
- * <br>
- * This event is fired on the {@link net.minecraftforge.common.MinecraftForge#EVENT_BUS}.
- **/
-@Cancelable
-public class RenderCapeEvent extends PlayerEvent {
+public interface RegistryObject<T> extends Supplier<T> {
 
-  public RenderCapeEvent(Player player) {
-    super(player);
-  }
+  ResourceKey<T> getResourceKey();
+
+  ResourceLocation getId();
+
+  @Override
+  T get();
+
+  Holder<T> asHolder();
 }

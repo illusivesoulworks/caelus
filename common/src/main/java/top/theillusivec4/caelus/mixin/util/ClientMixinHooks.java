@@ -16,27 +16,24 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package top.theillusivec4.caelus.api;
+package top.theillusivec4.caelus.mixin.util;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.Cancelable;
+import top.theillusivec4.caelus.platform.Services;
 
-/**
- * This event is fired when the game checks if the player cape should be rendered.<br>
- * <br>
- * This event is fired on client-side only.
- * <br>
- * This event is {@link Cancelable}.
- * <br>
- * This event does not have a result. {@link HasResult} <br>
- * <br>
- * This event is fired on the {@link net.minecraftforge.common.MinecraftForge#EVENT_BUS}.
- **/
-@Cancelable
-public class RenderCapeEvent extends PlayerEvent {
+public class ClientMixinHooks {
 
-  public RenderCapeEvent(Player player) {
-    super(player);
+  public static void checkFlight() {
+    LocalPlayer playerEntity = Minecraft.getInstance().player;
+
+    if (playerEntity != null && MixinHooks.startFlight(playerEntity)) {
+      Services.CAELUS.sendFlightPacket();
+    }
+  }
+
+  public static boolean canRenderCape(Player playerEntity) {
+    return Services.CAELUS.canRenderCape(playerEntity);
   }
 }

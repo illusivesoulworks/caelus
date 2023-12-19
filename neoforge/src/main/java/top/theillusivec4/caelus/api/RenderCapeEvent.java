@@ -19,22 +19,19 @@
 package top.theillusivec4.caelus.api;
 
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.Cancelable;
+import net.neoforged.bus.api.ICancellableEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 /**
  * This event is fired when the game checks if the player cape should be rendered.<br>
  * <br>
  * This event is fired on client-side only.
  * <br>
- * This event is {@link Cancelable}.
+ * This event is a {@link ICancellableEvent}.
  * <br>
- * This event does not have a result. {@link HasResult} <br>
- * <br>
- * This event is fired on the {@link net.minecraftforge.common.MinecraftForge#EVENT_BUS}.
+ * This event is fired on the {@link net.neoforged.neoforge.common.NeoForge#EVENT_BUS}.
  **/
-@Cancelable
-public class RenderCapeEvent extends PlayerEvent {
+public class RenderCapeEvent extends PlayerEvent implements ICancellableEvent {
 
   public RenderCapeEvent(Player player) {
     super(player);

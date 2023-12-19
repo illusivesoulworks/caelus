@@ -19,30 +19,28 @@
 package top.theillusivec4.caelus.common.network;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.Channel;
-import net.minecraftforge.network.ChannelBuilder;
-import net.minecraftforge.network.SimpleChannel;
+import net.neoforged.neoforge.network.NetworkRegistry;
+import net.neoforged.neoforge.network.simple.SimpleChannel;
 import top.theillusivec4.caelus.CaelusConstants;
 
 public class CaelusNetwork {
 
-  private static final int PTC_VERSION = 1;
+  private static final String PTC_VERSION = "1";
 
   public static SimpleChannel instance;
 
-  public static void setup() {
-    instance = ChannelBuilder.named(new ResourceLocation(CaelusConstants.MOD_ID, "main"))
-        .networkProtocolVersion(PTC_VERSION)
-        .clientAcceptedVersions(Channel.VersionTest.exact(PTC_VERSION))
-        .serverAcceptedVersions(Channel.VersionTest.exact(PTC_VERSION)).simpleChannel();
+  private static int id = 0;
 
-    instance.messageBuilder(CPacketFlight.class)
-        .encoder(CPacketFlight::encode)
-        .decoder(CPacketFlight::decode)
-        .consumerNetworkThread((cPacketFlight, context) -> {
+  public static void setup() {
+    instance =
+        NetworkRegistry.ChannelBuilder.named(new ResourceLocation(CaelusConstants.MOD_ID, "main"))
+            .networkProtocolVersion(() -> PTC_VERSION).clientAcceptedVersions(PTC_VERSION::equals)
+            .serverAcceptedVersions(PTC_VERSION::equals).simpleChannel();
+
+    instance.registerMessage(id++, CPacketFlight.class, CPacketFlight::encode,
+        CPacketFlight::decode, (cPacketFlight, context) -> {
           context.enqueueWork(() -> CPacketFlight.handle(cPacketFlight, context.getSender()));
           context.setPacketHandled(true);
-        })
-        .add();
+        });
   }
 }

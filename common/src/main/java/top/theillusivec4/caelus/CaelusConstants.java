@@ -16,27 +16,14 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package top.theillusivec4.caelus.api;
+package top.theillusivec4.caelus;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.Cancelable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * This event is fired when the game checks if the player cape should be rendered.<br>
- * <br>
- * This event is fired on client-side only.
- * <br>
- * This event is {@link Cancelable}.
- * <br>
- * This event does not have a result. {@link HasResult} <br>
- * <br>
- * This event is fired on the {@link net.minecraftforge.common.MinecraftForge#EVENT_BUS}.
- **/
-@Cancelable
-public class RenderCapeEvent extends PlayerEvent {
+public class CaelusConstants {
 
-  public RenderCapeEvent(Player player) {
-    super(player);
-  }
+  public static final String MOD_ID = "caelus";
+  public static final String MOD_NAME = "Caelus API";
+  public static final Logger LOG = LoggerFactory.getLogger(MOD_NAME);
 }
