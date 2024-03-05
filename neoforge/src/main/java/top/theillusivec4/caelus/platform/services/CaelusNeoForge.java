@@ -25,7 +25,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.PacketDistributor;
 import top.theillusivec4.caelus.api.RenderCapeEvent;
 import top.theillusivec4.caelus.common.network.CPacketFlightPayload;
-import top.theillusivec4.caelus.common.network.CaelusNetwork;
 
 public class CaelusNeoForge implements ICaelusPlatform {
 
@@ -36,7 +35,7 @@ public class CaelusNeoForge implements ICaelusPlatform {
 
   @Override
   public void sendFlightPacket() {
-    CaelusNetwork.instance.send(PacketDistributor.SERVER.noArg(), new CPacketFlightPayload());
+    PacketDistributor.SERVER.noArg().send(new CPacketFlightPayload());
   }
 
   @Override
