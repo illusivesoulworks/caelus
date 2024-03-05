@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2023 C4
+ * Copyright (C) 2019-2024 C4
  *
  * Caelus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,31 +18,33 @@
 
 package top.theillusivec4.caelus.common.network;
 
+import javax.annotation.Nonnull;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffects;
-import top.theillusivec4.caelus.api.CaelusApi;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import top.theillusivec4.caelus.CaelusConstants;
 
-public class CPacketFlight {
+public class CPacketFlightPayload extends CPacketFlight implements CustomPacketPayload {
 
-  public static void encode(CPacketFlight msg, FriendlyByteBuf buf) {
+  public static final ResourceLocation ID =
+      new ResourceLocation(CaelusConstants.MOD_ID, "flight");
+
+  public CPacketFlightPayload() {
+    super();
   }
 
-  public static CPacketFlight decode(FriendlyByteBuf buf) {
-    return new CPacketFlight();
+  public CPacketFlightPayload(FriendlyByteBuf buf) {
+    this();
   }
 
-  @SuppressWarnings("ConstantConditions")
-  public static void handle(ServerPlayer serverPlayer) {
+  @Override
+  public void write(@Nonnull FriendlyByteBuf buf) {
+    CPacketFlight.encode(this, buf);
+  }
 
-    if (serverPlayer != null) {
-      serverPlayer.stopFallFlying();
-
-      if (!serverPlayer.onGround() && !serverPlayer.isFallFlying() && !serverPlayer.isInWater() &&
-          !serverPlayer.hasEffect(MobEffects.LEVITATION) &&
-          CaelusApi.getInstance().canFly(serverPlayer)) {
-        serverPlayer.startFallFlying();
-      }
-    }
+  @Nonnull
+  @Override
+  public ResourceLocation id() {
+    return ID;
   }
 }

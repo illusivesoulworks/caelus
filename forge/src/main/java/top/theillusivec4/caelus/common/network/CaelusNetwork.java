@@ -40,7 +40,7 @@ public class CaelusNetwork {
         .encoder(CPacketFlight::encode)
         .decoder(CPacketFlight::decode)
         .consumerNetworkThread((cPacketFlight, context) -> {
-          context.enqueueWork(() -> CPacketFlight.handle(cPacketFlight, context.getSender()));
+          context.enqueueWork(() -> CPacketFlight.handle(context.getSender()));
           context.setPacketHandled(true);
         })
         .add();
