@@ -3,8 +3,7 @@ Prior to version 3.1.0, this project used [Forge Recommended Versioning](https:/
 
 This is a copy of the changelog for the most recent version. For the full version history, go [here](https://github.com/TheIllusiveC4/Caelus/blob/1.20.4/docs/CHANGELOG.md).
 
-## [5.0.0+1.20.4] - 2023.12.19
-### Added
-- Added NeoForge version
+## [5.0.1+1.20.4] - 2024.03.04
 ### Changed
-- Updated to Minecraft 1.20.4
+- Refactored networking [#39](https://github.com/TheIllusiveC4/Caelus/issues/39)
+- [NeoForge] Requires NeoForge 20.4.167+
