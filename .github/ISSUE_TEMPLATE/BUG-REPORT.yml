@@ -46,10 +46,10 @@ body:
   id: loader
   attributes:
     label: Loader
-    description: Are you using Forge or Fabric?
+    description: Are you using Forge or NeoForge?
     options:
       - Forge
-      - Fabric
+      - NeoForge
   validations:
     required: true
 - type: input
@@ -58,7 +58,7 @@ body:
     label: Loader Version
     description: Which version of the above loader are you using?
     placeholder: |
-      Example: Forge - 37.0.65 or Fabric - 0.7.4 w/ Fabric API 0.40.1
+      Example: Forge - 37.0.65
   validations:
     required: true
 - type: input
