@@ -3,7 +3,10 @@ Prior to version 3.1.0, this project used [Forge Recommended Versioning](https:/
 
 This is a copy of the changelog for the most recent version. For the full version history, go [here](https://github.com/TheIllusiveC4/Caelus/blob/1.20.4/docs/CHANGELOG.md).
 
-## [5.0.1+1.20.4] - 2024.03.04
+## [5.1.0+1.20.4] - 2024.04.22
+### Added
+- Added `CaelusApi#canFallFly(LivingEntity)`
 ### Changed
-- Refactored networking [#39](https://github.com/TheIllusiveC4/Caelus/issues/39)
-- [NeoForge] Requires NeoForge 20.4.167+
+- Refactored fall flying to account for three states instead of two for better mod compatibility
+### Deprecated
+- Deprecated `CaelusApi#canFly(LivingEntity)`
