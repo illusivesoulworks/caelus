@@ -23,28 +23,20 @@ package top.theillusivec4.caelus.mixin.util;
 
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import top.theillusivec4.caelus.api.CaelusApi;
 
 public class MixinHooks {
 
   @SuppressWarnings("ConstantConditions")
-  public static boolean canFly(LivingEntity livingEntity, boolean flag) {
-    boolean bl = flag;
-    bl = bl && !livingEntity.onGround() && !livingEntity.isPassenger() && !livingEntity
-        .hasEffect(MobEffects.LEVITATION) && CaelusApi.getInstance().canFly(livingEntity);
-    return bl;
-  }
+  public static boolean canFly(LivingEntity livingEntity, boolean oldFlag, boolean newFlag) {
+    CaelusApi.TriState fallFly = CaelusApi.getInstance().canFallFly(livingEntity);
 
-  @SuppressWarnings("ConstantConditions")
-  public static boolean startFlight(Player playerEntity) {
-
-    if (!playerEntity.onGround() && !playerEntity.isFallFlying() && !playerEntity.isInWater() &&
-        !playerEntity.hasEffect(MobEffects.LEVITATION) &&
-        CaelusApi.getInstance().canFly(playerEntity)) {
-      playerEntity.startFallFlying();
-      return true;
+    if (fallFly == CaelusApi.TriState.DENY) {
+      return false;
+    } else if (fallFly == CaelusApi.TriState.DEFAULT) {
+      return newFlag;
     }
-    return false;
+    return !livingEntity.onGround() && !livingEntity.isPassenger() &&
+        !livingEntity.hasEffect(MobEffects.LEVITATION) && oldFlag;
   }
 }

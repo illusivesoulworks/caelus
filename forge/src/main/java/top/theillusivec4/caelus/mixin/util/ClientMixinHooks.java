@@ -23,19 +23,32 @@ package top.theillusivec4.caelus.mixin.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
+import top.theillusivec4.caelus.api.CaelusApi;
 import top.theillusivec4.caelus.api.RenderCapeEvent;
 import top.theillusivec4.caelus.common.network.CaelusNetwork;
 
 public class ClientMixinHooks {
 
-  public static void checkFlight() {
+  public static boolean checkFlight() {
     LocalPlayer playerEntity = Minecraft.getInstance().player;
 
-    if (playerEntity != null && MixinHooks.startFlight(playerEntity)) {
-      CaelusNetwork.sendFlightC2S();
+    if (playerEntity != null) {
+      CaelusApi.TriState flag = CaelusApi.getInstance().canFallFly(playerEntity);
+
+      if (flag == CaelusApi.TriState.DENY) {
+        return false;
+      }
+
+      if (!playerEntity.onGround() && !playerEntity.isFallFlying() && !playerEntity.isInWater() &&
+          !playerEntity.hasEffect(MobEffects.LEVITATION) && flag == CaelusApi.TriState.ALLOW) {
+        playerEntity.startFallFlying();
+        CaelusNetwork.sendFlightC2S();
+      }
     }
+    return true;
   }
 
   public static boolean canRenderCape(Player playerEntity) {

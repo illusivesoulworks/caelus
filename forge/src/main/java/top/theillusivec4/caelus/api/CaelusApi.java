@@ -24,6 +24,7 @@ package top.theillusivec4.caelus.api;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import org.jetbrains.annotations.ApiStatus;
 
 public abstract class CaelusApi {
 
@@ -34,8 +35,11 @@ public abstract class CaelusApi {
   public abstract String getModId();
 
   /**
-   * The elytra flight attribute, will provide elytra flight if the value is 1.0 or above. No flight
-   * otherwise.
+   * The fall flight attribute.
+   * <br>
+   * Greater than or equal to 1.0 - Always grants fall flying.
+   * Between 0.0 (exclusive) and 1.0 (exclusive) - Falls back to default behavior.
+   * Less than or equal to 0.0 - Denies any fall flying.
    */
   public abstract Attribute getFlightAttribute();
 
@@ -45,10 +49,23 @@ public abstract class CaelusApi {
   public abstract AttributeModifier getElytraModifier();
 
   /**
-   * Checks whether or not an entity is able to elytra fly.
+   * Checks whether an entity is able to fall fly.
    *
-   * @param livingEntity The entity to check for elytra flight capabilities
-   * @return True if the entity can elytra fly, false otherwise
+   * @param livingEntity The entity to check for fall flight capabilities
+   * @return {@link TriState} based on the entity fall flight attribute
    */
+  public abstract TriState canFallFly(LivingEntity livingEntity);
+
+  /**
+   * @deprecated See {@link CaelusApi#canFallFly(LivingEntity)}
+   */
+  @Deprecated
+  @ApiStatus.ScheduledForRemoval(inVersion = "1.21")
   public abstract boolean canFly(LivingEntity livingEntity);
+
+  public enum TriState {
+    ALLOW,
+    DEFAULT,
+    DENY
+  }
 }

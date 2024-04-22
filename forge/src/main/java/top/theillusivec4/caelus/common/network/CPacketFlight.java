@@ -45,8 +45,9 @@ public final class CPacketFlight {
       if (sender != null) {
         sender.stopFallFlying();
 
-        if (!sender.onGround() && !sender.isFallFlying() && !sender.isInWater() && !sender
-            .hasEffect(MobEffects.LEVITATION) && CaelusApi.getInstance().canFly(sender)) {
+        if (!sender.onGround() && !sender.isFallFlying() && !sender.isInWater() &&
+            !sender.hasEffect(MobEffects.LEVITATION) &&
+            CaelusApi.getInstance().canFallFly(sender) != CaelusApi.TriState.DENY) {
           sender.startFallFlying();
         }
       }
