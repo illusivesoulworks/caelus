@@ -40,7 +40,7 @@ public class CaelusApiImpl extends CaelusApi {
       RegistryProvider.get(Registries.ATTRIBUTE, CaelusConstants.MOD_ID);
 
   private static final RegistryObject<Attribute> FALL_FLYING = ATTRIBUTES.register("fall_flying",
-      () -> new RangedAttribute("caelus.fallFlying", 0.0d, 0.0d, 1.0d).setSyncable(true));
+      () -> new RangedAttribute("caelus.fallFlying", 0.1d, 0.0d, 1.0d).setSyncable(true));
   private static final AttributeModifier ELYTRA_MODIFIER =
       new AttributeModifier(UUID.fromString("5b6c3728-9c24-42ae-83ac-70d61d8b8199"),
           "Elytra modifier", 1.0f, AttributeModifier.Operation.ADDITION);
@@ -65,13 +65,38 @@ public class CaelusApiImpl extends CaelusApi {
   }
 
   @Override
-  public boolean canFly(LivingEntity livingEntity) {
-    AttributeInstance attribute = livingEntity.getAttribute(FALL_FLYING.get());
+  public TriState canFallFly(LivingEntity livingEntity) {
+    Attribute fallFlying = FALL_FLYING.get();
+    AttributeInstance attribute = livingEntity.getAttribute(fallFlying);
 
     if (attribute != null) {
-      return attribute.getValue() >= 1.0d;
+      double val = attribute.getValue();
+      // backwards compatibility with old default value
+      // todo: Remove in 1.21
+      double baseValue = attribute.getBaseValue();
+      double actualBaseValue = fallFlying.getDefaultValue();
+
+      if (baseValue != actualBaseValue) {
+        attribute.setBaseValue(actualBaseValue);
+      }
+
+      if (val >= 1.0d) {
+        return TriState.ALLOW;
+      } else if (val > 0.0d) {
+        return TriState.DEFAULT;
+      }
+      return TriState.DENY;
     }
     ItemStack stack = livingEntity.getItemBySlot(EquipmentSlot.CHEST);
-    return Services.CAELUS.canFly(stack, livingEntity);
+
+    if (Services.CAELUS.canFly(stack, livingEntity)) {
+      return TriState.ALLOW;
+    }
+    return TriState.DEFAULT;
+  }
+
+  @Override
+  public boolean canFly(LivingEntity livingEntity) {
+    return canFallFly(livingEntity) == TriState.ALLOW;
   }
 }

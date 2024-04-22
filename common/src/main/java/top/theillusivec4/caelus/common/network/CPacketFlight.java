@@ -40,7 +40,7 @@ public class CPacketFlight {
 
       if (!serverPlayer.onGround() && !serverPlayer.isFallFlying() && !serverPlayer.isInWater() &&
           !serverPlayer.hasEffect(MobEffects.LEVITATION) &&
-          CaelusApi.getInstance().canFly(serverPlayer)) {
+          CaelusApi.getInstance().canFallFly(serverPlayer) != CaelusApi.TriState.DENY) {
         serverPlayer.startFallFlying();
       }
     }

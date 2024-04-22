@@ -42,6 +42,6 @@ public abstract class MixinLivingEntity extends Entity {
       method = "updateFallFlying"
   )
   private boolean caelus$setFlag(boolean value) {
-    return MixinHooks.canFly((LivingEntity) (Object) this, this.getSharedFlag(7));
+    return MixinHooks.canFly((LivingEntity) (Object) this, this.getSharedFlag(7), value);
   }
 }
