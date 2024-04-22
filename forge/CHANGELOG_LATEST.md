@@ -3,7 +3,10 @@ Prior to version 3.1.0, this project used [Forge Recommended Versioning](https:/
 
 This is a copy of the changelog for the most recent version. For the full version history, go [here](https://github.com/TheIllusiveC4/Caelus/blob/1.20.x/docs/CHANGELOG.md).
 
-## [3.1.0+1.20] - 2023.06.11
+## [3.2.0+1.20.1] - 2024.04.22
+### Added
+- Added `CaelusApi#canFallFly(LivingEntity)`
 ### Changed
-- Updated to Minecraft 1.20
-- Changed to Semantic Versioning
+- Refactored fall flying to account for three states instead of two for better mod compatibility
+### Deprecated
+- Deprecated `CaelusApi#canFly(LivingEntity)`
