@@ -19,6 +19,7 @@
 package top.theillusivec4.caelus.common;
 
 import java.util.UUID;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -43,10 +44,10 @@ public class CaelusApiImpl extends CaelusApi {
       () -> new RangedAttribute("caelus.fallFlying", 0.1d, 0.0d, 1.0d).setSyncable(true));
   private static final AttributeModifier ELYTRA_MODIFIER =
       new AttributeModifier(UUID.fromString("5b6c3728-9c24-42ae-83ac-70d61d8b8199"),
-          "Elytra modifier", 1.0f, AttributeModifier.Operation.ADDITION);
+          "Elytra modifier", 1.0f, AttributeModifier.Operation.ADD_VALUE);
 
   public static void setup() {
-    // NO-OP
+    CaelusApi.setInstance(INSTANCE);
   }
 
   @Override
@@ -55,8 +56,8 @@ public class CaelusApiImpl extends CaelusApi {
   }
 
   @Override
-  public Attribute getFlightAttribute() {
-    return FALL_FLYING.get();
+  public Holder<Attribute> getFlightAttribute() {
+    return FALL_FLYING.asHolder();
   }
 
   @Override
@@ -66,15 +67,15 @@ public class CaelusApiImpl extends CaelusApi {
 
   @Override
   public TriState canFallFly(LivingEntity livingEntity) {
-    Attribute fallFlying = FALL_FLYING.get();
-    AttributeInstance attribute = livingEntity.getAttribute(fallFlying);
+    Holder<Attribute> att = this.getFlightAttribute();
+    AttributeInstance attribute = livingEntity.getAttribute(att);
 
     if (attribute != null) {
       double val = attribute.getValue();
       // backwards compatibility with old default value
       // todo: Remove in 1.21
       double baseValue = attribute.getBaseValue();
-      double actualBaseValue = fallFlying.getDefaultValue();
+      double actualBaseValue = att.value().getDefaultValue();
 
       if (baseValue != actualBaseValue) {
         attribute.setBaseValue(actualBaseValue);

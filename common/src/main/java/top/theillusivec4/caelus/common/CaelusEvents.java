@@ -34,7 +34,7 @@ public class CaelusEvents {
 
     if (attributeInstance != null) {
       AttributeModifier elytraModifier = CaelusApi.getInstance().getElytraModifier();
-      attributeInstance.removeModifier(elytraModifier.getId());
+      attributeInstance.removeModifier(elytraModifier.id());
       ItemStack stack = livingEntity.getItemBySlot(EquipmentSlot.CHEST);
 
       if (Services.CAELUS.canFly(stack, livingEntity) &&

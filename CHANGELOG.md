@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 Prior to version 3.1.0, this project used [Forge Recommended Versioning](https://mcforge.readthedocs.io/en/latest/conventions/versioning/).
 
+## [6.0.0+1.20.6] - 2024.05.06
+### Changed
+- [API] Changed return of `CaelusApi#getFlightAttribute` to `Holder<Attribute>`
+- Updated to Minecraft 1.20.6
+
 ## [5.1.0+1.20.4] - 2024.04.22
 ### Added
 - Added `CaelusApi#canFallFly(LivingEntity)`

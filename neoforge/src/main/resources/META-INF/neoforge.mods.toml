@@ -10,15 +10,17 @@ issueTrackerURL= "${issues_url}"
     logoFile="${mod_id}_icon.png"
     authors = "${mod_author}"
     description = '''${description}'''
+[[mixins]]
+    config = "${mod_id}.mixins.json"
 [[dependencies.${mod_id}]]
-    modId = "forge"
-    mandatory = true
-    versionRange = "${forge_version_range}"
+    modId = "neoforge"
+    type="required"
+    versionRange = "${neoforge_version_range}"
     ordering = "NONE"
     side = "BOTH"
 [[dependencies.${mod_id}]]
     modId = "minecraft"
-    mandatory = true
+    type="required"
     versionRange = "${minecraft_version_range}"
     ordering = "NONE"
     side = "BOTH"

@@ -36,7 +36,7 @@ public class CaelusForge implements ICaelusPlatform {
 
   @Override
   public void sendFlightPacket() {
-    CaelusNetwork.instance.send(new CPacketFlight(), PacketDistributor.SERVER.noArg());
+    CaelusNetwork.instance.send(CPacketFlight.INSTANCE, PacketDistributor.SERVER.noArg());
   }
 
   @Override

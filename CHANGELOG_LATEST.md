@@ -3,10 +3,7 @@ Prior to version 3.1.0, this project used [Forge Recommended Versioning](https:/
 
 This is a copy of the changelog for the most recent version. For the full version history, go [here](https://github.com/TheIllusiveC4/Caelus/blob/1.20.4/docs/CHANGELOG.md).
 
-## [5.1.0+1.20.4] - 2024.04.22
-### Added
-- Added `CaelusApi#canFallFly(LivingEntity)`
+## [6.0.0+1.20.6] - 2024.05.06
 ### Changed
-- Refactored fall flying to account for three states instead of two for better mod compatibility
-### Deprecated
-- Deprecated `CaelusApi#canFly(LivingEntity)`
+- [API] Changed return of `CaelusApi#getFlightAttribute` to `Holder<Attribute>`
+- Updated to Minecraft 1.20.6

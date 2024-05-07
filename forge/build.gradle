@@ -1,143 +1,90 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 plugins {
-    id 'idea'
-    id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'multiloader-loader'
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
     id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
     id 'com.modrinth.minotaur' version '2.+'
     id 'net.darkhax.curseforgegradle' version '1.+'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
-base {
-    archivesName = "${mod_id}-forge"
-}
-mixin {
-    add(sourceSets.main, "${mod_id}.refmap.json")
 
+mixin {
     config("${mod_id}.mixins.json")
 }
 
 minecraft {
-    mappings channel: 'parchment', version: "${parchment_mc_version}-${parchment_version}-${minecraft_version}"
-
-    copyIdeResources = true //Calls processResources when in dev
+    mappings channel: "official", version: "${minecraft_version}"
+    reobf = false
+    copyIdeResources = true
 
     // Automatically enable forge AccessTransformers if the file exists
     // This location is hardcoded in Forge and can not be changed.
     // https://github.com/MinecraftForge/MinecraftForge/blob/be1698bb1554f9c8fa2f58e32b9ab70bc4385e60/fmlloader/src/main/java/net/minecraftforge/fml/loading/moddiscovery/ModFile.java#L123
-    if (file('src/main/resources/META-INF/accesstransformer.cfg').exists()) {
-        accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    def at = file('src/main/resources/META-INF/accesstransformer.cfg')
+    if (at.exists()) {
+        accessTransformer = at
     }
 
     runs {
         client {
-            workingDirectory project.file('run')
+            workingDirectory file('runs/client')
             ideaModule "${rootProject.name}.${project.name}.main"
             taskName 'Client'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 modClientRun {
                     source sourceSets.main
-                    source project(":common").sourceSets.main
                 }
             }
         }
 
         server {
-            workingDirectory project.file('run')
+            workingDirectory file('runs/server')
             ideaModule "${rootProject.name}.${project.name}.main"
             taskName 'Server'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 modServerRun {
                     source sourceSets.main
-                    source project(":common").sourceSets.main
                 }
             }
         }
 
         data {
-            workingDirectory project.file('run')
+            workingDirectory file('runs/data')
             ideaModule "${rootProject.name}.${project.name}.main"
             args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
             taskName 'Data'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 modDataRun {
                     source sourceSets.main
-                    source project(":common").sourceSets.main
                 }
             }
         }
     }
 }
 
-sourceSets.main.resources.srcDir 'src/generated/resources'
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    compileOnly project(":common")
-    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
+    // Hack fix for now, force jopt-simple to be exactly 5.0.4 because Mojang ships that version, but some transtive dependencies request 6.0+
+    implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    source(project(":common").sourceSets.main.allSource)
-}
-tasks.withType(Javadoc).configureEach {
-    source(project(":common").sourceSets.main.allJava)
-}
-tasks.named("sourcesJar", Jar) {
-    from(project(":common").sourceSets.main.allSource)
+sourceSets.each {
+    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
+    it.output.resourcesDir = dir
+    it.java.destinationDirectory = dir
 }
 
-task apiJar(type: Jar) {
-    archiveClassifier.set('api')
-    include 'top/theillusivec4/caelus/api/**/*'
-    from(project(":common").sourceSets.main.allSource)
-    from sourceSets.main.allSource
-    from sourceSets.main.output
-}
-
-processResources {
-    from project(":common").sourceSets.main.resources
-}
-
-artifacts {
-    archives apiJar
-}
-
-jar.finalizedBy('reobfJar')
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId base.archivesName.get()
-            artifact jar
-            artifact sourcesJar
-            artifact apiJar
-        }
-    }
-    repositories {
-
-        if (project.hasProperty('urlMaven')) {
-
-            if (project.hasProperty('userMaven') && project.hasProperty('passMaven')) {
-
-                maven {
-                    url urlMaven
-                    credentials {
-                        username userMaven
-                        password passMaven
-                    }
-                }
-            }
-        }
+jar {
+    manifest {
+        attributes([
+                "MixinConfigs": "${mod_id}.mixins.json"
+        ])
     }
 }
 
-task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+tasks.register('publishCurseForge', TaskPublishCurseForge) {
     apiToken = findProperty('curseKey')
     //debugMode = true
     def projectId = "${cf_id}".toString()
@@ -149,7 +96,6 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
         mainFile.addGameVersion("${it}")
     }
     mainFile.withAdditionalFile(sourcesJar)
-    mainFile.withAdditionalFile(apiJar)
 
     doLast {
 
@@ -160,14 +106,14 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
 }
 
 modrinth {
-    token = findProperty('modrinthKey') ?: 0
+    token = findProperty('modrinthKey') ?: ""
     //debugMode = true
     projectId = "${modrinth_id}"
     versionName = getArchivesBaseName() + "-" + getVersion()
     versionType = "${release_type}"
     changelog = file('../CHANGELOG_LATEST.md').text
     uploadFile = file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar")
-    additionalFiles = [sourcesJar, apiJar]
+    additionalFiles = [sourcesJar]
     gameVersions = "${release_versions}".split(",") as List<String>
 }
 
@@ -176,10 +122,4 @@ tasks.modrinth.doLast {
     if (project.hasProperty('modrinth_page') && tasks.modrinth.newVersion != null) {
         project.ext.modrinth_link = "${modrinth_page}/version/${tasks.modrinth.newVersion.id}"
     }
-}
-
-sourceSets.each {
-    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
-    it.output.resourcesDir = dir
-    it.java.destinationDirectory = dir
 }

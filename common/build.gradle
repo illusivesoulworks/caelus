@@ -1,54 +1,33 @@
 plugins {
-    id 'idea'
-    id 'java'
-    id 'maven-publish'
+    id 'multiloader-common'
     id 'org.spongepowered.gradle.vanilla' version '0.2.1-SNAPSHOT'
 }
-base {
-    archivesName = "${mod_id}-common"
-}
+
 minecraft {
     version(minecraft_version)
-    if(file("src/main/resources/${mod_id}.accesswidener").exists()){
-        accessWideners(file("src/main/resources/${mod_id}.accesswidener"))
+    def aw = file("src/main/resources/${mod_id}.accesswidener")
+    if (aw.exists()) {
+        accessWideners(aw)
     }
 }
 
 dependencies {
-     compileOnly group:'org.spongepowered', name:'mixin', version:'0.8.5'
-     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
 }
 
-task apiJar(type: Jar) {
-    archiveClassifier.set('api')
-    include 'top/theillusivec4/caelus/api/**/*'
-    from sourceSets.main.allSource
-    from sourceSets.main.output
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId base.archivesName.get()
-            artifact jar
-            artifact sourcesJar
-            artifact apiJar
-        }
+configurations {
+    commonJava {
+        canBeResolved = false
+        canBeConsumed = true
     }
-    repositories {
-
-        if (project.hasProperty('urlMaven')) {
-
-            if (project.hasProperty('userMaven') && project.hasProperty('passMaven')) {
-
-                maven {
-                    url urlMaven
-                    credentials {
-                        username userMaven
-                        password passMaven
-                    }
-                }
-            }
-        }
+    commonResources {
+        canBeResolved = false
+        canBeConsumed = true
     }
 }
+
+artifacts {
+    commonJava sourceSets.main.java.sourceDirectories.singleFile
+    commonResources sourceSets.main.resources.sourceDirectories.singleFile
+}
+

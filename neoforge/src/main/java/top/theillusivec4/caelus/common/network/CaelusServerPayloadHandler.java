@@ -20,7 +20,8 @@ package top.theillusivec4.caelus.common.network;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class CaelusServerPayloadHandler {
 
@@ -31,16 +32,16 @@ public class CaelusServerPayloadHandler {
     return INSTANCE;
   }
 
-  public void handleFlight(CPacketFlightPayload msg, PlayPayloadContext ctx) {
-    ctx.workHandler().submitAsync(() -> ctx.player().ifPresent(player -> {
-          if (player instanceof ServerPlayer serverPlayer) {
-            CPacketFlightPayload.handle(serverPlayer);
-          }
-        }))
-        .exceptionally(e -> {
-          ctx.packetHandler()
-              .disconnect(Component.translatable("caelus.networking.failed", e.getMessage()));
-          return null;
-        });
+  public void handleFlight(CPacketFlight msg, IPayloadContext ctx) {
+    ctx.enqueueWork(() -> {
+      Player player = ctx.player();
+
+      if (player instanceof ServerPlayer serverPlayer) {
+        CPacketFlight.handle(serverPlayer);
+      }
+    }).exceptionally(e -> {
+      ctx.disconnect(Component.translatable("caelus.networking.failed", e.getMessage()));
+      return null;
+    });
   }
 }

@@ -18,18 +18,19 @@
 
 package top.theillusivec4.caelus;
 
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import top.theillusivec4.caelus.api.CaelusApi;
 import top.theillusivec4.caelus.common.CaelusApiImpl;
 import top.theillusivec4.caelus.common.CaelusEvents;
-import top.theillusivec4.caelus.common.network.CPacketFlightPayload;
+import top.theillusivec4.caelus.common.network.CPacketFlight;
 import top.theillusivec4.caelus.common.network.CaelusServerPayloadHandler;
 
 @Mod(CaelusConstants.MOD_ID)
@@ -39,7 +40,7 @@ public class CaelusNeoForgeMod {
     CaelusApiImpl.setup();
     eventBus.addListener(this::registerPayloadHandler);
     eventBus.addListener(this::attributeSetup);
-    NeoForge.EVENT_BUS.addListener(this::livingTick);
+    NeoForge.EVENT_BUS.addListener(this::entityTick);
   }
 
   private void attributeSetup(final EntityAttributeModificationEvent evt) {
@@ -49,12 +50,16 @@ public class CaelusNeoForgeMod {
     }
   }
 
-  private void registerPayloadHandler(final RegisterPayloadHandlerEvent evt) {
-    evt.registrar(CaelusConstants.MOD_ID).play(CPacketFlightPayload.ID, CPacketFlightPayload::new,
-        handler -> handler.server(CaelusServerPayloadHandler.getInstance()::handleFlight));
+  private void registerPayloadHandler(final RegisterPayloadHandlersEvent evt) {
+    evt.registrar(CaelusConstants.MOD_ID)
+        .playToServer(CPacketFlight.TYPE, StreamCodec.unit(CPacketFlight.INSTANCE),
+            CaelusServerPayloadHandler.getInstance()::handleFlight);
   }
 
-  private void livingTick(final LivingEvent.LivingTickEvent evt) {
-    CaelusEvents.livingTick(evt.getEntity());
+  private void entityTick(final EntityTickEvent.Post evt) {
+
+    if (evt.getEntity() instanceof LivingEntity livingEntity) {
+      CaelusEvents.livingTick(livingEntity);
+    }
   }
 }

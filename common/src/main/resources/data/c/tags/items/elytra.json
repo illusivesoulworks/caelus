@@ -1,0 +1,9 @@
+{
+  "values": [
+    "minecraft:elytra",
+    {
+      "id": "#forge:elytra",
+      "required": false
+    }
+  ]
+}

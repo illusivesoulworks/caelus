@@ -18,18 +18,29 @@
 
 package top.theillusivec4.caelus.common.network;
 
+import javax.annotation.Nonnull;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffects;
+import top.theillusivec4.caelus.CaelusConstants;
 import top.theillusivec4.caelus.api.CaelusApi;
 
-public class CPacketFlight {
+public class CPacketFlight implements CustomPacketPayload {
+
+  public static final Type<CPacketFlight> TYPE =
+      new Type<>(new ResourceLocation(CaelusConstants.MOD_ID, "flight"));
+  public static final CPacketFlight INSTANCE = new CPacketFlight();
+
+  private CPacketFlight() {
+  }
 
   public static void encode(CPacketFlight msg, FriendlyByteBuf buf) {
   }
 
   public static CPacketFlight decode(FriendlyByteBuf buf) {
-    return new CPacketFlight();
+    return INSTANCE;
   }
 
   @SuppressWarnings("ConstantConditions")
@@ -44,5 +55,11 @@ public class CPacketFlight {
         serverPlayer.startFallFlying();
       }
     }
+  }
+
+  @Nonnull
+  @Override
+  public Type<? extends CustomPacketPayload> type() {
+    return TYPE;
   }
 }

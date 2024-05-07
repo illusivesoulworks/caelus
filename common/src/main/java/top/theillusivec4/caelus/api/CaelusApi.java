@@ -18,6 +18,7 @@
 
 package top.theillusivec4.caelus.api;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -25,8 +26,14 @@ import org.jetbrains.annotations.ApiStatus;
 
 public abstract class CaelusApi {
 
+  private static CaelusApi instance;
+
   public static CaelusApi getInstance() {
-    throw new IllegalStateException("Missing API implementation from Caelus!");
+    return instance;
+  }
+
+  public static void setInstance(final CaelusApi api) {
+    instance = api;
   }
 
   public abstract String getModId();
@@ -38,7 +45,7 @@ public abstract class CaelusApi {
    * Between 0.0 (exclusive) and 1.0 (exclusive) - Falls back to default behavior.
    * Less than or equal to 0.0 - Denies any fall flying.
    */
-  public abstract Attribute getFlightAttribute();
+  public abstract Holder<Attribute> getFlightAttribute();
 
   /**
    * The attribute modifier used for the vanilla elytra item.
