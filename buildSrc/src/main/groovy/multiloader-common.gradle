@@ -13,6 +13,18 @@ java {
     withJavadocJar()
 }
 
+task apiJar(type: Jar) {
+    archiveClassifier.set('api')
+    include 'top/theillusivec4/caelus/api/**/*'
+    from(project(":common").sourceSets.main.allSource)
+    from sourceSets.main.allSource
+    from sourceSets.main.output
+}
+
+artifacts {
+    archives apiJar
+}
+
 repositories {
     mavenCentral()
     // https://docs.gradle.org/current/userguide/declaring_repositories.html#declaring_content_exclusively_found_in_one_repository
@@ -105,13 +117,25 @@ processResources {
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
-            artifactId base.archivesName.get()
-            from components.java
+            artifact jar
+            artifact sourcesJar
+            artifact apiJar
         }
     }
     repositories {
-        maven {
-            url System.getenv("local_maven_url")
+
+        if (project.hasProperty('urlMaven')) {
+
+            if (project.hasProperty('userMaven') && project.hasProperty('passMaven')) {
+
+                maven {
+                    url urlMaven
+                    credentials {
+                        username userMaven
+                        password passMaven
+                    }
+                }
+            }
         }
     }
 }
