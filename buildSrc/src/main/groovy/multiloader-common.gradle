@@ -117,6 +117,7 @@ processResources {
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
+            artifactId base.archivesName.get()
             artifact jar
             artifact sourcesJar
             artifact apiJar
