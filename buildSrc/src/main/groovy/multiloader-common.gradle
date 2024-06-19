@@ -15,7 +15,7 @@ java {
 
 task apiJar(type: Jar) {
     archiveClassifier.set('api')
-    include 'top/theillusivec4/caelus/api/**/*'
+    include 'com/illusivesoulworks/caelus/api/**/*'
     from(project(":common").sourceSets.main.allSource)
     from sourceSets.main.allSource
     from sourceSets.main.output
