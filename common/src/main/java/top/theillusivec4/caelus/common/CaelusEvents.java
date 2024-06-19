@@ -30,7 +30,7 @@ public class CaelusEvents {
 
   public static void livingTick(LivingEntity livingEntity) {
     AttributeInstance attributeInstance =
-        livingEntity.getAttribute(CaelusApi.getInstance().getFlightAttribute());
+        livingEntity.getAttribute(CaelusApi.getInstance().getFallFlyingAttribute());
 
     if (attributeInstance != null) {
       AttributeModifier elytraModifier = CaelusApi.getInstance().getElytraModifier();
@@ -38,7 +38,7 @@ public class CaelusEvents {
       ItemStack stack = livingEntity.getItemBySlot(EquipmentSlot.CHEST);
 
       if (Services.CAELUS.canFly(stack, livingEntity) &&
-          !attributeInstance.hasModifier(elytraModifier)) {
+          !attributeInstance.hasModifier(elytraModifier.id())) {
         attributeInstance.addTransientModifier(elytraModifier);
       }
     }

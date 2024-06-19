@@ -18,9 +18,9 @@
 
 package top.theillusivec4.caelus.common;
 
-import java.util.UUID;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -43,11 +43,11 @@ public class CaelusApiImpl extends CaelusApi {
   private static final RegistryObject<Attribute> FALL_FLYING = ATTRIBUTES.register("fall_flying",
       () -> new RangedAttribute("caelus.fallFlying", 0.1d, 0.0d, 1.0d).setSyncable(true));
   private static final AttributeModifier ELYTRA_MODIFIER =
-      new AttributeModifier(UUID.fromString("5b6c3728-9c24-42ae-83ac-70d61d8b8199"),
-          "Elytra modifier", 1.0f, AttributeModifier.Operation.ADD_VALUE);
+      new AttributeModifier(ResourceLocation.fromNamespaceAndPath(CaelusConstants.MOD_ID, "elytra"),
+          1.0f, AttributeModifier.Operation.ADD_VALUE);
 
   public static void setup() {
-    CaelusApi.setInstance(INSTANCE);
+    // NO-OP
   }
 
   @Override
@@ -56,7 +56,7 @@ public class CaelusApiImpl extends CaelusApi {
   }
 
   @Override
-  public Holder<Attribute> getFlightAttribute() {
+  public Holder<Attribute> getFallFlyingAttribute() {
     return FALL_FLYING.asHolder();
   }
 
@@ -67,19 +67,11 @@ public class CaelusApiImpl extends CaelusApi {
 
   @Override
   public TriState canFallFly(LivingEntity livingEntity) {
-    Holder<Attribute> att = this.getFlightAttribute();
+    Holder<Attribute> att = this.getFallFlyingAttribute();
     AttributeInstance attribute = livingEntity.getAttribute(att);
 
     if (attribute != null) {
       double val = attribute.getValue();
-      // backwards compatibility with old default value
-      // todo: Remove in 1.21
-      double baseValue = attribute.getBaseValue();
-      double actualBaseValue = att.value().getDefaultValue();
-
-      if (baseValue != actualBaseValue) {
-        attribute.setBaseValue(actualBaseValue);
-      }
 
       if (val >= 1.0d) {
         return TriState.ALLOW;
@@ -97,7 +89,8 @@ public class CaelusApiImpl extends CaelusApi {
   }
 
   @Override
-  public boolean canFly(LivingEntity livingEntity) {
-    return canFallFly(livingEntity) == TriState.ALLOW;
+  public boolean canFallFly(LivingEntity livingEntity, boolean checkDefaults) {
+    return checkDefaults ? canFallFly(livingEntity) != TriState.DENY :
+        canFallFly(livingEntity) == TriState.ALLOW;
   }
 }

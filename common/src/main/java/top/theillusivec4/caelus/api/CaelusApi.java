@@ -22,18 +22,25 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * The public-facing Caelus API instance.
+ *
+ * <p>To obtain a working instance, call {@link #getInstance()}.</p>
+ */
 public abstract class CaelusApi {
 
   private static CaelusApi instance;
 
+  /**
+   * Returns the public-facing Caelus API instance.
+   */
   public static CaelusApi getInstance() {
-    return instance;
-  }
 
-  public static void setInstance(final CaelusApi api) {
-    instance = api;
+    if (instance == null) {
+      throw new RuntimeException("Missing Caelus API implementation!");
+    }
+    return instance;
   }
 
   public abstract String getModId();
@@ -45,15 +52,20 @@ public abstract class CaelusApi {
    * Between 0.0 (exclusive) and 1.0 (exclusive) - Falls back to default behavior.
    * Less than or equal to 0.0 - Denies any fall flying.
    */
-  public abstract Holder<Attribute> getFlightAttribute();
+  public abstract Holder<Attribute> getFallFlyingAttribute();
 
   /**
-   * The attribute modifier used for the vanilla elytra item.
+   * The attribute modifier used for the vanilla elytra item. In most cases, modded items should
+   * use a separate attribute modifier.
    */
   public abstract AttributeModifier getElytraModifier();
 
   /**
    * Checks whether an entity is able to fall fly.
+   * <br>
+   * {@link TriState#ALLOW} - Entity can always fall fly.
+   * {@link TriState#DEFAULT} - Falls back to default behavior.
+   * {@link TriState#DENY} - Entity cannot fall fly.
    *
    * @param livingEntity The entity to check for fall flight capabilities
    * @return {@link TriState} based on the entity fall flight attribute
@@ -61,11 +73,14 @@ public abstract class CaelusApi {
   public abstract TriState canFallFly(LivingEntity livingEntity);
 
   /**
-   * @deprecated See {@link CaelusApi#canFallFly(LivingEntity)}
+   * Checks whether an entity is able to fall fly.
+   * <br>
+   *
+   * @param livingEntity  The entity to check for fall flight capabilities
+   * @param checkDefaults True to include default behavior, such as fall flying granted by other mods
+   * @return True if the entity can fall fly, false otherwise
    */
-  @Deprecated
-  @ApiStatus.ScheduledForRemoval(inVersion = "1.21")
-  public abstract boolean canFly(LivingEntity livingEntity);
+  public abstract boolean canFallFly(LivingEntity livingEntity, boolean checkDefaults);
 
   public enum TriState {
     ALLOW,

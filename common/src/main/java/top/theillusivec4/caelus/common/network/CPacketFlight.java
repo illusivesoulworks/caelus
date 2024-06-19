@@ -30,7 +30,7 @@ import top.theillusivec4.caelus.api.CaelusApi;
 public class CPacketFlight implements CustomPacketPayload {
 
   public static final Type<CPacketFlight> TYPE =
-      new Type<>(new ResourceLocation(CaelusConstants.MOD_ID, "flight"));
+      new Type<>(ResourceLocation.fromNamespaceAndPath(CaelusConstants.MOD_ID, "flight"));
   public static final CPacketFlight INSTANCE = new CPacketFlight();
 
   private CPacketFlight() {

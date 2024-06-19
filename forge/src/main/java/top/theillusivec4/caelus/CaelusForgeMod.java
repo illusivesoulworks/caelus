@@ -46,7 +46,7 @@ public class CaelusForgeMod {
   private void attributeSetup(final EntityAttributeModificationEvent evt) {
 
     for (EntityType<? extends LivingEntity> type : evt.getTypes()) {
-      evt.add(type, CaelusApi.getInstance().getFlightAttribute());
+      evt.add(type, CaelusApi.getInstance().getFallFlyingAttribute());
     }
   }
 
