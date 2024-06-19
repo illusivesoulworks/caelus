@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 Prior to version 3.1.0, this project used [Forge Recommended Versioning](https://mcforge.readthedocs.io/en/latest/conventions/versioning/).
 
+## [7.0.0+1.21] - 2024.06.18
+### Added
+- [API] Added `CaelusApi#canFallFly(LivingEntity, boolean)`
+### Changed
+- [API] Moved package from `top.theillusivec4` to `com.illusivesoulworks`
+- [API] Renamed `CuriosApi#getFlightAttribute` to `CuriosApi#getFallFlyingAttribute`
+
 ## [6.0.0+1.20.6] - 2024.05.06
 ### Changed
 - [API] Changed return of `CaelusApi#getFlightAttribute` to `Holder<Attribute>`

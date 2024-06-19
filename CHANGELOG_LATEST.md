@@ -3,7 +3,9 @@ Prior to version 3.1.0, this project used [Forge Recommended Versioning](https:/
 
 This is a copy of the changelog for the most recent version. For the full version history, go [here](https://github.com/TheIllusiveC4/Caelus/blob/1.20.4/docs/CHANGELOG.md).
 
-## [6.0.0+1.20.6] - 2024.05.06
+## [7.0.0+1.21] - 2024.06.18
+### Added
+- [API] Added `CaelusApi#canFallFly(LivingEntity, boolean)`
 ### Changed
-- [API] Changed return of `CaelusApi#getFlightAttribute` to `Holder<Attribute>`
-- Updated to Minecraft 1.20.6
+- [API] Moved package from `top.theillusivec4` to `com.illusivesoulworks`
+- [API] Renamed `CuriosApi#getFlightAttribute` to `CuriosApi#getFallFlyingAttribute`
