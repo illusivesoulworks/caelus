@@ -1,10 +1,11 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 Prior to version 3.1.0, this project used [Forge Recommended Versioning](https://mcforge.readthedocs.io/en/latest/conventions/versioning/).
 
-This is a copy of the changelog for the most recent version. For the full version history, go [here](https://github.com/illusivesoulworks/caelus/blob/1.21.x/CHANGELOG.md).
+This is a copy of the changelog for the most recent version. For the full version history, go [here](https://github.com/illusivesoulworks/caelus/blob/1.21.4/CHANGELOG.md).
 
-## [7.0.1+1.21.1] - 2024.09.05
+## [8.0.0+1.21.4] - 2025.06.18
 ### Added
-- Added `es_cl` localization [#41](https://github.com/illusivesoulworks/caelus/pull/41)
+- [API] Added `GlidingDamageEvent`
+- Added compatibility with any item that has the `minecraft:glider` data component
 ### Changed
-- Updated to Minecraft 1.21.1
+- [API] Changed `RenderCapeEvent` to use `PlayerRenderState` instead of `Player` due to vanilla changes to rendering
