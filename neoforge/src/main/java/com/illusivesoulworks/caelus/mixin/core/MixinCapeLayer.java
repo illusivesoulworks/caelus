@@ -18,15 +18,15 @@
 
 package com.illusivesoulworks.caelus.mixin.core;
 
+import com.illusivesoulworks.caelus.mixin.ClientMixinHooks;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import com.illusivesoulworks.caelus.mixin.util.ClientMixinHooks;
 
 @Mixin(CapeLayer.class)
 public abstract class MixinCapeLayer {
@@ -34,18 +34,16 @@ public abstract class MixinCapeLayer {
   @Inject(
       at = @At(
           value = "INVOKE",
-          target = "net/minecraft/client/player/AbstractClientPlayer.getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;"),
-      method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;FFFFFF)V",
+          target = "net/minecraft/client/renderer/entity/layers/CapeLayer.hasLayer(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;)Z"),
+      method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/renderer/entity/state/PlayerRenderState;FF)V",
       cancellable = true
   )
-  private void caelus$canRenderCape(PoseStack pMatrixStack, MultiBufferSource pBuffer,
-                                    int pPackedLight, AbstractClientPlayer pLivingEntity,
-                                    float pLimbSwing, float pLimbSwingAmount, float pPartialTicks,
-                                    float pAgeInTicks, float pNetHeadYaw, float pHeadPitch,
-                                    CallbackInfo cb) {
+  private void caelus$canRenderCape(PoseStack poseStack, MultiBufferSource bufferSource,
+                                    int packedLight, PlayerRenderState playerRenderState, float $$4,
+                                    float $$5, CallbackInfo ci) {
 
-    if (!ClientMixinHooks.canRenderCape(pLivingEntity)) {
-      cb.cancel();
+    if (!ClientMixinHooks.canRenderCape(playerRenderState)) {
+      ci.cancel();
     }
   }
 }

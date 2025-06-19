@@ -18,7 +18,11 @@
 
 package com.illusivesoulworks.caelus.common;
 
+import com.illusivesoulworks.caelus.CaelusConstants;
+import com.illusivesoulworks.caelus.api.CaelusApi;
+import java.util.function.Supplier;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -27,27 +31,25 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
-import net.minecraft.world.item.ItemStack;
-import com.illusivesoulworks.caelus.CaelusConstants;
-import com.illusivesoulworks.caelus.api.CaelusApi;
-import com.illusivesoulworks.caelus.common.registry.RegistryObject;
-import com.illusivesoulworks.caelus.common.registry.RegistryProvider;
-import com.illusivesoulworks.caelus.platform.Services;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class CaelusApiImpl extends CaelusApi {
 
   public static final CaelusApi INSTANCE = new CaelusApiImpl();
-  public static final RegistryProvider<Attribute> ATTRIBUTES =
-      RegistryProvider.get(Registries.ATTRIBUTE, CaelusConstants.MOD_ID);
+  public static final DeferredRegister<Attribute> ATTRIBUTES =
+      DeferredRegister.create(Registries.ATTRIBUTE, CaelusConstants.MOD_ID);
 
-  private static final RegistryObject<Attribute> FALL_FLYING = ATTRIBUTES.register("fall_flying",
-      () -> new RangedAttribute("caelus.fallFlying", 0.1d, 0.0d, 1.0d).setSyncable(true));
+  private static final Supplier<Attribute> FALL_FLYING =
+      ATTRIBUTES.register("fall_flying",
+                          () -> new RangedAttribute("caelus.fallFlying", 0.1d, 0.0d, 1.0d)
+                              .setSyncable(true));
   private static final AttributeModifier ELYTRA_MODIFIER =
       new AttributeModifier(ResourceLocation.fromNamespaceAndPath(CaelusConstants.MOD_ID, "elytra"),
-          1.0f, AttributeModifier.Operation.ADD_VALUE);
+                            1.0f, AttributeModifier.Operation.ADD_VALUE);
 
-  public static void setup() {
-    // NO-OP
+  public static void setup(IEventBus eventBus) {
+    ATTRIBUTES.register(eventBus);
   }
 
   @Override
@@ -57,7 +59,7 @@ public class CaelusApiImpl extends CaelusApi {
 
   @Override
   public Holder<Attribute> getFallFlyingAttribute() {
-    return FALL_FLYING.asHolder();
+    return BuiltInRegistries.ATTRIBUTE.wrapAsHolder(FALL_FLYING.get());
   }
 
   @Override
@@ -80,9 +82,9 @@ public class CaelusApiImpl extends CaelusApi {
       }
       return TriState.DENY;
     }
-    ItemStack stack = livingEntity.getItemBySlot(EquipmentSlot.CHEST);
 
-    if (Services.CAELUS.canFly(stack, livingEntity)) {
+    if (LivingEntity.canGlideUsing(livingEntity.getItemBySlot(EquipmentSlot.CHEST),
+                                   EquipmentSlot.CHEST)) {
       return TriState.ALLOW;
     }
     return TriState.DEFAULT;
@@ -91,6 +93,6 @@ public class CaelusApiImpl extends CaelusApi {
   @Override
   public boolean canFallFly(LivingEntity livingEntity, boolean checkDefaults) {
     return checkDefaults ? canFallFly(livingEntity) != TriState.DENY :
-        canFallFly(livingEntity) == TriState.ALLOW;
+           canFallFly(livingEntity) == TriState.ALLOW;
   }
 }

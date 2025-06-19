@@ -18,29 +18,25 @@
 
 package com.illusivesoulworks.caelus;
 
+import com.illusivesoulworks.caelus.api.CaelusApi;
+import com.illusivesoulworks.caelus.common.CaelusApiImpl;
+import com.illusivesoulworks.caelus.common.network.CPacketFlight;
+import com.illusivesoulworks.caelus.common.network.CaelusServerPayloadHandler;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
-import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import com.illusivesoulworks.caelus.api.CaelusApi;
-import com.illusivesoulworks.caelus.common.CaelusApiImpl;
-import com.illusivesoulworks.caelus.common.CaelusEvents;
-import com.illusivesoulworks.caelus.common.network.CPacketFlight;
-import com.illusivesoulworks.caelus.common.network.CaelusServerPayloadHandler;
 
 @Mod(CaelusConstants.MOD_ID)
 public class CaelusNeoForgeMod {
 
   public CaelusNeoForgeMod(IEventBus eventBus) {
-    CaelusApiImpl.setup();
+    CaelusApiImpl.setup(eventBus);
     eventBus.addListener(this::registerPayloadHandler);
     eventBus.addListener(this::attributeSetup);
-    NeoForge.EVENT_BUS.addListener(this::entityTick);
   }
 
   private void attributeSetup(final EntityAttributeModificationEvent evt) {
@@ -53,13 +49,6 @@ public class CaelusNeoForgeMod {
   private void registerPayloadHandler(final RegisterPayloadHandlersEvent evt) {
     evt.registrar(CaelusConstants.MOD_ID)
         .playToServer(CPacketFlight.TYPE, StreamCodec.unit(CPacketFlight.INSTANCE),
-            CaelusServerPayloadHandler.getInstance()::handleFlight);
-  }
-
-  private void entityTick(final EntityTickEvent.Post evt) {
-
-    if (evt.getEntity() instanceof LivingEntity livingEntity) {
-      CaelusEvents.livingTick(livingEntity);
-    }
+                      CaelusServerPayloadHandler.getInstance()::handleFlight);
   }
 }

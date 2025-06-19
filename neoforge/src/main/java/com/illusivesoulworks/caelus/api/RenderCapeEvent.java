@@ -18,9 +18,9 @@
 
 package com.illusivesoulworks.caelus.api;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 /**
  * This event is fired when the game checks if the player cape should be rendered.<br>
@@ -31,9 +31,15 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
  * <br>
  * This event is fired on the {@link net.neoforged.neoforge.common.NeoForge#EVENT_BUS}.
  **/
-public class RenderCapeEvent extends PlayerEvent implements ICancellableEvent {
+public class RenderCapeEvent extends Event implements ICancellableEvent {
 
-  public RenderCapeEvent(Player player) {
-    super(player);
+  private final PlayerRenderState renderState;
+
+  public RenderCapeEvent(PlayerRenderState playerRenderState) {
+    this.renderState = playerRenderState;
+  }
+
+  public PlayerRenderState getPlayerRenderState() {
+    return this.renderState;
   }
 }

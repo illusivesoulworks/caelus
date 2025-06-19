@@ -7,8 +7,7 @@
     "MixinLivingEntity"
   ],
   "client": [
-    "MixinCapeLayer",
-    "MixinLocalPlayer"
+    "MixinCapeLayer"
   ],
   "injectors": {
     "defaultRequire": 1

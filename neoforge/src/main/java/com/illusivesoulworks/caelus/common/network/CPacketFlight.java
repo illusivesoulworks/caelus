@@ -18,14 +18,14 @@
 
 package com.illusivesoulworks.caelus.common.network;
 
+import com.illusivesoulworks.caelus.CaelusConstants;
+import com.illusivesoulworks.caelus.api.CaelusApi;
 import javax.annotation.Nonnull;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffects;
-import com.illusivesoulworks.caelus.CaelusConstants;
-import com.illusivesoulworks.caelus.api.CaelusApi;
 
 public class CPacketFlight implements CustomPacketPayload {
 
@@ -49,9 +49,9 @@ public class CPacketFlight implements CustomPacketPayload {
     if (serverPlayer != null) {
       serverPlayer.stopFallFlying();
 
-      if (!serverPlayer.onGround() && !serverPlayer.isFallFlying() && !serverPlayer.isInWater() &&
-          !serverPlayer.hasEffect(MobEffects.LEVITATION) &&
-          CaelusApi.getInstance().canFallFly(serverPlayer) != CaelusApi.TriState.DENY) {
+      if (!serverPlayer.onGround() && !serverPlayer.isFallFlying() && !serverPlayer.isInWater()
+          && !serverPlayer.hasEffect(MobEffects.LEVITATION)
+          && CaelusApi.getInstance().canFallFly(serverPlayer) != CaelusApi.TriState.DENY) {
         serverPlayer.startFallFlying();
       }
     }
