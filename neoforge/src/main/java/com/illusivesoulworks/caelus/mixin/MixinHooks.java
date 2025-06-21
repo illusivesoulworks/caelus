@@ -42,8 +42,8 @@ public class MixinHooks {
       flag.setTrue();
     }
 
-    if (flag.booleanValue() && slots.isEmpty()) {
-      slots.add(EquipmentSlot.HEAD);
+    if (slots.isEmpty()) {
+      return List.of(EquipmentSlot.HEAD);
     }
     return slots;
   }
