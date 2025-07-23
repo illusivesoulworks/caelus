@@ -20,11 +20,14 @@ package com.illusivesoulworks.caelus.mixin.core;
 
 import com.illusivesoulworks.caelus.api.CaelusApi;
 import com.illusivesoulworks.caelus.mixin.MixinHooks;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import java.util.List;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,7 +35,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
@@ -74,19 +76,20 @@ public abstract class MixinLivingEntity extends Entity {
     return MixinHooks.damageGliders((LivingEntity) (Object) this, slots, this.caelus$flag);
   }
 
-  @ModifyVariable(
+  @WrapOperation(
       at = @At(
           value = "INVOKE",
           target = "net/minecraft/world/entity/LivingEntity.getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;"
       ),
       method = "updateFallFlying"
   )
-  private EquipmentSlot caelus$substituteSlot(EquipmentSlot equipmentSlot) {
+  private ItemStack caelus$substituteSlot(LivingEntity livingEntity, EquipmentSlot slot,
+                                          Operation<ItemStack> operation) {
 
     if (this.caelus$flag.booleanValue()) {
       this.caelus$flag.setFalse();
-      return null;
+      return ItemStack.EMPTY;
     }
-    return equipmentSlot;
+    return operation.call(livingEntity, slot);
   }
 }
